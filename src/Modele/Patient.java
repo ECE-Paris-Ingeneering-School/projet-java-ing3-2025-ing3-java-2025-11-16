@@ -1,8 +1,8 @@
 package Modele;
-
 import java.util.ArrayList;
 
-public class Patient {
+
+public class Patient{
     private int IDpatient;
     private String mdp;
     private String nom;
@@ -19,5 +19,29 @@ public class Patient {
         TypePatient = typePatient;
         this.historiqueRDV = historiqueRDV;
         this.inscriptionDate = inscriptionDate;
+    }
+
+    public int getIDpatient(){
+        return IDpatient;
+    }
+
+    public void setIDpatient(String rdv){
+        this.historiqueRDV.add(rdv);
+    }
+
+    public int getInscriptionDate(){
+        return inscriptionDate;
+    }
+
+    public String toString(){
+
+        return "Patient{" +
+                "IDpatient=" + IDpatient +
+                ", nom='" + nom + '\'' +
+                ", prenom='" + prenom + '\'' +
+                ", typePatient='" + TypePatient + '\'' +
+                ", inscriptionDate=" + inscriptionDate +
+                ", historiqueRDV=" + historiqueRDV +
+                '}';
     }
 }
