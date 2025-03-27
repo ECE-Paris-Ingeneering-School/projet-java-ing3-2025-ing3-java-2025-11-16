@@ -25,10 +25,28 @@ public class Patient{
         return IDpatient;
     }
 
+    public String getNom() {
+        return nom;
+    }
+
+    public String getPrenom() {
+        return prenom;
+    }
+
+    public String getTypePatient() {
+        return TypePatient;
+    }
+
+    public String getMdp() {
+        return mdp;
+    }
+
     public void setIDpatient(String rdv){
         this.historiqueRDV.add(rdv);
     }
-
+    public ArrayList<String> getHistoriqueRDV() {
+        return historiqueRDV;
+    }
     public int getInscriptionDate(){
         return inscriptionDate;
     }
