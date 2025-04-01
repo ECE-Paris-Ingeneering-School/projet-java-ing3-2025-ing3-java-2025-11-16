@@ -15,10 +15,10 @@ public class RendezVousVue {
     }
 
     public void afficherListeRendezVous(List<RendezVous> rdvs){
-        System.out.println("Liste des Rendez-Vous :"){
+        System.out.println("Liste des Rendez-Vous :");
             for(RendezVous rdv : rdvs){
                 System.out.println(rdv);
             }
         }
     }
-}
+
