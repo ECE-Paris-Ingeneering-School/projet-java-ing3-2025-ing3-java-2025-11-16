@@ -162,6 +162,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         }
     }
 
+    // Vérification si l'utilisateur est un specialiste
     private boolean isSpecialiste(int id, Connection connection) throws SQLException {
         String query = "SELECT COUNT(*) FROM Specialiste WHERE IDSpecialiste = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {

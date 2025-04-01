@@ -1,55 +1,89 @@
 package Modele;
-
-import java.time.LocalDateTime;
+import java.util.Date;
 
 public class RendezVous {
-    private int IDrdv;
-    Specialiste specialiste;
-    Patient patient;
-    private String statut;//confirmé , ou annulé ou reporté
-    private LocalDateTime dateHeure;
+    private int idSpecialiste;
+    private int idPatient;
+    private String notes;
+    private Date horaire;
+    private String lieu;
 
-    public RendezVous(int IDrdv , String statut, LocalDateTime dateHeure , Specialiste specialiste, Patient patient){
-        this.IDrdv=IDrdv;
-        this.statut=statut;
-        this.specialiste=specialiste;
-        this.dateHeure=dateHeure;
-        this.patient=patient;
+    // Constructeur par défaut
+    public RendezVous() {}
+
+    // Constructeur avec paramètres
+    public RendezVous(int idSpecialiste, int idPatient, String notes, Date horaire, String lieu) {
+        this.idSpecialiste = idSpecialiste;
+        this.idPatient = idPatient;
+        this.notes = notes;
+        this.horaire = horaire;
+        this.lieu = lieu;
     }
 
-    public int getIDrdv(){
-        return IDrdv;
+    // Getters et Setters
+    public int getIdSpecialiste() {
+        return idSpecialiste;
     }
 
-    public String statut(){
-        return statut;
+    public void setIdSpecialiste(int idSpecialiste) {
+        this.idSpecialiste = idSpecialiste;
     }
 
-    public Specialiste getSpecialiste() {
-        return specialiste;
+    public int getIdPatient() {
+        return idPatient;
     }
 
-    public Patient getPatient(){
-        return patient;
-
+    public void setIdPatient(int idPatient) {
+        this.idPatient = idPatient;
     }
 
-    public LocalDateTime dateHeure(){
-        return dateHeure;
+    public String getNotes() {
+        return notes;
     }
 
-    public void setStatut(String statut) {
-        this.statut = statut;
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
+    public Date getHoraire() {
+        return horaire;
+    }
+
+    public void setHoraire(Date horaire) {
+        this.horaire = horaire;
+    }
+
+    public String getLieu() {
+        return lieu;
+    }
+
+    public void setLieu(String lieu) {
+        this.lieu = lieu;
+    }
+
+    // toString pour afficher l'objet sous forme de texte
     @Override
     public String toString() {
         return "RendezVous{" +
-                "idRDV=" + IDrdv +
-                ", patient=" + patient.getNom() + " " + patient.getPrenom() +
-                ", specialiste=" + specialiste.getNom() + " " + specialiste.getPrenom() +
-                ", dateHeure=" + dateHeure +
-                ", statut='" + statut + '\'' +
+                "idSpecialiste=" + idSpecialiste +
+                ", idPatient=" + idPatient +
+                ", notes='" + notes + '\'' +
+                ", horaire=" + horaire +
+                ", lieu='" + lieu + '\'' +
                 '}';
+    }
+
+    // equals et hashCode pour comparer les objets
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        RendezVous that = (RendezVous) obj;
+        return idSpecialiste == that.idSpecialiste && idPatient == that.idPatient && horaire.equals(that.horaire);
+    }
+
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(idSpecialiste, idPatient, horaire);
     }
 }

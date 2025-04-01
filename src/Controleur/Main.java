@@ -1,17 +1,47 @@
 package Controleur;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import Dao.DatabaseConnection;
+import Dao.UtilisateurDAO;
+import Dao.UtilisateurDAOImpl;
+import Modele.Utilisateur;
+import Modele.Patient;
+import Modele.Specialiste;
+
+import java.util.List;
+
 public class Main {
     public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+        // Connexion à la base de données
+        DatabaseConnection db = DatabaseConnection.getInstance("RDV_Specialiste", "root", "root");
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
+        // Instanciation du DAO des utilisateurs
+        UtilisateurDAO utilisateurDAO = new UtilisateurDAOImpl(db);
+
+        // Récupération et affichage des utilisateurs existants
+        List<Utilisateur> utilisateurs = utilisateurDAO.getAllUtilisateurs();
+        System.out.println("Liste des utilisateurs existants :");
+        for (Utilisateur u : utilisateurs) {
+            System.out.println(u);
         }
+
+        // Ajout d'un nouveau Patient
+        Patient patient = new Patient(10, "Dupont", "Jean", "jean.dupont@example.com", "mdp123", 1);
+        utilisateurDAO.ajouterUtilisateur(patient);
+        System.out.println("Patient ajouté : " + patient);
+
+        // Ajout d'un nouveau Spécialiste
+        Specialiste specialiste = new Specialiste(11, "Martin", "Alice", "alice.martin@example.com", "mdp456", "Dentiste", "Marseille");
+        utilisateurDAO.ajouterUtilisateur(specialiste);
+        System.out.println("Spécialiste ajouté : " + specialiste);
+
+        // Récupération et affichage des utilisateurs après ajout
+        utilisateurs = utilisateurDAO.getAllUtilisateurs();
+        System.out.println("\nListe mise à jour des utilisateurs :");
+        for (Utilisateur u : utilisateurs) {
+            System.out.println(u);
+        }
+
+        // Fermeture de la connexion à la base de données
+        db.disconnect();
     }
 }
