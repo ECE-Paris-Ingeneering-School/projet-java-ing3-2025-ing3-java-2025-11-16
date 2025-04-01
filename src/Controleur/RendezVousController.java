@@ -4,7 +4,7 @@ import Modele.Patient;
 import java.util.ArrayList;
 
 public class RendezVousController {
-    private ArrayList<Patient> patients;
+    /*private ArrayList<Patient> patients;
 
     public RendezVousController() {
         this.patients = new ArrayList<>();
@@ -43,6 +43,6 @@ public class RendezVousController {
         } else {
             System.out.println("Patient avec ID " + IDpatient + " non trouvé.");
         }
-    }
+    }*/
 }
 

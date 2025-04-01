@@ -4,7 +4,7 @@ import Modele.Patient;
 import java.util.ArrayList;
 
     public class StatistiquesController {
-        private ArrayList<Patient> patients;
+        /*private ArrayList<Patient> patients;
 
         public StatistiquesController() {
             this.patients = new ArrayList<>();
@@ -65,6 +65,6 @@ import java.util.ArrayList;
                 }
             }
             return null;
-        }
+        }*/
     }
 
