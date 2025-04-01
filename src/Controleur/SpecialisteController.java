@@ -5,7 +5,7 @@ import Modele.Specialiste;
 import java.util.ArrayList;
 
     public class SpecialisteController {
-        private ArrayList<Specialiste> specialistes;
+        /*private ArrayList<Specialiste> specialistes;
 
         public SpecialisteController(){
             this.specialistes= new ArrayList<>();
@@ -28,5 +28,5 @@ import java.util.ArrayList;
                 }
             }
             return null;
-        }
+        }*/
 }

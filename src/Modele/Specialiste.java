@@ -1,78 +1,18 @@
 package Modele;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-
-public class Specialiste {
-
-    private int IDspecialiste;
-    private String nom;
-    private String prenom;
+public class Specialiste extends Utilisateur {
     private String specialisation;
-    private Set<String> lieuxConsultation;
-    private Set<String> disponibilites;
+    private String lieu;
 
-    public Specialiste(String prenom, String nom, int IDspecialiste, String specialisation, ArrayList<String> lieuxConsultation, ArrayList<String> disponibilites) {
-        this.prenom = prenom;
-        this.nom = nom;
-        this.IDspecialiste = IDspecialiste;
+    public Specialiste(int id, String nom, String prenom, String email, String mdp, String specialisation, String lieu) {
+        super(id, nom, prenom, email, mdp);
         this.specialisation = specialisation;
-        this.lieuxConsultation = new HashSet<>(lieuxConsultation);
-        this.disponibilites = new HashSet<>(disponibilites);
+        this.lieu = lieu;
     }
 
+    public String getSpecialisation() { return specialisation; }
+    public void setSpecialisation(String specialisation) { this.specialisation = specialisation; }
 
-    public String getNom() {
-        return nom;
-    }
-
-    public String getSpecialisation() {
-        return specialisation;
-    }
-
-    public String getPrenom() {
-        return prenom;
-    }
-
-
-    public int getIDspecialiste(){
-        return IDspecialiste;
-    }
-
-    public Set<String> getLieuxConsultation() {
-        return new HashSet<>(lieuxConsultation);
-    }
-
-    public Set<String> getDisponibilites() {
-        return new HashSet<>(disponibilites);
-    }
-    public void ajouterLieux (String lieu){
-        lieuxConsultation.add(lieu);
-    }
-
-    public void ajouterDisponibilites(String date){
-       disponibilites.add(date);
-    }
-
-    public void afficher(){
-        System.out.println(this);
-    }
-
-    public String toString(){
-        return "Spécialiste{" +
-                "IDspécialiste=" + IDspecialiste +
-                ", nom='" + nom + '\'' +
-                ", prenom='" + prenom + '\'' +
-                ", spécialisation='" +specialisation + '\'' +
-                ", ses lieux de consultation sont : " + lieuxConsultation +
-                ", ses disponibilités sont les suivantes : " + disponibilites +
-                '}';
-    }
+    public String getLieu() { return lieu; }
+    public void setLieu(String lieu) { this.lieu = lieu; }
 }
-
-
-
-
-
-
