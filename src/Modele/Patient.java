@@ -13,4 +13,10 @@ public class Patient extends Utilisateur{
 
     public int getTypePatient() { return typePatient; }
     public void setTypePatient(int typePatient) { this.typePatient = typePatient; }
+
+    @Override
+    public String toString() {
+        return super.toString() + ", TypePatient : " + typePatient;
+    }
+
 }

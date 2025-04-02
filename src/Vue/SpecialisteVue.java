@@ -5,7 +5,7 @@ import java.util.List;
 
 public class SpecialisteVue {
 
-    public void afficherSpecialise(Specialiste specialiste){
+    /*public void afficherSpecialise(Specialiste specialiste){
         System.out.println("Details du Spécialiste : ");
         System.out.println("ID: "+ specialiste.getIDspecialiste());
         System.out.println("Nom: "+ specialiste.getNom());
@@ -20,5 +20,5 @@ public class SpecialisteVue {
         for(Specialiste specialiste : specialistes){
             System.out.println(specialistes);
         }
-    }
+    }*/
 }

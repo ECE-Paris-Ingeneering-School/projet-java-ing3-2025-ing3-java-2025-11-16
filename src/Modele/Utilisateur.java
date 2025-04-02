@@ -29,5 +29,17 @@ public class Utilisateur {
 
     public String getMdp() { return mdp; }
     public void setMdp(String mdp) { this.mdp = mdp; }
+
+    @Override
+    public String toString() {
+        return "Utilisateur " +
+                "ID :" + ID_utilisateur +
+                ", Nom : " + nom +
+                ", Prénom : " + prenom +
+                ", Email : " + email  +
+                ", Type : " + this.getClass().getSimpleName();
+    }
+
 }
+
 

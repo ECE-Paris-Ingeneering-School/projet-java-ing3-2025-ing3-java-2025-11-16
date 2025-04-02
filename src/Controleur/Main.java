@@ -12,7 +12,7 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
         // Connexion à la base de données
-        DatabaseConnection db = DatabaseConnection.getInstance("RDV_Specialiste", "root", "root");
+        DatabaseConnection db = DatabaseConnection.getInstance("rdv_specialiste", "root", "root");
 
         // Instanciation du DAO des utilisateurs
         UtilisateurDAO utilisateurDAO = new UtilisateurDAOImpl(db);

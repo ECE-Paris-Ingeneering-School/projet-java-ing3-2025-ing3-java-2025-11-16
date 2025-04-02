@@ -15,4 +15,10 @@ public class Specialiste extends Utilisateur {
 
     public String getLieu() { return lieu; }
     public void setLieu(String lieu) { this.lieu = lieu; }
+
+    @Override
+    public String toString() {
+        return super.toString() + ", Spécialisation : " + specialisation + ", Lieu : " + lieu;
+    }
+
 }

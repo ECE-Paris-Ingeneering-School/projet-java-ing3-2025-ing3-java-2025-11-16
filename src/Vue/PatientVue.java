@@ -6,7 +6,7 @@ import java.util.List;
 public class PatientVue {
 
     public void afficherPatient(Patient patient){
-        System.out.println("Details du Patient : ");
+        /*System.out.println("Details du Patient : ");
         System.out.println("ID: " + patient.getIDpatient());
         System.out.println("Nom: " + patient.getNom());
         System.out.println("Prenom: " + patient.getPrenom());
@@ -22,7 +22,7 @@ public class PatientVue {
                     ", Nom : " + patient.getNom() +
                     ", Prenom: " + patient.getPrenom() +
                     ", Type: " + patient.getTypePatient());
-        }
+        }*/
 
     }
 }

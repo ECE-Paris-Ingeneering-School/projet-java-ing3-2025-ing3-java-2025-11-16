@@ -5,7 +5,7 @@ import java.util.List;
 
 public class RendezVousVue {
 
-    public void afficherRendezVous(RendezVous rdv){
+    /*public void afficherRendezVous(RendezVous rdv){
         System.out.println("Informations RendezVous : ");
         System.out.println("ID : " + rdv.getIDrdv());
         System.out.println("Patient: " + rdv.getPatient());
@@ -19,6 +19,6 @@ public class RendezVousVue {
             for(RendezVous rdv : rdvs){
                 System.out.println(rdv);
             }
-        }
+        }*/
     }
 

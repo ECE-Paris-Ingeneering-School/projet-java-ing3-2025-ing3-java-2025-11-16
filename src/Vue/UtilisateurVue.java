@@ -5,7 +5,7 @@ import java.util.List;
 
 public class UtilisateurVue {
 
-    public void afficherUtilisateur(Utilisateur utilisateur){
+    /*public void afficherUtilisateur(Utilisateur utilisateur){
         System.out.println("Détailes de l'utilisateur: ");
         System.out.println("ID: " + utilisateur.getID());
         System.out.println("Nom: " + utilisateur.getNom());
@@ -18,5 +18,5 @@ public class UtilisateurVue {
             for (Utilisateur utilisateur : utilisateurs){
                 System.out.println("ID: " + utilisateur.getID() + ", Nom: "+ utilisateur.getNom() + ", Prenom : "+ utilisateur.getPrenom());
             }
-    }
+    }*/
 }
