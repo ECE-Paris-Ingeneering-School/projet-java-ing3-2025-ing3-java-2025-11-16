@@ -1,14 +1,18 @@
 package Dao;
 
 import Modele.Utilisateur;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public interface UtilisateurDAO {
-    List<Utilisateur> getAllUtilisateurs(); // Récupérer tous les utilisateurs
+    ArrayList<Utilisateur> getAll(); // Récupérer tous les utilisateurs
 
-    Utilisateur getUtilisateurById(int id); // Récupérer un utilisateur par son ID
+    void ajouter(Utilisateur utilisateur);
 
-    void ajouterUtilisateur(Utilisateur utilisateur); // Ajouter un utilisateur
+    //void supprimer(Utilisateur utilisateur);
 
-    void supprimerUtilisateur(int id); // Supprimer un utilisateur
-}
+    //Utilisateur modifier(Utilisateur utilisateur);
+
+    Utilisateur chercher(int id);
+ }

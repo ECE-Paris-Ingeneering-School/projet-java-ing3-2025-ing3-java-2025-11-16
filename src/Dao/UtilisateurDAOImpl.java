@@ -1,13 +1,16 @@
 package Dao;
 
-import Modele.Utilisateur;
-import Modele.Patient;
-import Modele.Specialiste;
+// Import des packages
+import Modele.*;
 
+import javax.xml.crypto.Data;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 
+/**
+ * Implémentation MySQL du stockage dans la base de données des méthodes définies dans l'interface
+ * UtilisateurDAO.
+ */
 public class UtilisateurDAOImpl implements UtilisateurDAO {
     private DatabaseConnection Data;
 
@@ -16,197 +19,119 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
     }
 
     @Override
-    public List<Utilisateur> getAllUtilisateurs() {
-        List<Utilisateur> utilisateurs = new ArrayList<>();
-        String query = "SELECT * FROM Utilisateur";
+    public ArrayList<Utilisateur> getAll() {
+        ArrayList<Utilisateur> listeUtilisateurs = new ArrayList<>();
+        try {
+            Connection connexion = Data.getConnection();
+            Statement statement = connexion.createStatement();
+            ResultSet resultats = statement.executeQuery(
 
-        try (Connection connection = Data.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet rs = statement.executeQuery(query)) {
+        "SELECT u.ID, u.Nom, u.Prenom, u.Email, u.Mdp, p.ID AS patientID, p.type, s.Specialisation, s.Lieu " +
+                "FROM utilisateur u " +
+                "LEFT JOIN patient p ON u.ID = p.ID " +
+                "LEFT JOIN specialiste s ON u.ID = s.ID"
+            );
 
-            while (rs.next()) {
-                int id = rs.getInt("IDUtilisateur");
-                String nom = rs.getString("nom");
-                String prenom = rs.getString("prénom");
-                String email = rs.getString("Email");
-                String mdp = rs.getString("mdp");
+            while (resultats.next()) {
+                int id = resultats.getInt("ID");
+                String nom = resultats.getString("Nom");
+                String prenom = resultats.getString("Prenom");
+                String email = resultats.getString("Email");
+                String mdp = resultats.getString("Mdp");
+                int type = resultats.getInt("type");
 
-                // Vérifier si l'utilisateur est un Patient ou un Spécialiste
-                if (isPatient(id, connection)) {
-                    int typePatient = getTypePatient(id, connection);
-                    utilisateurs.add(new Patient(id, nom, prenom, email, mdp, typePatient));
-                } else if (isSpecialiste(id, connection)) {
-                    String specialisation = getSpecialisation(id, connection);
-                    String lieu = getLieu(id, connection);
-                    utilisateurs.add(new Specialiste(id, nom, prenom, email, mdp, specialisation, lieu));
+                if (resultats.getInt("patientID") != 0) {
+                    listeUtilisateurs.add(new Patient(id, nom, prenom, email, mdp, type));
+                } else if (resultats.getString("Specialisation") != null) {
+                    String specialisation = resultats.getString("Specialisation");
+                    String lieu = resultats.getString("Lieu");
+                    listeUtilisateurs.add(new Specialiste(id, nom, prenom, email, mdp, specialisation, lieu));
                 } else {
-                    utilisateurs.add(new Utilisateur(id, nom, prenom, email, mdp));
+                    listeUtilisateurs.add(new Utilisateur(id, nom, prenom, email, mdp));
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            System.out.println("Création de la liste des utilisateurs impossible");
         }
-        return utilisateurs;
+        return listeUtilisateurs;
     }
 
     @Override
-    public Utilisateur getUtilisateurById(int id) {
-        String query = "SELECT * FROM Utilisateur WHERE IDUtilisateur = ?";
+    public void ajouter(Utilisateur utilisateur) {
+        try {
+            Connection connexion = Data.getConnection();
+            String query = "INSERT INTO utilisateur (Nom, Prenom, Email, Mdp) VALUES (?, ?, ?, ?)";
+            PreparedStatement preparedStatement = connexion.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1, utilisateur.getNom());
+            preparedStatement.setString(2, utilisateur.getPrenom());
+            preparedStatement.setString(3, utilisateur.getEmail());
+            preparedStatement.setString(4, utilisateur.getMdp());
+            preparedStatement.executeUpdate();
 
-        try (Connection connection = Data.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
-
-            statement.setInt(1, id);
-            ResultSet rs = statement.executeQuery();
-
+            ResultSet rs = preparedStatement.getGeneratedKeys();
             if (rs.next()) {
-                String nom = rs.getString("nom");
-                String prenom = rs.getString("prénom");
-                String email = rs.getString("Email");
-                String mdp = rs.getString("mdp");
-
-                if (isPatient(id, connection)) {
-                    int typePatient = getTypePatient(id, connection);
-                    return new Patient(id, nom, prenom, email, mdp, typePatient);
-                } else if (isSpecialiste(id, connection)) {
-                    String specialisation = getSpecialisation(id, connection);
-                    String lieu = getLieu(id, connection);
-                    return new Specialiste(id, nom, prenom, email, mdp, specialisation, lieu);
-                } else {
-                    return new Utilisateur(id, nom, prenom, email, mdp);
+                int id = rs.getInt(1);
+                utilisateur.setId(id);
+                if (utilisateur instanceof Patient) {
+                    Patient patient = (Patient) utilisateur;
+                    String patientQuery = "INSERT INTO patient (ID, type) VALUES (?, ?)";
+                    PreparedStatement ps = connexion.prepareStatement(patientQuery);
+                    ps.setInt(1, id);
+                    ps.setInt(2, patient.getType());
+                    ps.executeUpdate();
+                } else if (utilisateur instanceof Specialiste) {
+                    Specialiste specialiste = (Specialiste) utilisateur;
+                    String specialisteQuery = "INSERT INTO specialiste (ID, Specialisation, Lieu) VALUES (?, ?, ?)";
+                    PreparedStatement ps = connexion.prepareStatement(specialisteQuery);
+                    ps.setInt(1, id);
+                    ps.setString(2, specialiste.getSpecialisation());
+                    ps.setString(3, specialiste.getLieu());
+                    ps.executeUpdate();
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            System.out.println("Ajout de l'utilisateur impossible");
         }
-        return null;
     }
 
     @Override
-    public void ajouterUtilisateur(Utilisateur utilisateur) {
-        String query = "INSERT INTO Utilisateur (IDUtilisateur, nom, prénom, Email, mdp) VALUES (?, ?, ?, ?, ?)";
+    public Utilisateur chercher(int id) {
+        Utilisateur utilisateur = null;
+        try {
+            Connection connexion = Data.getConnection();
+            String query =
+            "SELECT u.ID, u.Nom, u.Prenom, u.Email, u.Mdp, p.ID AS patientID, p.type, s.Specialisation, s.Lieu " +
+            "FROM utilisateur u " +
+            "LEFT JOIN patient p ON u.ID = p.ID " +
+            "LEFT JOIN specialiste s ON u.ID = s.ID " +
+            "WHERE u.ID = ?";
+            PreparedStatement preparedStatement = connexion.prepareStatement(query);
+            preparedStatement.setInt(1, id);
+            ResultSet resultats = preparedStatement.executeQuery();
 
-        try (Connection connection = Data.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+            if (resultats.next()) {
+                String nom = resultats.getString("Nom");
+                String prenom = resultats.getString("Prenom");
+                String email = resultats.getString("Email");
+                String mdp = resultats.getString("Mdp");
+                int type = resultats.getInt("type");
 
-            statement.setInt(1, utilisateur.getId());
-            statement.setString(2, utilisateur.getNom());
-            statement.setString(3, utilisateur.getPrenom());
-            statement.setString(4, utilisateur.getEmail());
-            statement.setString(5, utilisateur.getMdp());
-            statement.executeUpdate();
-
-            if (utilisateur instanceof Patient) {
-                ajouterPatient((Patient) utilisateur, connection);
-            } else if (utilisateur instanceof Specialiste) {
-                ajouterSpecialiste((Specialiste) utilisateur, connection);
+                if (resultats.getInt("patientID") != 0) {
+                    utilisateur = new Patient(id, nom, prenom, email, mdp, type);
+                } else if (resultats.getString("Specialisation") != null) {
+                    String specialisation = resultats.getString("Specialisation");
+                    String lieu = resultats.getString("Lieu");
+                    utilisateur = new Specialiste(id, nom, prenom, email, mdp, specialisation, lieu);
+                } else {
+                    utilisateur = new Utilisateur(id, nom, prenom, email, mdp);
+                }
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
+            System.out.println("Utilisateur non trouvé dans la base de données");
         }
-    }
-
-    @Override
-    public void supprimerUtilisateur(int id) {
-        String query = "DELETE FROM Utilisateur WHERE IDUtilisateur = ?";
-
-        try (Connection connection = Data.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
-
-            statement.setInt(1, id);
-            statement.executeUpdate();
-
-            supprimerPatient(id, connection);
-            supprimerSpecialiste(id, connection);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // Vérification si l'utilisateur est un patient
-    private boolean isPatient(int id, Connection connection) throws SQLException {
-        String query = "SELECT COUNT(*) FROM Patient WHERE IDpatient = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, id);
-            ResultSet rs = statement.executeQuery();
-            return rs.next() && rs.getInt(1) > 0;
-        }
-    }
-
-    private int getTypePatient(int id, Connection connection) throws SQLException {
-        String query = "SELECT TypePatient FROM Patient WHERE IDpatient = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, id);
-            ResultSet rs = statement.executeQuery();
-            if (rs.next()) return rs.getInt("TypePatient");
-        }
-        return 0;
-    }
-
-    private void ajouterPatient(Patient patient, Connection connection) throws SQLException {
-        String query = "INSERT INTO Patient (IDpatient, TypePatient) VALUES (?, ?)";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, patient.getId());
-            statement.setInt(2, patient.getTypePatient());
-            statement.executeUpdate();
-        }
-    }
-
-    private void supprimerPatient(int id, Connection connection) throws SQLException {
-        String query = "DELETE FROM Patient WHERE IDpatient = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, id);
-            statement.executeUpdate();
-        }
-    }
-
-    // Vérification si l'utilisateur est un specialiste
-    private boolean isSpecialiste(int id, Connection connection) throws SQLException {
-        String query = "SELECT COUNT(*) FROM Specialiste WHERE IDSpecialiste = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, id);
-            ResultSet rs = statement.executeQuery();
-            return rs.next() && rs.getInt(1) > 0;
-        }
-    }
-
-    private String getSpecialisation(int id, Connection connection) throws SQLException {
-        String query = "SELECT Specialisation FROM Specialiste WHERE IDSpecialiste = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, id);
-            ResultSet rs = statement.executeQuery();
-            if (rs.next()) return rs.getString("Specialisation");
-        }
-        return null;
-    }
-
-    private String getLieu(int id, Connection connection) throws SQLException {
-        String query = "SELECT Lieu FROM Specialiste WHERE IDSpecialiste = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, id);
-            ResultSet rs = statement.executeQuery();
-            if (rs.next()) return rs.getString("Lieu");
-        }
-        return null;
-    }
-
-    private void ajouterSpecialiste(Specialiste specialiste, Connection connection) throws SQLException {
-        String query = "INSERT INTO Specialiste (IDSpecialiste, Specialisation, Lieu) VALUES (?, ?, ?)";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, specialiste.getId());
-            statement.setString(2, specialiste.getSpecialisation());
-            statement.setString(3, specialiste.getLieu());
-            statement.executeUpdate();
-        }
-    }
-
-    private void supprimerSpecialiste(int id, Connection connection) throws SQLException {
-        String query = "DELETE FROM Specialiste WHERE IDSpecialiste = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, id);
-            statement.executeUpdate();
-        }
+        return utilisateur;
     }
 }

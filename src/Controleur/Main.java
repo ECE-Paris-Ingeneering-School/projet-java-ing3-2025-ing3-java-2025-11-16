@@ -1,47 +1,41 @@
 package Controleur;
 
-import Dao.DatabaseConnection;
-import Dao.UtilisateurDAO;
-import Dao.UtilisateurDAOImpl;
-import Modele.Utilisateur;
+import Dao.*;
 import Modele.Patient;
 import Modele.Specialiste;
-
-import java.util.List;
+import Modele.Utilisateur;
+import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
-        // Connexion à la base de données
+
         DatabaseConnection db = DatabaseConnection.getInstance("rdv_specialiste", "root", "root");
 
         // Instanciation du DAO des utilisateurs
         UtilisateurDAO utilisateurDAO = new UtilisateurDAOImpl(db);
+        // Ajouter un patient
+        Patient patient = new Patient("Dupont", "Jean", "jean.dupont@email.com", "mdp123", 1);
+        utilisateurDAO.ajouter(patient);
+        System.out.println("Patient ajouté avec succès!");
 
-        // Récupération et affichage des utilisateurs existants
-        List<Utilisateur> utilisateurs = utilisateurDAO.getAllUtilisateurs();
-        System.out.println("Liste des utilisateurs existants :");
+        // Ajouter un spécialiste
+        Specialiste specialiste = new Specialiste("Martin", "Sophie", "sophie.martin@email.com", "mdp456", "Cardiologue", "Paris");
+        utilisateurDAO.ajouter(specialiste);
+        System.out.println("Spécialiste ajouté avec succès!");
+
+        // Récupérer et afficher tous les utilisateurs
+        ArrayList<Utilisateur> utilisateurs = utilisateurDAO.getAll();
         for (Utilisateur u : utilisateurs) {
             System.out.println(u);
         }
 
-        // Ajout d'un nouveau Patient
-        Patient patient = new Patient(10, "Dupont", "Jean", "jean.dupont@example.com", "mdp123", 1);
-        utilisateurDAO.ajouterUtilisateur(patient);
-        System.out.println("Patient ajouté : " + patient);
-
-        // Ajout d'un nouveau Spécialiste
-        Specialiste specialiste = new Specialiste(11, "Martin", "Alice", "alice.martin@example.com", "mdp456", "Dentiste", "Marseille");
-        utilisateurDAO.ajouterUtilisateur(specialiste);
-        System.out.println("Spécialiste ajouté : " + specialiste);
-
-        // Récupération et affichage des utilisateurs après ajout
-        utilisateurs = utilisateurDAO.getAllUtilisateurs();
-        System.out.println("\nListe mise à jour des utilisateurs :");
-        for (Utilisateur u : utilisateurs) {
-            System.out.println(u);
+        // Rechercher un utilisateur par ID
+        Utilisateur utilisateurTrouve = utilisateurDAO.chercher(1);
+        if (utilisateurTrouve != null) {
+            System.out.println("Utilisateur trouvé : " + utilisateurTrouve);
+        } else {
+            System.out.println("Aucun utilisateur trouvé avec cet ID.");
         }
-
-        // Fermeture de la connexion à la base de données
-        db.disconnect();
     }
 }
+

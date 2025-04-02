@@ -1,22 +1,30 @@
 package Modele;
 
 public class Utilisateur {
-    protected int ID_utilisateur;
+    protected int id;
     protected String nom;
     protected String mdp;
     protected String prenom;
     protected String email;
 
+    // Constructeur avec ID (pour récupération depuis la base)
+    public Utilisateur(int id, String nom, String mdp, String prenom, String email) {
+        this.id = id;
+        this.mdp = mdp;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.email = email;
+    }
 
-    public Utilisateur(int ID,String nom ,String mdp , String prenom, String email ) {
+    public Utilisateur(String nom ,String mdp , String prenom, String email ) {
         this.mdp=mdp;
         this.nom=nom;
         this.prenom=prenom;
-        this.ID_utilisateur=ID;
         this.email=email;
     }
-    public int getId() { return ID_utilisateur; }
-    public void setId(int id) { this.ID_utilisateur = id; }
+
+    public int getId() { return id; }
+    public void setId(int ID) { this.id = ID; }
 
     public String getNom() { return nom; }
     public void setNom(String nom) { this.nom = nom; }
@@ -33,7 +41,6 @@ public class Utilisateur {
     @Override
     public String toString() {
         return "Utilisateur " +
-                "ID :" + ID_utilisateur +
                 ", Nom : " + nom +
                 ", Prénom : " + prenom +
                 ", Email : " + email  +

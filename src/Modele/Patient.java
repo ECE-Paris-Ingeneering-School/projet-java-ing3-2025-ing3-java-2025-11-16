@@ -1,22 +1,25 @@
 package Modele;
-import java.util.ArrayList;
 
+public class Patient extends Utilisateur {
+    private int type;
 
-public class Patient extends Utilisateur{
-    private int typePatient;
-
-    public Patient(int id, String nom, String prenom, String email, String mdp, int typePatient) {
-        super(id, nom, prenom, email, mdp);
-        this.typePatient = typePatient;
-
+    // Constructeur sans ID (utilisé avant l'insertion en base)
+    public Patient(String nom, String prenom, String email, String mdp, int typePatient) {
+        super(nom, mdp, prenom, email);
+        this.type = typePatient;
     }
 
-    public int getTypePatient() { return typePatient; }
-    public void setTypePatient(int typePatient) { this.typePatient = typePatient; }
+    // Constructeur avec ID (utilisé après récupération depuis la base)
+    public Patient(int id, String nom, String prenom, String email, String mdp, int typePatient) {
+        super(id, nom, mdp, prenom, email);
+        this.type = typePatient;
+    }
+
+    public int getType() { return type; }
+    public void setType(int typePatient) { this.type = typePatient; }
 
     @Override
     public String toString() {
-        return super.toString() + ", TypePatient : " + typePatient;
+        return super.toString() + ", TypePatient : " + type;
     }
-
 }
