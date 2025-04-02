@@ -10,9 +10,9 @@ public interface UtilisateurDAO {
 
     void ajouter(Utilisateur utilisateur);
 
-    //void supprimer(Utilisateur utilisateur);
+    void supprimer(Utilisateur utilisateur);
 
-    //Utilisateur modifier(Utilisateur utilisateur);
+    void modifier(Utilisateur utilisateur);
 
     Utilisateur chercher(int id);
  }

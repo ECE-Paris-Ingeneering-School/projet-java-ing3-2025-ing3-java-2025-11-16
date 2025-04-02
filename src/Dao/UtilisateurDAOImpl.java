@@ -97,16 +97,91 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
     }
 
     @Override
+    public void supprimer(Utilisateur utilisateur) {
+        try {
+            Connection connexion = Data.getConnection();
+
+            // Supprimer l'utilisateur dans la table 'patient' ou 'specialiste' si nécessaire
+            if (utilisateur instanceof Patient) {
+                String deletePatient = "DELETE FROM patient WHERE ID = ?";
+                PreparedStatement psPatient = connexion.prepareStatement(deletePatient);
+                psPatient.setInt(1, utilisateur.getId());
+                psPatient.executeUpdate();
+            } else if (utilisateur instanceof Specialiste) {
+                String deleteSpecialiste = "DELETE FROM specialiste WHERE ID = ?";
+                PreparedStatement psSpecialiste = connexion.prepareStatement(deleteSpecialiste);
+                psSpecialiste.setInt(1, utilisateur.getId());
+                psSpecialiste.executeUpdate();
+            }
+
+            // Supprimer l'utilisateur dans la table 'utilisateur'
+            String deleteUtilisateur = "DELETE FROM utilisateur WHERE ID = ?";
+            PreparedStatement psUtilisateur = connexion.prepareStatement(deleteUtilisateur);
+            psUtilisateur.setInt(1, utilisateur.getId());
+            psUtilisateur.executeUpdate();
+
+            System.out.println("Utilisateur supprimé avec succès");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors de la suppression de l'utilisateur");
+        }
+    }
+
+
+    @Override
+    public void modifier(Utilisateur utilisateur) {
+        try {
+            Connection connexion = Data.getConnection();
+
+            // Modifier l'utilisateur dans la table 'utilisateur'
+            String updateUtilisateur = "UPDATE utilisateur SET Nom = ?, Prenom = ?, Email = ?, Mdp = ? WHERE ID = ?";
+            PreparedStatement psUtilisateur = connexion.prepareStatement(updateUtilisateur);
+            psUtilisateur.setString(1, utilisateur.getNom());
+            psUtilisateur.setString(2, utilisateur.getPrenom());
+            psUtilisateur.setString(3, utilisateur.getEmail());
+            psUtilisateur.setString(4, utilisateur.getMdp());
+            psUtilisateur.setInt(5, utilisateur.getId());
+            psUtilisateur.executeUpdate();
+
+            // Modifier dans la table 'patient' si l'utilisateur est un patient
+            if (utilisateur instanceof Patient) {
+                Patient patient = (Patient) utilisateur;
+                String updatePatient = "UPDATE patient SET type = ? WHERE ID = ?";
+                PreparedStatement psPatient = connexion.prepareStatement(updatePatient);
+                psPatient.setInt(1, patient.getType());
+                psPatient.setInt(2, utilisateur.getId());
+                psPatient.executeUpdate();
+            }
+
+            // Modifier dans la table 'specialiste' si l'utilisateur est un spécialiste
+            else if (utilisateur instanceof Specialiste) {
+                Specialiste specialiste = (Specialiste) utilisateur;
+                String updateSpecialiste = "UPDATE specialiste SET Specialisation = ?, Lieu = ? WHERE ID = ?";
+                PreparedStatement psSpecialiste = connexion.prepareStatement(updateSpecialiste);
+                psSpecialiste.setString(1, specialiste.getSpecialisation());
+                psSpecialiste.setString(2, specialiste.getLieu());
+                psSpecialiste.setInt(3, utilisateur.getId());
+                psSpecialiste.executeUpdate();
+            }
+
+            System.out.println("Utilisateur mis à jour avec succès");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors de la mise à jour de l'utilisateur");
+        }
+    }
+
+    @Override
     public Utilisateur chercher(int id) {
         Utilisateur utilisateur = null;
         try {
             Connection connexion = Data.getConnection();
             String query =
-            "SELECT u.ID, u.Nom, u.Prenom, u.Email, u.Mdp, p.ID AS patientID, p.type, s.Specialisation, s.Lieu " +
-            "FROM utilisateur u " +
-            "LEFT JOIN patient p ON u.ID = p.ID " +
-            "LEFT JOIN specialiste s ON u.ID = s.ID " +
-            "WHERE u.ID = ?";
+                    "SELECT u.ID, u.Nom, u.Prenom, u.Email, u.Mdp, p.ID AS patientID, p.type, s.Specialisation, s.Lieu " +
+                            "FROM utilisateur u " +
+                            "LEFT JOIN patient p ON u.ID = p.ID " +
+                            "LEFT JOIN specialiste s ON u.ID = s.ID " +
+                            "WHERE u.ID = ?";
             PreparedStatement preparedStatement = connexion.prepareStatement(query);
             preparedStatement.setInt(1, id);
             ResultSet resultats = preparedStatement.executeQuery();
@@ -134,4 +209,6 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         }
         return utilisateur;
     }
+
+
 }
