@@ -15,4 +15,9 @@ public interface UtilisateurDAO {
     void modifier(Utilisateur utilisateur);
 
     Utilisateur chercher(int id);
- }
+
+    Utilisateur getUtilisateurById(int id);
+
+    Utilisateur getUtilisateurByEmail(String email);
+
+}

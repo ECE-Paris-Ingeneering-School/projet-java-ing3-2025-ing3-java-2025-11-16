@@ -1,5 +1,8 @@
 package Dao;
 
+import Modele.RendezVous;
+import Modele.Utilisateur;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -42,15 +45,6 @@ public class DatabaseConnection {
     public Connection getConnection() throws SQLException {
         return DriverManager.getConnection(url, username, password);
     }
-    /**
-     * Récupération du Dao pour l'utilisateur
-     * @return : objet de la classe UtilisateurDAOImpl
-     */
-    public UtilisateurDAO getUtilisateurDAO() {
-        // Retourner un objet de UtilisateurDAOImpl qui implémente UtilisateurDAO
-        return new UtilisateurDAOImpl(this);
-    }
-
 
     /**
      *     Fermer la connexion à la base de données
@@ -67,5 +61,15 @@ public class DatabaseConnection {
             System.out.println("Erreur de déconnexion à la base de données");
         }
     }
+
+
+    public UtilisateurDAO getUtilisateurDAO() { return new UtilisateurDAOImpl(this);}
+
+    public RendezVousDAO getRendezVousDAO() { return new RendezVousDAOImpl(this);}
+
+    public HoraireDAO getHoraireDAO() { return new HoraireDAOImpl(this);}
+
+    public EdtDAO getEdtDAO() { return new EdtDAOImpl(this);}
+
 
 }

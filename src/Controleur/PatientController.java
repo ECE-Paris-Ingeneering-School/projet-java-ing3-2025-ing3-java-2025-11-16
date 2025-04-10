@@ -3,22 +3,19 @@ package Controleur;
 import Modele.Patient;
 import java.util.ArrayList;
 
-    public class PatientController {
-        private ArrayList<Patient> patients;
+public class PatientController {
+   /*
+    ajouterPatient(Patient patient) : boolean → Ajoute un nouveau patient.
 
-        public PatientController() {
-            this.patients = new ArrayList<>();
-        }
+    modifierPatient(Patient patient) : boolean → Modifie les infos d’un patient.
 
-        public void ajouterPatient(Patient p) {
-            patients.add(p);
-        }
+    supprimerPatient(int idPatient) : boolean → Supprime un patient par son ID.
 
-        public void afficherPatients() {
-            for (Patient p : patients) {
-                System.out.println(p);
-            }
-        }
-    }
+    getPatient(int idPatient) : Patient → Récupère un patient spécifique.
+
+    listerPatients() : List<Patient> → Récupère la liste de tous les patients.
+    */
+
+}
 
 

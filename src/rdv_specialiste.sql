@@ -31,9 +31,13 @@ CREATE TABLE `specialiste` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Table des horaires (stocke les dates et heures de rendez-vous)
+-- Détail des résultats possibles :
+-- (1 : Dimanche, 2 : Lundi, 3 : Mardi, 4 : Mercredi, 5 : Jeudi, 6 : Vendredi, 7 : Samedi)
 CREATE TABLE `horaire` (
    `ID` INT(11) NOT NULL AUTO_INCREMENT,
-   `DateHeure` DATETIME NOT NULL,
+   `jourSemaine` TINYINT NOT NULL CHECK (jourSemaine BETWEEN 1 AND 7),
+   `HeureDebut` TIME NOT NULL,
+   `HeureFin` TIME NOT NULL,
    PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -43,12 +47,14 @@ CREATE TABLE `rdv` (
    `IDSpecialiste` INT(11) NOT NULL,
    `IDPatient` INT(11) NOT NULL,
    `IDHoraire` INT(11) NOT NULL,
+   `Date` DATE NULL,
    `Notes` TEXT NULL,
    `Lieu` VARCHAR(255) NOT NULL,
    PRIMARY KEY (`ID`),
    CONSTRAINT `fk_rdv_specialiste` FOREIGN KEY (`IDSpecialiste`) REFERENCES `specialiste`(`ID`) ON DELETE CASCADE,
    CONSTRAINT `fk_rdv_patient` FOREIGN KEY (`IDPatient`) REFERENCES `patient`(`ID`) ON DELETE CASCADE,
-   CONSTRAINT `fk_rdv_horaire` FOREIGN KEY (`IDHoraire`) REFERENCES `horaire`(`ID`) ON DELETE CASCADE
+   CONSTRAINT `fk_rdv_horaire` FOREIGN KEY (`IDHoraire`) REFERENCES `horaire`(`ID`) ON DELETE CASCADE,
+   UNIQUE (`IDSpecialiste`, `Date`, `IDHoraire`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Table des disponibilités des spécialistes

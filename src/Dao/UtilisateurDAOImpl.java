@@ -70,9 +70,12 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
             preparedStatement.executeUpdate();
 
             ResultSet rs = preparedStatement.getGeneratedKeys();
+
             if (rs.next()) {
+
                 int id = rs.getInt(1);
                 utilisateur.setId(id);
+
                 if (utilisateur instanceof Patient) {
                     Patient patient = (Patient) utilisateur;
                     String patientQuery = "INSERT INTO patient (ID, type) VALUES (?, ?)";
@@ -80,6 +83,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
                     ps.setInt(1, id);
                     ps.setInt(2, patient.getType());
                     ps.executeUpdate();
+
                 } else if (utilisateur instanceof Specialiste) {
                     Specialiste specialiste = (Specialiste) utilisateur;
                     String specialisteQuery = "INSERT INTO specialiste (ID, Specialisation, Lieu) VALUES (?, ?, ?)";
@@ -90,6 +94,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
                     ps.executeUpdate();
                 }
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Ajout de l'utilisateur impossible");
@@ -207,6 +212,62 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
             e.printStackTrace();
             System.out.println("Utilisateur non trouvé dans la base de données");
         }
+        return utilisateur;
+    }
+
+    @Override
+    public Utilisateur getUtilisateurById(int id) {
+        Utilisateur utilisateur = null;
+        String query = "SELECT * FROM utilisateur WHERE ID = ?";
+
+        try (Connection conn = Data.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                utilisateur = new Utilisateur();
+                utilisateur.setId(rs.getInt("ID"));
+                utilisateur.setNom(rs.getString("nom"));
+                utilisateur.setPrenom(rs.getString("prenom"));
+                utilisateur.setEmail(rs.getString("email"));
+                utilisateur.setMdp(rs.getString("mdp"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return utilisateur;
+    }
+
+
+    @Override
+    public Utilisateur getUtilisateurByEmail(String email) {
+        Utilisateur utilisateur = null;
+        String query = "SELECT * FROM utilisateur WHERE email = ?";
+
+        try (Connection conn = Data.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                utilisateur = new Utilisateur();
+                utilisateur.setId(rs.getInt("ID"));
+                utilisateur.setNom(rs.getString("nom"));
+                utilisateur.setPrenom(rs.getString("prenom"));
+                utilisateur.setEmail(rs.getString("email"));
+                utilisateur.setMdp(rs.getString("mdp"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors de la récupération de l'utilisateur par email.");
+        }
+
         return utilisateur;
     }
 

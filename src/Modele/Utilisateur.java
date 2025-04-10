@@ -7,8 +7,11 @@ public class Utilisateur {
     protected String prenom;
     protected String email;
 
+    public Utilisateur() {
+
+    }
     // Constructeur avec ID (pour récupération depuis la base)
-    public Utilisateur(int id, String nom, String mdp, String prenom, String email) {
+    public Utilisateur(int id, String nom, String prenom, String email, String mdp) {
         this.id = id;
         this.mdp = mdp;
         this.nom = nom;
@@ -16,7 +19,7 @@ public class Utilisateur {
         this.email = email;
     }
 
-    public Utilisateur(String nom ,String mdp , String prenom, String email ) {
+    public Utilisateur(String nom ,String prenom , String email, String mdp ) {
         this.mdp=mdp;
         this.nom=nom;
         this.prenom=prenom;
@@ -44,7 +47,7 @@ public class Utilisateur {
                 ", Nom : " + nom +
                 ", Prénom : " + prenom +
                 ", Email : " + email  +
-                ", Type : " + this.getClass().getSimpleName();
+                ", Type d'utilisateur : " + this.getClass().getSimpleName();
     }
 
 }
