@@ -19,6 +19,57 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
     }
 
     @Override
+    public Utilisateur seConnecter(String email, String mdp, String type) {
+        Utilisateur utilisateur = null;
+
+        String query =
+                "SELECT u.ID, u.Nom, u.Prenom, u.Email, u.Mdp, p.type, s.Specialisation, s.Lieu " +
+                        "FROM utilisateur u " +
+                        "LEFT JOIN patient p ON u.ID = p.ID " +
+                        "LEFT JOIN specialiste s ON u.ID = s.ID " +
+                        "WHERE u.Email = ? AND u.Mdp = ?";
+
+        try (Connection conn = Data.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, email);
+            stmt.setString(2, mdp);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                int id = rs.getInt("ID");
+                String nom = rs.getString("Nom");
+                String prenom = rs.getString("Prenom");
+
+                // Identifie selon le type demandé
+                switch (type.toLowerCase()) {
+                    case "patient":
+                        int patientType = rs.getInt("type");
+                        utilisateur = new Patient(id, nom, prenom, email, mdp, patientType);
+                        break;
+                    case "specialiste":
+                        String specialisation = rs.getString("Specialisation");
+                        String lieu = rs.getString("Lieu");
+                        utilisateur = new Specialiste(id, nom, prenom, email, mdp, specialisation, lieu);
+                        break;
+                    case "admin":
+                        utilisateur = new Utilisateur(id, nom, prenom, email, mdp);
+                        break;
+                    default:
+                        System.out.println("Type d'utilisateur inconnu");
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return utilisateur;
+    }
+
+
+    @Override
     public ArrayList<Utilisateur> getAll() {
         ArrayList<Utilisateur> listeUtilisateurs = new ArrayList<>();
         try {

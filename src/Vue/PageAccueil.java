@@ -1,14 +1,16 @@
 package Vue;
 
+import Modele.*;
+import com.mysql.cj.exceptions.UnableToConnectException;
+
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
 
 public class PageAccueil extends BaseFrame {
 
-    public PageAccueil(String utilisateur) {
-        super(utilisateur);
-
+    public PageAccueil() {
+        super();
         // Récupérer le panneau principal de la classe de base pour ne pas le remplacer
         JPanel mainPanel = getMainPanel();
 
@@ -37,6 +39,23 @@ public class PageAccueil extends BaseFrame {
 
         // Rendre la fenêtre visible
         setVisible(true);
+
+        // Actions au clic sur les boutons
+        patientButton.addActionListener(e -> {
+            new ChoixConnexion("patient");
+            dispose(); // ferme la page d'accueil
+        });
+
+        specialisteButton.addActionListener(e -> {
+            new ChoixConnexion("specialiste");
+            dispose();
+        });
+
+        adminButton.addActionListener(e -> {
+            new ChoixConnexion("admin");
+            dispose();
+        });
+
     }
 
     // Méthode pour créer un bouton avec une image et un texte
