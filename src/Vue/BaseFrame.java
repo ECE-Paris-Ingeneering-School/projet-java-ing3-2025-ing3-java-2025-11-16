@@ -20,9 +20,8 @@ public class BaseFrame extends JFrame {
         this(null);  // On passe null pour indiquer qu'il n'y a pas d'utilisateur connecté
     }
 
-    // Initialisation de l'interface graphique
     public void initUI() {
-        // Affiche le type d'utilisateur
+        // Définir rôle & userText
         String role = "Non connecté";
         String userText = "Veuillez vous connecter.";
 
@@ -32,49 +31,54 @@ public class BaseFrame extends JFrame {
             } else if (utilisateurConnecte instanceof Specialiste) {
                 role = "Spécialiste";
             }
-            // Affichage de l'utilisateur connecté
             userText = utilisateurConnecte.getPrenom() + " " + utilisateurConnecte.getNom() + " (ID: " + utilisateurConnecte.getId() + ")";
         }
 
-        // Configuration du label utilisateur (s'il est connecté ou non)
         userLabel = new JLabel(role + " : " + userText);
         userLabel.setForeground(Color.WHITE);
-        userLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        userLabel.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 10));
+        userLabel.setFont(new Font("Georgia", Font.PLAIN, 14));
 
-        // Configuration de la fenêtre principale
         setTitle("Application Rendez-vous");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 600);
-        setLocationRelativeTo(null); // Centrer la fenêtre
+        setLocationRelativeTo(null);
 
-        // Panel principal avec BorderLayout
         JPanel mainPanel = new JPanel(new BorderLayout());
         setContentPane(mainPanel);
 
-        // Bandeau supérieur
         JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.setBackground(new Color(166, 212, 240)); // Bleu doux
+        topPanel.setBackground(new Color(166, 212, 240));
 
-        // Titre de l'application (au centre)
-        JLabel titreLabel = new JLabel("MediLink", SwingConstants.CENTER);
+        // ---------- Titre MediLink à gauche ----------
+        JLabel titreLabel = new JLabel("MediLink");
         titreLabel.setForeground(Color.WHITE);
         titreLabel.setFont(new Font("Brush Script MT", Font.BOLD, 50));
-        titreLabel.setBorder(BorderFactory.createEmptyBorder(40, 0, 40, 0));
-        topPanel.add(titreLabel, BorderLayout.CENTER);
+        titreLabel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        topPanel.add(titreLabel, BorderLayout.WEST);
 
-        // Ajouter le label utilisateur à gauche
-        topPanel.add(userLabel, BorderLayout.WEST);
+        // ---------- Panel à droite avec infos utilisateur + bouton ----------
+        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        rightPanel.setOpaque(false); // Pour laisser voir la couleur du bandeau
 
-        // Ajout du bandeau au panel principal
+        if(utilisateurConnecte!=null){
+            JButton logoutBtn = new JButton("Déconnexion");
+            logoutBtn.addActionListener(e -> {
+                dispose();
+                new PageAccueil(); // ou "patient"/"specialiste" si tu veux pré-remplir
+            });
+            rightPanel.add(logoutBtn);
+        }
+
+
+        rightPanel.add(userLabel);
+        topPanel.add(rightPanel, BorderLayout.EAST);
+
+        // ---------- Ajout du bandeau au main panel ----------
         mainPanel.add(topPanel, BorderLayout.NORTH);
 
-        // Tu peux maintenant ajouter tes panneaux de contenu dans le CENTER, etc.
-        // JPanel contentPanel = new JPanel();
-        // mainPanel.add(contentPanel, BorderLayout.CENTER);
-
-        setVisible(true); // Afficher la fenêtre
+        setVisible(true);
     }
+
 
     // Méthode pour accéder au panneau principal
     public JPanel getMainPanel() {

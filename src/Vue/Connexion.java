@@ -63,22 +63,26 @@ public class Connexion extends BaseFrame {
 
         DatabaseConnection db = DatabaseConnection.getInstance("rdv_specialiste", "root", "root");
         UtilisateurDAO utilisateurDAO = db.getUtilisateurDAO();
-        Utilisateur utilisateur = utilisateurDAO.getUtilisateurByEmail(email);
 
-        if (utilisateur != null && utilisateur.getMdp().equals(mdp)) {
+        Utilisateur utilisateur = utilisateurDAO.seConnecter(email, mdp, typeUtilisateur);
+
+        if (utilisateur != null) {
             JOptionPane.showMessageDialog(this, "Bienvenue " + utilisateur.getPrenom() + " !");
-            if (Objects.equals(typeUtilisateur, "patient")) {
-                new PatientVue();
-                dispose(); // Ferme la fenêtre de connexion
-            }
-            if (Objects.equals(typeUtilisateur, "specialiste")) {
-                new SpecialisteVue();
-                dispose(); // Ferme la fenêtre de connexion
+
+            if (utilisateur instanceof Patient) {
+                new PatientVue(utilisateur);
+            } else if (utilisateur instanceof Specialiste) {
+                new SpecialisteVue(utilisateur);
+            } else {
+                JOptionPane.showMessageDialog(this, "Type d'utilisateur non reconnu.");
+                return;
             }
 
-            else {
-                JOptionPane.showMessageDialog(this, "Email ou mot de passe incorrect.");
-            }
+            dispose(); // Ferme la fenêtre de connexion
+
+        } else {
+            JOptionPane.showMessageDialog(this, "Email ou mot de passe incorrect.");
         }
     }
+
 }

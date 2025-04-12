@@ -1,4 +1,12 @@
 package Vue;
 
-public class SpecialisteVue {
+import Modele.Utilisateur;
+
+public class SpecialisteVue extends BaseFrame{
+
+    public SpecialisteVue(Utilisateur utilisateur) {
+        super(utilisateur);
+
+
+    }
 }
