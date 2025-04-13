@@ -13,6 +13,13 @@ CREATE TABLE `utilisateur` (
    PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- Table des patients
+CREATE TABLE `admin` (
+   `ID` INT(11) NOT NULL,
+   PRIMARY KEY (`ID`),
+    CONSTRAINT `fk_admin_utilisateur` FOREIGN KEY (`ID`) REFERENCES `utilisateur`(`ID`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 -- 👶 Table des patients
 CREATE TABLE `patient` (
    `ID` INT(11) NOT NULL,
@@ -65,6 +72,7 @@ CREATE TABLE `edt` (
    CONSTRAINT `fk_edt_horaire` FOREIGN KEY (`IDHoraire`) REFERENCES `horaire`(`ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
 -- 👨‍⚕️ Insertion des spécialistes
 INSERT INTO utilisateur (nom, prenom, email, mdp) VALUES
       ('Dupont', 'Jean', 'jean.dupont@medilink.fr', 'pass123'),
@@ -87,6 +95,16 @@ INSERT INTO patient (ID, type) VALUES
        (5, 1),
        (6, 1);
 
+-- ️ Insertion des admins
+INSERT INTO utilisateur (nom, prenom, email, mdp) VALUES
+      ('Bernard', 'Thomas', 'thomas.bernard@medilink.fr', 'pass123'),
+      ('Fabre', 'Emma', 'emma.fabre@medilink.fr', 'pass123'),
+      ('Morel', 'Luc', 'luc.morel@medilink.fr', 'pass123');
+
+INSERT INTO admin (ID) VALUES
+       (7),
+       (8),
+       (9);
 -- 🕐 Insertion des horaires (1: lundi à 7 : dimanche, matin et après-midi)
 INSERT INTO horaire (jourSemaine, HeureDebut, HeureFin) VALUES
         (2, '09:00:00', '10:00:00'), -- ID 1

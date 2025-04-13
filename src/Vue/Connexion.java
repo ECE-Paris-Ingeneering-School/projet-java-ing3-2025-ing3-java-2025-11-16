@@ -67,15 +67,25 @@ public class Connexion extends BaseFrame {
 
         if (utilisateur != null) {
             JOptionPane.showMessageDialog(this, "Bienvenue " + utilisateur.getPrenom() + " !");
+            System.out.println("Type réel de l'utilisateur : " + utilisateur.getClass());
 
             if (utilisateur instanceof Patient) {
+                System.out.println("avant");
                 new Recherche(utilisateur);
+                System.out.println("Paatient");
             } else if (utilisateur instanceof Specialiste) {
                 new SpecialisteVue(utilisateur);
+            } else if (utilisateur instanceof Admin) {
+                new AdminVue(utilisateur);
             } else {
+                System.out.println("??");
+
                 JOptionPane.showMessageDialog(this, "Type d'utilisateur non reconnu.");
+                System.out.println("???");
                 return;
             }
+
+            System.out.println("Bonjour");
 
             dispose(); // Ferme la fenêtre de connexion
 

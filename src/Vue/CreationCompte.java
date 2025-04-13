@@ -94,9 +94,9 @@ public class CreationCompte extends BaseFrame {
                 String etablissement = LieuField.getText().trim();
                 utilisateur = new Specialiste(nom, prenom, email, mdp, specialite, etablissement);
                 break;
-            /*case "Admin":
+            case "Admin":
                 utilisateur = new Admin(nom, prenom, email, mdp);
-                break;*/
+                break;
         }
 
         if (utilisateur != null) {
