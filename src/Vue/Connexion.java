@@ -7,7 +7,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Objects;
 
 public class Connexion extends BaseFrame {
     private JTextField emailField;
@@ -19,8 +18,8 @@ public class Connexion extends BaseFrame {
         this.typeUtilisateur = typeUtilisateur;
         JPanel mainPanel = getMainPanel();
 
-        JPanel panel = new JPanel(new GridLayout(4, 1, 10, 10));
-        panel.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
+        JPanel panel = new JPanel(new GridLayout(4, 1, 5, 5));
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 30, 10, 30));
 
         JButton btnRetour = new JButton("Retour");
         btnRetour.addActionListener(e -> {
@@ -70,7 +69,7 @@ public class Connexion extends BaseFrame {
             JOptionPane.showMessageDialog(this, "Bienvenue " + utilisateur.getPrenom() + " !");
 
             if (utilisateur instanceof Patient) {
-                new PatientVue(utilisateur);
+                new Recherche(utilisateur);
             } else if (utilisateur instanceof Specialiste) {
                 new SpecialisteVue(utilisateur);
             } else {

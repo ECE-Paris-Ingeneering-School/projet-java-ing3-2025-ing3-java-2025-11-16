@@ -1,12 +1,15 @@
 package Dao;
 
+import Modele.Specialiste;
 import Modele.Utilisateur;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Time;
+import java.util.*;
 
 public interface UtilisateurDAO {
     ArrayList<Utilisateur> getAll(); // Récupérer tous les utilisateurs
+
+    ArrayList<Specialiste> rechercherSpecialistes(String motCle, String jour, Time heure);
 
     Utilisateur seConnecter(String email, String mdp, String type);
 

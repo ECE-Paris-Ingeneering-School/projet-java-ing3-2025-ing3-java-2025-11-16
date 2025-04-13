@@ -40,7 +40,7 @@ public class BaseFrame extends JFrame {
 
         setTitle("Application Rendez-vous");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 600);
+        setSize(1000, 600);
         setLocationRelativeTo(null);
 
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -53,7 +53,7 @@ public class BaseFrame extends JFrame {
         JLabel titreLabel = new JLabel("MediLink");
         titreLabel.setForeground(Color.WHITE);
         titreLabel.setFont(new Font("Brush Script MT", Font.BOLD, 50));
-        titreLabel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        titreLabel.setBorder(BorderFactory.createEmptyBorder(50, 20, 50, 20));
         topPanel.add(titreLabel, BorderLayout.WEST);
 
         // ---------- Panel à droite avec infos utilisateur + bouton ----------

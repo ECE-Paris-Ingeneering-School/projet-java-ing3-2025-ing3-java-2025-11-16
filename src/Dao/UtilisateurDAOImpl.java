@@ -5,7 +5,7 @@ import Modele.*;
 
 import javax.xml.crypto.Data;
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  * Implémentation MySQL du stockage dans la base de données des méthodes définies dans l'interface
@@ -14,9 +14,91 @@ import java.util.ArrayList;
 public class UtilisateurDAOImpl implements UtilisateurDAO {
     private DatabaseConnection Data;
 
+    private int convertirJourEnInt(String jour) {
+        return switch (jour.toLowerCase()) {
+            case "lundi" -> 1;
+            case "mardi" -> 2;
+            case "mercredi" -> 3;
+            case "jeudi" -> 4;
+            case "vendredi" -> 5;
+            case "samedi" -> 6;
+            case "dimanche" -> 7;
+            default -> throw new IllegalArgumentException("Jour invalide : " + jour);
+        };
+    }
+
     public UtilisateurDAOImpl(DatabaseConnection Data) {
         this.Data = Data;
     }
+
+    @Override
+    public ArrayList<Specialiste> rechercherSpecialistes(String motCle, String jour, Time heure) {
+        ArrayList<Specialiste> resultats = new ArrayList<>();
+
+        String sql = """
+        SELECT DISTINCT u.ID, u.Nom, u.Prenom, u.Email, u.Mdp, s.Specialisation, s.Lieu
+        FROM utilisateur u
+        JOIN specialiste s ON u.ID = s.ID
+        LEFT JOIN edt e ON s.ID = e.IDSpecialiste
+        LEFT JOIN horaire h ON e.IDHoraire = h.ID
+        WHERE 
+            (u.Nom LIKE ? OR u.Prenom LIKE ? OR s.Specialisation LIKE ? OR s.Lieu LIKE ?)
+            AND (? IS NULL OR h.jourSemaine = ?)
+            AND (? IS NULL OR h.HeureDebut <= ? AND h.HeureFin > ?)
+    """;
+
+        try (Connection conn = Data.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            String likeMotCle = "%" + motCle + "%";
+
+            stmt.setString(1, likeMotCle);
+            stmt.setString(2, likeMotCle);
+            stmt.setString(3, likeMotCle);
+            stmt.setString(4, likeMotCle);
+
+            if (jour != null) {
+                int jourInt = convertirJourEnInt(jour); // au lieu de parseInt
+                stmt.setString(5, jour);
+                stmt.setInt(6, jourInt);
+            } else {
+                stmt.setNull(5, Types.VARCHAR);
+                stmt.setNull(6, Types.INTEGER);
+            }
+
+
+            if (heure != null) {
+                stmt.setTime(7, heure);
+                stmt.setTime(8, heure);
+                stmt.setTime(9, heure);
+            } else {
+                stmt.setNull(7, Types.TIME);
+                stmt.setNull(8, Types.TIME);
+                stmt.setNull(9, Types.TIME);
+            }
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Specialiste sp = new Specialiste(
+                        rs.getInt("ID"),
+                        rs.getString("Nom"),
+                        rs.getString("Prenom"),
+                        rs.getString("Email"),
+                        rs.getString("Mdp"),
+                        rs.getString("Specialisation"),
+                        rs.getString("Lieu")
+                );
+                resultats.add(sp);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return resultats;
+    }
+
 
     @Override
     public Utilisateur seConnecter(String email, String mdp, String type) {

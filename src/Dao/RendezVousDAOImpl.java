@@ -1,6 +1,6 @@
 package Dao;
 
-import Modele.RendezVous;
+import Modele.*;
 
 import java.sql.*;
 import java.util.ArrayList;
