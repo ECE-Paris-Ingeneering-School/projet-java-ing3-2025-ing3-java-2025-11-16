@@ -26,54 +26,64 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
     }
 
     @Override
-    public ArrayList<Specialiste> rechercherSpecialistes(String motCle, String jour, Time heure) {
+    public ArrayList<Specialiste> rechercherSpecialistes(String motCle, String jour, Time heure, String lieu) {
         ArrayList<Specialiste> resultats = new ArrayList<>();
 
         String sql = """
-            SELECT DISTINCT u.ID, u.Nom, u.Prenom, u.Email, u.Mdp, s.Specialisation, s.Lieu
-            FROM utilisateur u
-            JOIN specialiste s ON u.ID = s.ID
-            LEFT JOIN edt e ON s.ID = e.IDSpecialiste
-            LEFT JOIN horaire h ON e.IDHoraire = h.ID
-            WHERE 
-                (u.Nom LIKE ? OR u.Prenom LIKE ? OR s.Specialisation LIKE ? OR s.Lieu LIKE ?)
-                AND (? IS NULL OR h.jourSemaine = ?)
-                AND (? IS NULL OR h.HeureDebut <= ? AND h.HeureFin > ?)
-        """;
+        SELECT DISTINCT u.ID, u.Nom, u.Prenom, u.Email, u.Mdp, s.Specialisation, s.Lieu
+        FROM utilisateur u
+        JOIN specialiste s ON u.ID = s.ID
+        LEFT JOIN edt e ON s.ID = e.IDSpecialiste
+        LEFT JOIN horaire h ON e.IDHoraire = h.ID
+        WHERE (
+            u.Nom LIKE ? 
+            OR u.Prenom LIKE ? 
+            OR s.Specialisation LIKE ?
+            OR CONCAT(u.Nom, ' ', u.Prenom) LIKE ?
+            OR CONCAT(u.Prenom, ' ', u.Nom) LIKE ?
+        )
+    """;
+
+        if (!lieu.equals("Lieu")) {
+            sql += " AND s.Lieu LIKE ?";
+        }
+        if (jour != null && !jour.trim().isEmpty()) {
+            sql += " AND h.jourSemaine = ?";
+        }
+        if (heure != null) {
+            sql += " AND h.HeureDebut = ?";
+        }
 
         try (Connection conn = Data.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             String likeMotCle = "%" + motCle + "%";
 
-            stmt.setString(1, likeMotCle);
-            stmt.setString(2, likeMotCle);
-            stmt.setString(3, likeMotCle);
-            stmt.setString(4, likeMotCle);
+            stmt.setString(1, likeMotCle); // Nom
+            stmt.setString(2, likeMotCle); // Prénom
+            stmt.setString(3, likeMotCle); // Spécialisation
+            stmt.setString(4, likeMotCle); // Nom + Prénom
+            stmt.setString(5, likeMotCle); // Prénom + Nom
 
-            if (jour != null) {
+            int index=6;
+            if (!lieu.equals("Lieu")) {
+                System.out.println("Lieu != rien : "+lieu);
+                stmt.setString(index++, "%" + lieu + "%");
+            }
+
+           if (jour != null && !jour.trim().isEmpty()) {
                 int jourInt = convertirJourEnInt(jour);
-                stmt.setString(5, jour);
-                stmt.setInt(6, jourInt);
-            } else {
-                stmt.setNull(5, Types.VARCHAR);
-                stmt.setNull(6, Types.INTEGER);
+                System.out.println("JourINT " + jourInt + " = " + jour);
+                stmt.setInt(index++, jourInt);
             }
 
             if (heure != null) {
-                stmt.setTime(7, heure);
-                stmt.setTime(8, heure);
-                stmt.setTime(9, heure);
-            } else {
-                stmt.setNull(7, Types.TIME);
-                stmt.setNull(8, Types.TIME);
-                stmt.setNull(9, Types.TIME);
+                stmt.setTime(index, heure);
             }
 
             ResultSet rs = stmt.executeQuery();
-
             while (rs.next()) {
-                Specialiste sp = new Specialiste(
+                Specialiste s = new Specialiste(
                         rs.getInt("ID"),
                         rs.getString("Nom"),
                         rs.getString("Prenom"),
@@ -82,7 +92,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
                         rs.getString("Specialisation"),
                         rs.getString("Lieu")
                 );
-                resultats.add(sp);
+                resultats.add(s);
             }
 
         } catch (SQLException e) {
@@ -91,6 +101,9 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 
         return resultats;
     }
+
+
+
 
     @Override
     public Utilisateur seConnecter(String email, String mdp, String type) {

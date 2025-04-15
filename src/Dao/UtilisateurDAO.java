@@ -9,7 +9,7 @@ import java.util.*;
 public interface UtilisateurDAO {
     ArrayList<Utilisateur> getAll(); // Récupérer tous les utilisateurs
 
-    ArrayList<Specialiste> rechercherSpecialistes(String motCle, String jour, Time heure);
+    ArrayList<Specialiste> rechercherSpecialistes(String motCle, String jour, Time heure, String lieu);
 
     Utilisateur seConnecter(String email, String mdp, String type);
 
