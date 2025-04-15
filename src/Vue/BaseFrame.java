@@ -8,7 +8,8 @@ public class BaseFrame extends JFrame {
 
     private JLabel userLabel;
     protected Utilisateur utilisateurConnecte;
-    private JPanel centerPanel; // ✅ Le panel pour le contenu "hors bandeau"
+    protected JPanel centerPanel; // ✅ Le panel pour le contenu "hors bandeau"
+    protected JPanel topPanel;
 
     public BaseFrame(Utilisateur utilisateurConnecte) {
         this.utilisateurConnecte = utilisateurConnecte;
@@ -45,8 +46,8 @@ public class BaseFrame extends JFrame {
         setContentPane(mainPanel);
 
         // ---------------- Bandeau top ----------------
-        JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.setBackground(new Color(166, 212, 240));
+        topPanel = new JPanel(new BorderLayout());
+        topPanel.setBackground(new Color(54, 153, 213));
 
         JLabel titreLabel = new JLabel("MediLink");
         titreLabel.setForeground(Color.WHITE);
@@ -70,16 +71,15 @@ public class BaseFrame extends JFrame {
         topPanel.add(rightPanel, BorderLayout.EAST);
         mainPanel.add(topPanel, BorderLayout.NORTH);
 
+
         //  ---------------- Panel pour le contenu central ----------------
         centerPanel = new JPanel();
         centerPanel.setLayout(new BorderLayout());
         mainPanel.add(centerPanel, BorderLayout.CENTER);
-        //mainPanel.add(centerPanel, BorderLayout.SOUTH);
 
         setVisible(true);
     }
 
-    // Accès au bandeau ou contenu
     public JPanel getMainPanel() {
         return (JPanel) getContentPane();
     }
@@ -87,6 +87,8 @@ public class BaseFrame extends JFrame {
     public JPanel getCenterPanel() {
         return centerPanel;
     }
+
+    public JPanel getNorthPanel() { return topPanel; }
 
     public void setUserText(String texte) {
         if (userLabel != null) {
