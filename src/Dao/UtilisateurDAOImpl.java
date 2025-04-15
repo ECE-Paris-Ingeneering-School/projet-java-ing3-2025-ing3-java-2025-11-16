@@ -29,58 +29,34 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
     public ArrayList<Specialiste> rechercherSpecialistes(String motCle, String jour, Time heure, String lieu) {
         ArrayList<Specialiste> resultats = new ArrayList<>();
 
-        StringBuilder sql = new StringBuilder("""
+        String sql = """
         SELECT DISTINCT u.ID, u.Nom, u.Prenom, u.Email, u.Mdp, s.Specialisation, s.Lieu
         FROM utilisateur u
         JOIN specialiste s ON u.ID = s.ID
-        LEFT JOIN edt e ON s.ID = e.IDSpecialiste
-        LEFT JOIN horaire h ON e.IDHoraire = h.ID
-        WHERE 1=1
-    """);
+        WHERE 
+            u.Nom LIKE ? 
+            OR u.Prenom LIKE ? 
+            OR s.Specialisation LIKE ?
+            OR CONCAT(u.Nom, ' ', u.Prenom) LIKE ?
+            OR CONCAT(u.Prenom, ' ', u.Nom) LIKE ?
+    """;
 
-        // Liste des paramètres
-        List<Object> params = new ArrayList<>();
-
-        // Filtre mot-clé
-        if (motCle != null && !motCle.isEmpty()) {
-            sql.append(" AND (u.Nom LIKE ? OR u.Prenom LIKE ? OR s.Specialisation LIKE ?)");
-            String likeMotCle = "%" + motCle + "%";
-            params.add(likeMotCle);
-            params.add(likeMotCle);
-            params.add(likeMotCle);
-        }
-
-        // Filtre lieu
-        if (lieu != null && !lieu.isEmpty()) {
-            sql.append(" AND s.Lieu LIKE ?");
-            params.add("%" + lieu + "%");
-        }
-
-        // Filtre jour
-        if (jour != null && !jour.isEmpty()) {
-            int jourInt = convertirJourEnInt(jour); // 1 = lundi, etc.
-            sql.append(" AND h.jourSemaine = ?");
-            params.add(jourInt);
-        }
-
-        // Filtre heure de début
-        if (heure != null) {
-            sql.append(" AND h.HeureDebut = ?");
-            params.add(heure);
+        if (lieu != null && !lieu.trim().isEmpty()) {
+            sql += " AND s.Lieu LIKE ?";
         }
 
         try (Connection conn = Data.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            // Insertion des paramètres
-            for (int i = 0; i < params.size(); i++) {
-                Object param = params.get(i);
-                if (param instanceof String)
-                    stmt.setString(i + 1, (String) param);
-                else if (param instanceof Integer)
-                    stmt.setInt(i + 1, (Integer) param);
-                else if (param instanceof Time)
-                    stmt.setTime(i + 1, (Time) param);
+            String likeMotCle = "%" + motCle + "%";
+            stmt.setString(1, likeMotCle); // Nom
+            stmt.setString(2, likeMotCle); // Prénom
+            stmt.setString(3, likeMotCle); // Spécialisation
+            stmt.setString(4, likeMotCle); // Nom + Prénom
+            stmt.setString(5, likeMotCle); // Prénom + Nom
+
+            if (lieu != null && !lieu.trim().isEmpty()) {
+                stmt.setString(6, "%" + lieu + "%");
             }
 
             ResultSet rs = stmt.executeQuery();
@@ -103,6 +79,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 
         return resultats;
     }
+
 
 
 

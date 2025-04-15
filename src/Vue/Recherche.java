@@ -117,6 +117,9 @@ public class Recherche extends BaseFrame {
         String jour = null;
         Time heure = null;
 
+        System.out.println(motCle);
+        System.out.println(lieu);
+
         // Récupérer le jour s’il est sélectionné
         if (jourCombo.getSelectedItem() != null && !jourCombo.getSelectedItem().toString().isEmpty()) {
             jour = jourCombo.getSelectedItem().toString().toLowerCase();
@@ -132,6 +135,12 @@ public class Recherche extends BaseFrame {
                 JOptionPane.showMessageDialog(this, "Heure invalide (ex : 09:00)");
                 return;
             }
+        }
+
+        if(motCle.trim().isEmpty() || motCle.equalsIgnoreCase("Nom, spécialité")) {
+            System.out.println("MotCle: " + motCle);
+            JOptionPane.showMessageDialog(this, "Saisir un nom ou une spécialité","Champ requis", JOptionPane.WARNING_MESSAGE);
+            return;
         }
 
         // Appel au DAO
