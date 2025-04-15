@@ -13,12 +13,11 @@ public class InscrireVue extends JDialog {
     private JButton validerButton;
 
     public InscrireVue() {
-        initialisation();
-        setSize(400, 300);
-        setVisible(true);
-    }
+        setTitle("Inscription");
 
-    private void initialisation() {
+        setSize(800, 500);
+        setVisible(true);
+
         JPanel panel = new JPanel(new GridLayout(5, 2, 10, 10));
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
