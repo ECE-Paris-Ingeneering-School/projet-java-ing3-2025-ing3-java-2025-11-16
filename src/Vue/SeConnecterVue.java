@@ -8,16 +8,21 @@ public class SeConnecterVue extends JDialog {
     private JTextField idField;
     private JPasswordField MdPField;
     private JButton connectButton;
+    private JButton inscrireButton;
 
-    public SeConnecterVue (Frame fenetre1 ){
+    public SeConnecterVue(Frame fenetre1) {
         super(fenetre1, "Connexion", true);
         initialisation();
-        pack();
-        setLocationRelativeTo(fenetre1);
+        setSize(400, 250);
+        setVisible(true);
     }
 
-    private void initialisation(){
-        JPanel panel = new JPanel(new GridLayout(3,2,10,10));
+    private void initialisation() {
+
+        JPanel panel = new JPanel(new BorderLayout(10, 10));
+
+
+        JPanel inputPanel = new JPanel(new GridLayout(2, 2, 2, 2));
 
         JLabel idLabel = new JLabel("ID:");
         idField = new JTextField(20);
@@ -25,31 +30,48 @@ public class SeConnecterVue extends JDialog {
         JLabel MdPLabel = new JLabel("Mot de Passe:");
         MdPField = new JPasswordField(20);
 
-        panel.add(idLabel);
-        panel.add(idField);
-        panel.add(MdPLabel);
-        panel.add(MdPField);
+        inputPanel.add(idLabel);
+        inputPanel.add(idField);
+        inputPanel.add(MdPLabel);
+        inputPanel.add(MdPField);
+
+        panel.add(inputPanel, BorderLayout.CENTER);
+
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
 
         connectButton = new JButton("Se connecter");
-        panel.add(new JLabel());
-        panel.add(new JLabel());
-        panel.add(connectButton);
+        inscrireButton = new JButton("S'inscrire");
+
+        buttonPanel.add(connectButton);
+        buttonPanel.add(inscrireButton);
+
+        panel.add(buttonPanel, BorderLayout.SOUTH);
+
 
         connectButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String id = idField.getText();
                 String MdP = new String(MdPField.getPassword());
-                JOptionPane.showMessageDialog(SeConnecterVue.this, "ID: " + id + "\n Mot de Passe:  " + MdP);
+                JOptionPane.showMessageDialog(SeConnecterVue.this,
+                        "ID: " + id + "\nMot de Passe: " + MdP);
                 dispose();
             }
         });
 
-        getContentPane().add(panel,BorderLayout.CENTER);
 
+        inscrireButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                new InscrireVue();
+            }
+        });
+        getContentPane().add(panel);
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 SeConnecterVue dialog = new SeConnecterVue(null);
