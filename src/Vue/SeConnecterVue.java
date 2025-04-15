@@ -10,19 +10,13 @@ public class SeConnecterVue extends JDialog {
     private JButton connectButton;
     private JButton inscrireButton;
 
-    public SeConnecterVue(Frame fenetre1) {
-        super(fenetre1, "Connexion", true);
-        initialisation();
-        setSize(400, 250);
+    public SeConnecterVue() {
+        setTitle("Connexion");
+        setSize(800, 500);
         setVisible(true);
-    }
-
-    private void initialisation() {
 
         JPanel panel = new JPanel(new BorderLayout(10, 10));
-
-
-        JPanel inputPanel = new JPanel(new GridLayout(2, 2, 2, 2));
+        JPanel inputPanel = new JPanel(new GridLayout(2, 2,1,1));
 
         JLabel idLabel = new JLabel("ID:");
         idField = new JTextField(20);
@@ -36,7 +30,6 @@ public class SeConnecterVue extends JDialog {
         inputPanel.add(MdPField);
 
         panel.add(inputPanel, BorderLayout.CENTER);
-
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
 
@@ -54,8 +47,6 @@ public class SeConnecterVue extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 String id = idField.getText();
                 String MdP = new String(MdPField.getPassword());
-                JOptionPane.showMessageDialog(SeConnecterVue.this,
-                        "ID: " + id + "\nMot de Passe: " + MdP);
                 dispose();
             }
         });
@@ -74,7 +65,7 @@ public class SeConnecterVue extends JDialog {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                SeConnecterVue dialog = new SeConnecterVue(null);
+                SeConnecterVue dialog = new SeConnecterVue();
                 dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
                 dialog.setVisible(true);
             }
