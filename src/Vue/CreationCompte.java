@@ -16,17 +16,19 @@ public class CreationCompte extends BaseFrame {
     public CreationCompte(String typeUtilisateur) {
         super();
         this.typeUtilisateur = typeUtilisateur;
-        JPanel mainPanel = getMainPanel();
+        JPanel Contenu = getCenterPanel();
+        JPanel boutonsPanel = new JPanel(new BorderLayout());
 
         JPanel panel = new JPanel(new GridLayout(8, 1, 10, 10));
         panel.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
+        boutonsPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
-        nomField = new JTextField();
-        prenomField = new JTextField();
-        emailField = new JTextField();
-        mdpField = new JPasswordField();
-        SpecialiteField = new JTextField();
-        LieuField = new JTextField();
+        nomField = new JTextField(10);
+        prenomField = new JTextField(10);
+        emailField = new JTextField(10);
+        mdpField = new JPasswordField(10);
+        SpecialiteField = new JTextField(10);
+        LieuField = new JTextField(10);
 
         JButton btnRetour = new JButton("Retour");
         btnRetour.addActionListener(e -> {
@@ -59,11 +61,22 @@ public class CreationCompte extends BaseFrame {
         }
 
         JButton creerBtn = new JButton("Créer le compte");
+        Font bigFont = new Font("Arial", Font.BOLD, 20);
+        Dimension bigSize = new Dimension(250, 60);
+
+        creerBtn.setFont(bigFont);
+        btnRetour.setFont(bigFont);
+
+        creerBtn.setPreferredSize(bigSize);
+        btnRetour.setPreferredSize(bigSize);
+
         creerBtn.addActionListener(this::creerCompte);
 
-        mainPanel.add(panel, BorderLayout.CENTER);
-        mainPanel.add(creerBtn, BorderLayout.SOUTH);
-        mainPanel.add(btnRetour, BorderLayout.EAST);
+        boutonsPanel.add(btnRetour, BorderLayout.WEST);
+        boutonsPanel.add(creerBtn, BorderLayout.EAST);
+        Contenu.add(panel, BorderLayout.CENTER);
+
+        Contenu.add(boutonsPanel, BorderLayout.SOUTH);
 
         setVisible(true);
     }

@@ -16,10 +16,12 @@ public class Connexion extends BaseFrame {
     public Connexion(String typeUtilisateur) {
         super();
         this.typeUtilisateur = typeUtilisateur;
-        JPanel mainPanel = getMainPanel();
+        JPanel contenu = getCenterPanel();
+        JPanel boutonPanel = new JPanel(new BorderLayout());
 
-        JPanel panel = new JPanel(new GridLayout(4, 1, 5, 5));
-        panel.setBorder(BorderFactory.createEmptyBorder(10, 30, 10, 30));
+        JPanel panel = new JPanel(new GridLayout(8, 1, 10, 10));
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
+        boutonPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
         JButton btnRetour = new JButton("Retour");
         btnRetour.addActionListener(e -> {
@@ -27,13 +29,14 @@ public class Connexion extends BaseFrame {
             dispose();
         });
 
-        emailField = new JTextField();
-        passwordField = new JPasswordField();
+        emailField = new JTextField(10);
+        passwordField = new JPasswordField(10);
 
         panel.add(new JLabel("Email :"));
         panel.add(emailField);
         panel.add(new JLabel("Mot de passe :"));
         panel.add(passwordField);
+
 
         JButton loginBtn = new JButton("Se connecter");
         loginBtn.addActionListener(new ActionListener() {
@@ -43,10 +46,20 @@ public class Connexion extends BaseFrame {
             }
         });
 
-        panel.add(btnRetour);
+        Font bigFont = new Font("Arial", Font.BOLD, 20);
+        Dimension bigSize = new Dimension(250, 60);
 
-        mainPanel.add(panel, BorderLayout.CENTER);
-        mainPanel.add(loginBtn, BorderLayout.SOUTH);
+        loginBtn.setFont(bigFont);
+        btnRetour.setFont(bigFont);
+
+        loginBtn.setPreferredSize(bigSize);
+        btnRetour.setPreferredSize(bigSize);
+
+        boutonPanel.add(loginBtn, BorderLayout.EAST);
+        boutonPanel.add(btnRetour, BorderLayout.WEST);
+
+        contenu.add(boutonPanel, BorderLayout.SOUTH);
+        contenu.add(panel, BorderLayout.CENTER);
 
         setVisible(true);
     }

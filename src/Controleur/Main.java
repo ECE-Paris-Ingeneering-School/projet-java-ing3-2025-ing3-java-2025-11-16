@@ -9,7 +9,8 @@ import java.util.Date;
 public class Main {
     public static void main(String[] args) {
         //TestApplication.lancerMenu();
-        new PageAccueil();
-
+        //new PageAccueil();
+         new PageAccueil();
     }
+
 }

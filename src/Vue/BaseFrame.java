@@ -6,22 +6,20 @@ import Modele.*;
 
 public class BaseFrame extends JFrame {
 
-    private JLabel userLabel; // Affiche le compte utilisateur
+    private JLabel userLabel;
     protected Utilisateur utilisateurConnecte;
+    private JPanel centerPanel; // ✅ Le panel pour le contenu "hors bandeau"
 
-    // Constructeur avec utilisateur connecté
     public BaseFrame(Utilisateur utilisateurConnecte) {
         this.utilisateurConnecte = utilisateurConnecte;
         initUI();
     }
 
-    // Constructeur sans utilisateur (cas d'une page sans utilisateur connecté)
     public BaseFrame() {
-        this(null);  // On passe null pour indiquer qu'il n'y a pas d'utilisateur connecté
+        this(null);
     }
 
     public void initUI() {
-        // Définir rôle & userText
         String role = "Non connecté";
         String userText = "Veuillez vous connecter.";
 
@@ -46,46 +44,50 @@ public class BaseFrame extends JFrame {
         JPanel mainPanel = new JPanel(new BorderLayout());
         setContentPane(mainPanel);
 
+        // ---------------- Bandeau top ----------------
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.setBackground(new Color(166, 212, 240));
 
-        // ---------- Titre MediLink à gauche ----------
         JLabel titreLabel = new JLabel("MediLink");
         titreLabel.setForeground(Color.WHITE);
         titreLabel.setFont(new Font("Brush Script MT", Font.BOLD, 50));
         titreLabel.setBorder(BorderFactory.createEmptyBorder(50, 20, 50, 20));
         topPanel.add(titreLabel, BorderLayout.WEST);
 
-        // ---------- Panel à droite avec infos utilisateur + bouton ----------
         JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        rightPanel.setOpaque(false); // Pour laisser voir la couleur du bandeau
+        rightPanel.setOpaque(false);
 
-        if(utilisateurConnecte!=null){
+        if(utilisateurConnecte != null){
             JButton logoutBtn = new JButton("Déconnexion");
             logoutBtn.addActionListener(e -> {
                 dispose();
-                new PageAccueil(); // ou "patient"/"specialiste" si tu veux pré-remplir
+                new PageAccueil();
             });
             rightPanel.add(logoutBtn);
         }
 
-
         rightPanel.add(userLabel);
         topPanel.add(rightPanel, BorderLayout.EAST);
-
-        // ---------- Ajout du bandeau au main panel ----------
         mainPanel.add(topPanel, BorderLayout.NORTH);
+
+        //  ---------------- Panel pour le contenu central ----------------
+        centerPanel = new JPanel();
+        centerPanel.setLayout(new BorderLayout());
+        mainPanel.add(centerPanel, BorderLayout.CENTER);
+        //mainPanel.add(centerPanel, BorderLayout.SOUTH);
 
         setVisible(true);
     }
 
-
-    // Méthode pour accéder au panneau principal
+    // Accès au bandeau ou contenu
     public JPanel getMainPanel() {
         return (JPanel) getContentPane();
     }
 
-    // Pour mettre à jour dynamiquement le texte de l'utilisateur
+    public JPanel getCenterPanel() {
+        return centerPanel;
+    }
+
     public void setUserText(String texte) {
         if (userLabel != null) {
             userLabel.setText("👤 " + texte);
