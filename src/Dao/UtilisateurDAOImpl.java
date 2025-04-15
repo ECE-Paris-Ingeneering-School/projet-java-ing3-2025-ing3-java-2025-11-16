@@ -33,30 +33,52 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         SELECT DISTINCT u.ID, u.Nom, u.Prenom, u.Email, u.Mdp, s.Specialisation, s.Lieu
         FROM utilisateur u
         JOIN specialiste s ON u.ID = s.ID
-        WHERE 
+        LEFT JOIN edt e ON s.ID = e.IDSpecialiste
+        LEFT JOIN horaire h ON e.IDHoraire = h.ID
+        WHERE (
             u.Nom LIKE ? 
             OR u.Prenom LIKE ? 
             OR s.Specialisation LIKE ?
             OR CONCAT(u.Nom, ' ', u.Prenom) LIKE ?
             OR CONCAT(u.Prenom, ' ', u.Nom) LIKE ?
+        )
     """;
 
-        if (lieu != null && !lieu.trim().isEmpty()) {
+        if (!lieu.equals("Lieu")) {
             sql += " AND s.Lieu LIKE ?";
+        }
+        if (jour != null && !jour.trim().isEmpty()) {
+            sql += " AND h.jourSemaine = ?";
+        }
+        if (heure != null) {
+            sql += " AND h.HeureDebut = ?";
         }
 
         try (Connection conn = Data.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             String likeMotCle = "%" + motCle + "%";
+
             stmt.setString(1, likeMotCle); // Nom
             stmt.setString(2, likeMotCle); // Prénom
             stmt.setString(3, likeMotCle); // Spécialisation
             stmt.setString(4, likeMotCle); // Nom + Prénom
             stmt.setString(5, likeMotCle); // Prénom + Nom
 
-            if (lieu != null && !lieu.trim().isEmpty()) {
-                stmt.setString(6, "%" + lieu + "%");
+            int index=6;
+            if (!lieu.equals("Lieu")) {
+                System.out.println("Lieu != rien : "+lieu);
+                stmt.setString(index++, "%" + lieu + "%");
+            }
+
+           if (jour != null && !jour.trim().isEmpty()) {
+                int jourInt = convertirJourEnInt(jour);
+                System.out.println("JourINT " + jourInt + " = " + jour);
+                stmt.setInt(index++, jourInt);
+            }
+
+            if (heure != null) {
+                stmt.setTime(index, heure);
             }
 
             ResultSet rs = stmt.executeQuery();

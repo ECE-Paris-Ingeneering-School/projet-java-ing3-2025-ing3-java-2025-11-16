@@ -81,7 +81,7 @@ public class Recherche extends BaseFrame {
         });
 
     // ComboBox pour le jour
-        String[] jours = {"", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"};
+        String[] jours = {"", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"};
         jourCombo = new JComboBox<>(jours);
 
     // ComboBox pour l'horaire
