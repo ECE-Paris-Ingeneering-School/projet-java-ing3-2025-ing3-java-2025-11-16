@@ -14,7 +14,6 @@ public class Recherche extends BaseFrame {
     private JComboBox<String> jourCombo;
     private JComboBox<String> heureCombo;
     private JButton rechercherBtn;
-    //private JTextArea resultArea;
     private JTextField lieuField;
 
     private UtilisateurDAOImpl specialisteDAO;
@@ -33,7 +32,6 @@ public class Recherche extends BaseFrame {
         JPanel recherchePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         motCleField = new JTextField(20);
         rechercherBtn = new JButton("Rechercher");
-        //resultArea = new JTextArea(40,40);
 
         resultatsPanel = new JPanel();
         resultatsPanel.setLayout(new BoxLayout(resultatsPanel, BoxLayout.Y_AXIS));
@@ -115,11 +113,10 @@ public class Recherche extends BaseFrame {
 
         rechercherBtn.addActionListener(e -> rechercher());
 
-        //contenu.add(resultArea, BorderLayout.CENTER);
         setVisible(true);
     }
 
-    private void rechercher() {
+    public void rechercher() {
         String motCle = motCleField.getText().trim();
         String lieu = lieuField.getText().trim();
         String jour = null;
@@ -159,20 +156,20 @@ public class Recherche extends BaseFrame {
     }
 
 
-    private JPanel creerPanelSpecialiste(Specialiste s) {
+    public JPanel creerPanelSpecialiste(Specialiste s) {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-        panel.setBackground(new Color(224, 244, 248));
-        panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 120)); // Hauteur fixe
+        panel.setBackground(new Color(253, 249, 249));
+        panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 250)); // Hauteur fixe
 
         // Partie gauche - Infos perso
         JPanel infosPanel = new JPanel();
         infosPanel.setLayout(new BoxLayout(infosPanel, BoxLayout.Y_AXIS));
         infosPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        infosPanel.setBackground(new Color(224, 244, 248));
+        infosPanel.setBackground(new Color(253, 249, 249));
 
         JLabel nomPrenom = new JLabel(s.getPrenom() + " " + s.getNom());
-        nomPrenom.setFont(new Font("Arial", Font.BOLD, 16));
+        nomPrenom.setFont(new Font("Arial", Font.BOLD, 20));
         JLabel specialisation = new JLabel("Spécialité : " + s.getSpecialisation());
         JLabel lieu = new JLabel("Lieu : " + s.getLieu());
 
@@ -181,10 +178,10 @@ public class Recherche extends BaseFrame {
         infosPanel.add(lieu);
 
         // Partie droite - Emploi du temps
-        JPanel edtPanel = new JPanel();
-        edtPanel.setLayout(new BoxLayout(edtPanel, BoxLayout.Y_AXIS));
+        Calendrier calendrierPanel = new Calendrier(s);
+        /*edtPanel.setLayout(new BoxLayout(edtPanel, BoxLayout.Y_AXIS));
         edtPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        edtPanel.setBackground(new Color(224, 244, 248));
+        edtPanel.setBackground(new Color(253, 249, 249));
 
         ArrayList<Horaire> emploiDuTemps = s.getEmploiDuTemps();
         if (emploiDuTemps != null && !emploiDuTemps.isEmpty()) {
@@ -195,16 +192,16 @@ public class Recherche extends BaseFrame {
             }
         } else {
             edtPanel.add(new JLabel("Aucun créneau disponible."));
-        }
+        }*/
 
         panel.add(infosPanel, BorderLayout.WEST);
-        panel.add(edtPanel, BorderLayout.EAST);
+        panel.add(calendrierPanel, BorderLayout.EAST);
 
         return panel;
     }
 
 
-    private void afficherResultats(ArrayList<Specialiste> listeSpecialistes) {
+    public void afficherResultats(ArrayList<Specialiste> listeSpecialistes) {
         resultatsPanel.removeAll(); // Vider les anciens résultats
 
         if (listeSpecialistes.isEmpty()) {
