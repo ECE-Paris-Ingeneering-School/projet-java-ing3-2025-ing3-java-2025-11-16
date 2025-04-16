@@ -8,11 +8,10 @@ public class Horaire {
     private Time heureDebut;
     private Time heureFin;
 
-    // ✅ Constructeur vide
     public Horaire() {
     }
 
-    // ✅ Constructeur avec tous les paramètres (sauf id)
+    // Constructeur avec tous les paramètres (sauf id)
     public Horaire(int jourSemaine, Time heureDebut, Time heureFin) {
         this.jourSemaine = jourSemaine;
         this.heureDebut = heureDebut;
@@ -30,4 +29,32 @@ public class Horaire {
     public void setJourSemaine(int jourSemaine) { this.jourSemaine = jourSemaine; }
     public void setHeureDebut(Time heureDebut) { this.heureDebut = heureDebut; }
     public void setHeureFin(Time heureFin) { this.heureFin = heureFin; }
+
+    public static String convertirJourIntEnString(int jour) {
+        return switch (jour) {
+            case 1 -> "Lundi";
+            case 2 -> "Mardi";
+            case 3 -> "Mercredi";
+            case 4 -> "Jeudi";
+            case 5 -> "Vendredi";
+            case 6 -> "Samedi";
+            case 7 -> "Dimanche";
+            default -> "Inconnu";
+        };
+    }
+
+    public static int convertirJourEnInt(String jour) {
+        return switch (jour.toLowerCase()) {
+            case "lundi" -> 1;
+            case "mardi" -> 2;
+            case "mercredi" -> 3;
+            case "jeudi" -> 4;
+            case "vendredi" -> 5;
+            case "samedi" -> 6;
+            case "dimanche" -> 7;
+            default -> throw new IllegalArgumentException("Jour invalide : " + jour);
+        };
+    }
+
+
 }
