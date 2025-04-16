@@ -12,19 +12,6 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         this.Data = Data;
     }
 
-    private int convertirJourEnInt(String jour) {
-        return switch (jour.toLowerCase()) {
-            case "lundi" -> 1;
-            case "mardi" -> 2;
-            case "mercredi" -> 3;
-            case "jeudi" -> 4;
-            case "vendredi" -> 5;
-            case "samedi" -> 6;
-            case "dimanche" -> 7;
-            default -> throw new IllegalArgumentException("Jour invalide : " + jour);
-        };
-    }
-
     @Override
     public ArrayList<Specialiste> rechercherSpecialistes(String motCle, String jour, Time heure, String lieu) {
         ArrayList<Specialiste> resultats = new ArrayList<>();
@@ -69,16 +56,20 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
             if (!lieu.equals("Lieu")) {
                 System.out.println("Lieu != rien : "+lieu);
                 stmt.setString(index++, "%" + lieu + "%");
+                System.out.println("index lieu"+index);
             }
 
            if (jour != null && !jour.trim().isEmpty()) {
-                int jourInt = convertirJourEnInt(jour);
+                int jourInt = Horaire.convertirJourEnInt(jour);
                 System.out.println("JourINT " + jourInt + " = " + jour);
                 stmt.setInt(index++, jourInt);
+                System.out.println("index jour"+index);
+
             }
 
             if (heure != null) {
                 stmt.setTime(index, heure);
+                System.out.println("index horaire = " + heure);
             }
 
             ResultSet rs = stmt.executeQuery();
@@ -92,6 +83,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
                         rs.getString("Specialisation"),
                         rs.getString("Lieu")
                 );
+                s.setEmploiDuTemps(chargerHorairesPourSpecialiste(s.getId()));
                 resultats.add(s);
             }
 
@@ -102,6 +94,38 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         return resultats;
     }
 
+    @Override
+    public ArrayList<Horaire> chargerHorairesPourSpecialiste(int idSpecialiste) {
+        ArrayList<Horaire> horaires = new ArrayList<>();
+        String sql = """
+        SELECT h.jourSemaine, h.HeureDebut, h.HeureFin
+        FROM edt e
+        JOIN horaire h ON e.IDHoraire = h.ID
+        WHERE e.IDSpecialiste = ?
+        ORDER BY h.jourSemaine, h.HeureDebut
+    """;
+
+        try (Connection conn = Data.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idSpecialiste);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Horaire h = new Horaire(
+                        rs.getInt("jourSemaine"),
+                        rs.getTime("HeureDebut"),
+                        rs.getTime("HeureFin")
+                );
+                horaires.add(h);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return horaires;
+    }
 
 
 
@@ -152,48 +176,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         return utilisateur;
     }
 
-    @Override
-    public ArrayList<Utilisateur> getAll() {
-        ArrayList<Utilisateur> listeUtilisateurs = new ArrayList<>();
-        try {
-            Connection connexion = Data.getConnection();
-            Statement statement = connexion.createStatement();
-            ResultSet resultats = statement.executeQuery("""
-                SELECT u.ID, u.Nom, u.Prenom, u.Email, u.Mdp, 
-                       p.ID AS patientID, p.type, 
-                       s.Specialisation, s.Lieu, 
-                       a.ID AS adminID
-                FROM utilisateur u 
-                LEFT JOIN patient p ON u.ID = p.ID 
-                LEFT JOIN specialiste s ON u.ID = s.ID 
-                LEFT JOIN admin a ON u.ID = a.ID
-            """);
 
-            while (resultats.next()) {
-                int id = resultats.getInt("ID");
-                String nom = resultats.getString("Nom");
-                String prenom = resultats.getString("Prenom");
-                String email = resultats.getString("Email");
-                String mdp = resultats.getString("Mdp");
-
-                if (resultats.getInt("patientID") != 0) {
-                    int type = resultats.getInt("type");
-                    listeUtilisateurs.add(new Patient(id, nom, prenom, email, mdp, type));
-                } else if (resultats.getString("Specialisation") != null) {
-                    String specialisation = resultats.getString("Specialisation");
-                    String lieu = resultats.getString("Lieu");
-                    listeUtilisateurs.add(new Specialiste(id, nom, prenom, email, mdp, specialisation, lieu));
-                } else if (resultats.getInt("adminID") != 0) {
-                    listeUtilisateurs.add(new Admin(id, nom, prenom, email, mdp));
-                } else {
-                    listeUtilisateurs.add(new Utilisateur(id, nom, prenom, email, mdp));
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return listeUtilisateurs;
-    }
 
     @Override
     public void ajouter(Utilisateur utilisateur) {
@@ -242,7 +225,50 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         }
     }
 
-    @Override
+    /*@Override
+    public ArrayList<Utilisateur> getAll() {
+        ArrayList<Utilisateur> listeUtilisateurs = new ArrayList<>();
+        try {
+            Connection connexion = Data.getConnection();
+            Statement statement = connexion.createStatement();
+            ResultSet resultats = statement.executeQuery("""
+                SELECT u.ID, u.Nom, u.Prenom, u.Email, u.Mdp,
+                       p.ID AS patientID, p.type,
+                       s.Specialisation, s.Lieu,
+                       a.ID AS adminID
+                FROM utilisateur u
+                LEFT JOIN patient p ON u.ID = p.ID
+                LEFT JOIN specialiste s ON u.ID = s.ID
+                LEFT JOIN admin a ON u.ID = a.ID
+            """);
+
+            while (resultats.next()) {
+                int id = resultats.getInt("ID");
+                String nom = resultats.getString("Nom");
+                String prenom = resultats.getString("Prenom");
+                String email = resultats.getString("Email");
+                String mdp = resultats.getString("Mdp");
+
+                if (resultats.getInt("patientID") != 0) {
+                    int type = resultats.getInt("type");
+                    listeUtilisateurs.add(new Patient(id, nom, prenom, email, mdp, type));
+                } else if (resultats.getString("Specialisation") != null) {
+                    String specialisation = resultats.getString("Specialisation");
+                    String lieu = resultats.getString("Lieu");
+                    listeUtilisateurs.add(new Specialiste(id, nom, prenom, email, mdp, specialisation, lieu));
+                } else if (resultats.getInt("adminID") != 0) {
+                    listeUtilisateurs.add(new Admin(id, nom, prenom, email, mdp));
+                } else {
+                    listeUtilisateurs.add(new Utilisateur(id, nom, prenom, email, mdp));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listeUtilisateurs;
+    }*/
+
+    /*@Override
     public void supprimer(Utilisateur utilisateur) {
         try {
             Connection connexion = Data.getConnection();
@@ -268,9 +294,9 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
-    @Override
+    /*@Override
     public void modifier(Utilisateur utilisateur) {
         try {
             Connection connexion = Data.getConnection();
@@ -300,55 +326,9 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
-    @Override
-    public Utilisateur chercher(int id) {
-        Utilisateur utilisateur = null;
-        try {
-            Connection connexion = Data.getConnection();
-            PreparedStatement stmt = connexion.prepareStatement("""
-                SELECT u.ID, u.Nom, u.Prenom, u.Email, u.Mdp, 
-                       p.ID AS patientID, p.type, 
-                       s.Specialisation, s.Lieu, 
-                       a.ID AS adminID
-                FROM utilisateur u 
-                LEFT JOIN patient p ON u.ID = p.ID 
-                LEFT JOIN specialiste s ON u.ID = s.ID 
-                LEFT JOIN admin a ON u.ID = a.ID 
-                WHERE u.ID = ?
-            """);
-            stmt.setInt(1, id);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                String nom = rs.getString("Nom");
-                String prenom = rs.getString("Prenom");
-                String email = rs.getString("Email");
-                String mdp = rs.getString("Mdp");
-
-                if (rs.getInt("patientID") != 0) {
-                    int type = rs.getInt("type");
-                    utilisateur = new Patient(id, nom, prenom, email, mdp, type);
-                } else if (rs.getString("Specialisation") != null) {
-                    String specialisation = rs.getString("Specialisation");
-                    String lieu = rs.getString("Lieu");
-                    utilisateur = new Specialiste(id, nom, prenom, email, mdp, specialisation, lieu);
-                } else if (rs.getInt("adminID") != 0) {
-                    utilisateur = new Admin(id, nom, prenom, email, mdp);
-                } else {
-                    utilisateur = new Utilisateur(id, nom, prenom, email, mdp);
-                }
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return utilisateur;
-    }
-
-    @Override
+    /*@Override
     public Utilisateur getUtilisateurById(int id) {
         Utilisateur utilisateur = null;
         try (Connection conn = Data.getConnection();
@@ -368,9 +348,9 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
             e.printStackTrace();
         }
         return utilisateur;
-    }
+    }*/
 
-    @Override
+    /*@Override
     public Utilisateur getUtilisateurByEmail(String email) {
         Utilisateur utilisateur = null;
         try (Connection conn = Data.getConnection();
@@ -390,5 +370,5 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
             e.printStackTrace();
         }
         return utilisateur;
-    }
+    }*/
 }
