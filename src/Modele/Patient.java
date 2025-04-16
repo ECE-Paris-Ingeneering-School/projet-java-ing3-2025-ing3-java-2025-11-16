@@ -1,65 +1,25 @@
 package Modele;
-import java.util.ArrayList;
 
+public class Patient extends Utilisateur {
+    private int type;
 
-public class Patient{
-    private int IDpatient;
-    private String mdp;
-    private String nom;
-    private String prenom;
-    private String TypePatient;
-    private ArrayList<String> historiqueRDV;
-    private int inscriptionDate;
-
-    public Patient(int IDpatient, String mdp, String nom, String prenom, String typePatient, ArrayList historiqueRDV, int inscriptionDate) {
-        this.IDpatient = IDpatient;
-        this.mdp = mdp;
-        this.nom = nom;
-        this.prenom = prenom;
-        TypePatient = typePatient;
-        this.historiqueRDV = historiqueRDV;
-        this.inscriptionDate = inscriptionDate;
+    // Constructeur sans ID (utilisé avant l'insertion en base)
+    public Patient(String nom, String prenom, String email, String mdp, int typePatient) {
+        super(nom, prenom, email, mdp);
+        this.type = typePatient;
     }
 
-    public int getIDpatient(){
-        return IDpatient;
+    // Constructeur avec ID (utilisé après récupération depuis la base)
+    public Patient(int id, String nom, String prenom, String email, String mdp, int typePatient) {
+        super(id, nom, prenom, email, mdp);
+        this.type = typePatient;
     }
 
-    public String getNom() {
-        return nom;
-    }
+    public int getType() { return type; }
+    public void setType(int typePatient) { this.type = typePatient; }
 
-    public String getPrenom() {
-        return prenom;
-    }
-
-    public String getTypePatient() {
-        return TypePatient;
-    }
-
-    public String getMdp() {
-        return mdp;
-    }
-
-    public void setIDpatient(String rdv){
-        this.historiqueRDV.add(rdv);
-    }
-    public ArrayList<String> getHistoriqueRDV() {
-        return historiqueRDV;
-    }
-    public int getInscriptionDate(){
-        return inscriptionDate;
-    }
-
-    public String toString(){
-
-        return "Patient{" +
-                "IDpatient=" + IDpatient +
-                ", nom='" + nom + '\'' +
-                ", prenom='" + prenom + '\'' +
-                ", typePatient='" + TypePatient + '\'' +
-                ", inscriptionDate=" + inscriptionDate +
-                ", historiqueRDV=" + historiqueRDV +
-                '}';
+    @Override
+    public String toString() {
+        return super.toString() + ", TypePatient : " + type;
     }
 }

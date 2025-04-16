@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
     public class Statistiques {
-        private ArrayList<Patient> patients;
+        /*private ArrayList<Patient> patients;
         private ArrayList<Specialiste> specialistes;
         private ArrayList<RendezVous> rendezVous;
 
@@ -43,7 +43,7 @@ import java.util.HashMap;
         public double calculerMoyenneRendezVousParPatient() {
             if (patients.size() == 0) return 0;
             return (double) rendezVous.size() / patients.size();
-        }
+        }*/
     }
 
 

@@ -1,55 +1,43 @@
 package Modele;
-
-import java.time.LocalDateTime;
+import java.util.Date;
 
 public class RendezVous {
-    private int IDrdv;
-    Specialiste specialiste;
-    Patient patient;
-    private String statut;//confirmé , ou annulé ou reporté
-    private LocalDateTime dateHeure;
+    private int id;
+    private int idSpecialiste;
+    private int idPatient;
+    private int idHoraire;
+    private Date date;
+    private String notes;
+    private String lieu;
 
-    public RendezVous(int IDrdv , String statut, LocalDateTime dateHeure , Specialiste specialiste, Patient patient){
-        this.IDrdv=IDrdv;
-        this.statut=statut;
-        this.specialiste=specialiste;
-        this.dateHeure=dateHeure;
-        this.patient=patient;
+    // Constructeur
+    public RendezVous(int idSpecialiste, int idPatient, int idHoraire, Date date, String notes, String lieu) {
+        this.idSpecialiste = idSpecialiste;
+        this.idPatient = idPatient;
+        this.idHoraire = idHoraire;
+        this.date = date;
+        this.notes = notes;
+        this.lieu = lieu;
     }
 
-    public int getIDrdv(){
-        return IDrdv;
-    }
-
-    public String statut(){
-        return statut;
-    }
-
-    public Specialiste getSpecialiste() {
-        return specialiste;
-    }
-
-    public Patient getPatient(){
-        return patient;
+    public RendezVous() {
 
     }
 
-    public LocalDateTime dateHeure(){
-        return dateHeure;
-    }
+    public int getId() { return id; }
+    public int getIdSpecialiste() { return idSpecialiste; }
+    public int getIdPatient() { return idPatient; }
+    public int getIdHoraire() { return idHoraire; }
+    public Date getDate() { return date; }
+    public String getNotes() { return notes; }
+    public String getLieu() { return lieu; }
 
-    public void setStatut(String statut) {
-        this.statut = statut;
-    }
+    public void setId(int id) { this.id = id; }
+    public void setIdSpecialiste(int idSpecialiste) { this.idSpecialiste = idSpecialiste; }
+    public void setIdPatient(int idPatient) { this.idPatient = idPatient; }
+    public void setIdHoraire(int idHoraire) { this.idHoraire = idHoraire; }
+    public void setDate(Date date) { this.date = date; }
+    public void setNotes(String notes) { this.notes = notes; }
+    public void setLieu(String lieu) { this.lieu = lieu; }
 
-    @Override
-    public String toString() {
-        return "RendezVous{" +
-                "idRDV=" + IDrdv +
-                ", patient=" + patient.getNom() + " " + patient.getPrenom() +
-                ", specialiste=" + specialiste.getNom() + " " + specialiste.getPrenom() +
-                ", dateHeure=" + dateHeure +
-                ", statut='" + statut + '\'' +
-                '}';
-    }
 }

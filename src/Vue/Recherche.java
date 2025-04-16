@@ -1,0 +1,168 @@
+package Vue;
+
+import Dao.*;
+import Modele.*;
+
+import javax.swing.*;
+import java.awt.*;
+import java.sql.*;
+import java.util.*;
+
+public class Recherche extends BaseFrame {
+
+    private JTextField motCleField;
+    private JComboBox<String> jourCombo;
+    private JComboBox<String> heureCombo;
+    private JButton rechercherBtn;
+    private JTextArea resultArea;
+    private JTextField lieuField;
+
+    private UtilisateurDAOImpl specialisteDAO;
+
+    public Recherche(Utilisateur utilisateur) {
+        super(utilisateur);
+
+        JPanel contenu = getCenterPanel(); // affichage des specialistes + filtres jours/horaires/Lieu
+        JPanel bandeau = getNorthPanel(); // Barre de recherche dans le bandeau (Nom specialiste ou Specialité)
+
+        DatabaseConnection db = DatabaseConnection.getInstance("rdv_specialiste", "root", "root");
+        this.specialisteDAO = new UtilisateurDAOImpl(db);
+
+        JPanel recherchePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        motCleField = new JTextField(20);
+        rechercherBtn = new JButton("Rechercher");
+        resultArea = new JTextArea(40,40);
+
+        motCleField.setBorder(BorderFactory.createLineBorder(Color.RED));
+        motCleField.setText("Nom, spécialité");
+        motCleField.setForeground(Color.GRAY);
+
+        motCleField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent e) {
+                if (motCleField.getText().equals("Nom, spécialité")) {
+                    motCleField.setText("");
+                    motCleField.setForeground(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(java.awt.event.FocusEvent e) {
+                if (motCleField.getText().isEmpty()) {
+                    motCleField.setForeground(Color.GRAY);
+                    motCleField.setText("Nom, spécialité");
+                }
+            }
+        });
+
+        JPanel filtrePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        filtrePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Un peu d'espace
+        filtrePanel.setBackground(Color.WHITE); // ou une autre couleur douce si tu veux
+
+    // Barre de recherche pour le lieu
+        lieuField = new JTextField("Lieu", 15);
+        lieuField.setForeground(Color.GRAY);
+        lieuField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent e) {
+                if (lieuField.getText().equals("Lieu")) {
+                    lieuField.setText("");
+                    lieuField.setForeground(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(java.awt.event.FocusEvent e) {
+                if (lieuField.getText().isEmpty()) {
+                    lieuField.setForeground(Color.GRAY);
+                    lieuField.setText("Lieu");
+                }
+            }
+        });
+
+    // ComboBox pour le jour
+        String[] jours = {"", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"};
+        jourCombo = new JComboBox<>(jours);
+
+    // ComboBox pour l'horaire
+        String[] horaires = {"", "08:00", "09:00", "10:00", "11:00", "14:00", "15:00", "16:00"};
+        heureCombo = new JComboBox<>(horaires);
+
+    // Ajout au panel
+        filtrePanel.add(new JLabel("Lieu:"));
+        filtrePanel.add(lieuField);
+        filtrePanel.add(new JLabel("Jour:"));
+        filtrePanel.add(jourCombo);
+        filtrePanel.add(new JLabel("Horaire:"));
+        filtrePanel.add(heureCombo);
+
+    // Ensuite, ajoute ce filtrePanel en haut du contenu principal :
+        contenu.add(filtrePanel, BorderLayout.NORTH);
+
+        recherchePanel.add(motCleField);
+        recherchePanel.add(rechercherBtn);
+        recherchePanel.setBackground(new Color(54, 153, 213));
+
+        bandeau.add(recherchePanel, BorderLayout.CENTER);
+
+        rechercherBtn.addActionListener(e -> rechercher());
+
+        contenu.add(resultArea, BorderLayout.CENTER);
+        setVisible(true);
+    }
+
+    private void rechercher() {
+        String motCle = motCleField.getText().trim();
+        String lieu = lieuField.getText().trim();
+        String jour = null;
+        Time heure = null;
+
+        System.out.println(motCle);
+        System.out.println(lieu);
+
+        // Récupérer le jour s’il est sélectionné
+        if (jourCombo.getSelectedItem() != null && !jourCombo.getSelectedItem().toString().isEmpty()) {
+            jour = jourCombo.getSelectedItem().toString().toLowerCase();
+            System.out.println("Jour: " + jour);
+        }
+
+        // Récupérer l'heure si sélectionnée
+        if (heureCombo.getSelectedItem() != null && !heureCombo.getSelectedItem().toString().isEmpty()) {
+            try {
+                heure = Time.valueOf(heureCombo.getSelectedItem().toString() + ":00");
+                System.out.println("Heure: " + heure);
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(this, "Heure invalide (ex : 09:00)");
+                return;
+            }
+        }
+
+        if(motCle.trim().isEmpty() || motCle.equalsIgnoreCase("Nom, spécialité")) {
+            System.out.println("MotCle: " + motCle);
+            JOptionPane.showMessageDialog(this, "Saisir un nom ou une spécialité","Champ requis", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Appel au DAO
+        ArrayList<Specialiste> resultats = specialisteDAO.rechercherSpecialistes(motCle, jour, heure, lieu);
+
+        // Affichage
+        afficherResultats(resultats);
+    }
+
+
+
+    private void afficherResultats(ArrayList<Specialiste> ListeSpecialistes) {
+        resultArea.setText("");
+        if (ListeSpecialistes.isEmpty()) {
+            resultArea.append("Aucun spécialiste trouvé.\n");
+        } else {
+            for (int i = 0; i < ListeSpecialistes.size(); i++) {
+                Specialiste s = ListeSpecialistes.get(i);
+                resultArea.append(s.getPrenom() + " " + s.getNom() +
+                        " - " + s.getSpecialisation() + " - " + s.getLieu() + "\n");
+            }
+
+        }
+    }
+}
