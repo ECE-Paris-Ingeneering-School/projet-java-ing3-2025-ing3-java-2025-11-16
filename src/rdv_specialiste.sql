@@ -33,6 +33,7 @@ CREATE TABLE `specialiste` (
    `ID` INT(11) NOT NULL,
    `Specialisation` VARCHAR(255) NOT NULL,
    `Lieu` VARCHAR(255) NOT NULL,
+   `Photo` VARCHAR(255) NOT NULL,
    PRIMARY KEY (`ID`),
    CONSTRAINT `fk_specialiste_utilisateur` FOREIGN KEY (`ID`) REFERENCES `utilisateur`(`ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -105,6 +106,26 @@ INSERT INTO admin (ID) VALUES
        (7),
        (8),
        (9);
+
+-- 👤 Nouveaux utilisateurs spécialistes
+INSERT INTO utilisateur (nom, prenom, email, mdp) VALUES
+      ('Moreau', 'Julie', 'julie.moreau@medilink.fr', 'pass123'),     -- Cardiologue
+      ('Garcia', 'Paul', 'paul.garcia@medilink.fr', 'pass123'),       -- Gynécologue
+      ('Fernandez', 'Lucia', 'lucia.fernandez@medilink.fr', 'pass123'), -- Cardiologue
+      ('Thomas', 'Élise', 'elise.thomas@medilink.fr', 'pass123'),     -- Gynécologue
+      ('Perrot', 'Hugo', 'hugo.perrot@medilink.fr', 'pass123'),       -- Dermatologue
+      ('Carvalho', 'Manon', 'manon.carvalho@medilink.fr', 'pass123'); -- Cardiologue
+
+
+INSERT INTO specialiste (ID, Specialisation, Lieu) VALUES
+       (10, 'Cardiologue', 'Paris'),
+       (11, 'Gynécologue', 'Lyon'),
+       (12, 'Cardiologue', 'Bordeaux'),
+       (13, 'Gynécologue', 'Toulouse'),
+       (14, 'Dermatologue', 'Nice'),
+       (15, 'Cardiologue', 'Marseille');
+
+
 -- 🕐 Insertion des horaires (1: lundi à 7 : dimanche, matin et après-midi)
 INSERT INTO horaire (jourSemaine, HeureDebut, HeureFin) VALUES
         (2, '09:00:00', '10:00:00'), -- ID 1
@@ -129,10 +150,44 @@ INSERT INTO edt (IDSpecialiste, IDHoraire) VALUES
        (2, 4),
        (2, 5),
        (2, 7);
+
 -- Dr Nguyen (Psy)
 INSERT INTO edt (IDSpecialiste, IDHoraire) VALUES
        (3, 6),
        (3, 8);
+
+-- Julie Moreau (ID 10 - Cardiologue à Paris)
+INSERT INTO edt (IDSpecialiste, IDHoraire) VALUES
+       (10, 1), -- Lundi 9h
+       (10, 2), -- Lundi 10h
+       (10, 3); -- Lundi 14h
+
+-- Paul Garcia (ID 11 - Gynécologue à Lyon)
+INSERT INTO edt (IDSpecialiste, IDHoraire) VALUES
+        (11, 4), -- Mardi 9h
+        (11, 5); -- Mardi 10h
+
+-- Lucia Fernandez (ID 12 - Cardiologue à Bordeaux)
+INSERT INTO edt (IDSpecialiste, IDHoraire) VALUES
+        (12, 6), -- Jeudi 14h
+        (12, 7); -- Vendredi 9h
+
+-- Élise Thomas (ID 13 - Gynécologue à Toulouse)
+INSERT INTO edt (IDSpecialiste, IDHoraire) VALUES
+        (13, 5), -- Mardi 10h
+        (13, 8); -- Samedi 14h
+
+-- Hugo Perrot (ID 14 - Dermatologue à Nice)
+INSERT INTO edt (IDSpecialiste, IDHoraire) VALUES
+        (14, 3), -- Lundi 14h
+        (14, 6); -- Jeudi 14h
+
+-- Manon Carvalho (ID 15 - Cardiologue à Marseille)
+INSERT INTO edt (IDSpecialiste, IDHoraire) VALUES
+        (15, 1), -- Lundi 9h
+        (15, 4), -- Mardi 9h
+        (15, 7); -- Vendredi 9h
+
 
 -- 📆 Rendez-vous logiques
 INSERT INTO rdv (IDSpecialiste, IDPatient, IDHoraire, Date, Notes, Lieu) VALUES
