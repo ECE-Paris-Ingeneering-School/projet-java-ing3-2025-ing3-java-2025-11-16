@@ -20,6 +20,10 @@ public class Recherche extends BaseFrame {
     private JPanel resultatsPanel;
 
 
+    public Recherche() {
+
+    }
+
     public Recherche(Utilisateur utilisateur) {
         super(utilisateur);
 
@@ -181,7 +185,7 @@ public class Recherche extends BaseFrame {
         infosPanel.add(lieu);
 
         // Partie droite - Emploi du temps
-        Calendrier calendrierPanel = new Calendrier(s);
+        Calendrier calendrierPanel = new Calendrier(s,utilisateurConnecte);
 
         panel.add(infosPanel, BorderLayout.WEST);
         panel.add(calendrierPanel, BorderLayout.EAST);

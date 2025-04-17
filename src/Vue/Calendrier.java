@@ -1,8 +1,10 @@
 package Vue;
+import Dao.*;
 import Modele.*;
 
 import java.awt.*;
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import javax.swing.*;
 
@@ -10,9 +12,11 @@ public class Calendrier extends JPanel{
 
     private LocalDate startOfWeek;
     private final Specialiste specialiste;
+    private Utilisateur utilisateur;
 
-    public Calendrier(Specialiste specialiste) {
+    public Calendrier(Specialiste specialiste, Utilisateur utilisateur) {
         this.specialiste = specialiste;
+        this.utilisateur = utilisateur;
         this.startOfWeek = LocalDate.now().with(DayOfWeek.MONDAY);
         setLayout(new BorderLayout());
         buildUI();
@@ -22,10 +26,13 @@ public class Calendrier extends JPanel{
         removeAll(); // Clear if refreshing
 
         // --- TOP: Header avec boutons navigation
-        JPanel header = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        JButton previousWeek = new JButton("← Semaine précédente");
-        JButton nextWeek = new JButton("→ Semaine suivante");
-        JLabel semaineLabel = new JLabel("Semaine du " + startOfWeek + " au " + startOfWeek.plusDays(5));
+        JPanel header = new JPanel(new BorderLayout());
+        JButton previousWeek = new JButton("← pred");
+        JButton nextWeek = new JButton("→ suiv");
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.FRENCH);
+        String moisAnnee = startOfWeek.format(formatter);
+        JLabel semaineLabel = new JLabel(moisAnnee, SwingConstants.CENTER);
 
 
 
@@ -39,9 +46,9 @@ public class Calendrier extends JPanel{
             buildUI();
         });
 
-        header.add(previousWeek);
+        header.add(previousWeek,BorderLayout.WEST);
         header.add(semaineLabel);
-        header.add(nextWeek);
+        header.add(nextWeek, BorderLayout.EAST);
         add(header, BorderLayout.NORTH);
 
         // --- GRID: tableau des créneaux
@@ -52,32 +59,86 @@ public class Calendrier extends JPanel{
         grid.setBorder(BorderFactory.createEmptyBorder()); // pas de contour
 
 
-        for (String jour : jours) grid.add(new JLabel(jour, SwingConstants.CENTER));
+        for (int i = 0; i < jours.length; i++) {
+            LocalDate currentDay = startOfWeek.plusDays(i);
+            String jourComplet = jours[i] + " " + currentDay.getDayOfMonth();
+            JLabel jourLabel = new JLabel(jourComplet, SwingConstants.CENTER);
+            grid.add(jourLabel);
+        }
+
 
         for (String heure : heures) {
-            //grid.add(new JLabel(heure, SwingConstants.CENTER));
+
             for (int i = 0; i < jours.length; i++) {
                 JButton creneauBtn = new JButton();
                 int jourInt = i + 1; // Lundi = 1
 
-                // Vérifie si ce créneau existe dans l'emploi du temps
-                Optional<Horaire> match = specialiste.getEmploiDuTemps().stream()
-                        .filter(h -> h.getJourSemaine() == jourInt &&
-                                h.getHeureDebut().toString().startsWith(heure))
-                        .findFirst();
+                Horaire match = null;
+                for (Horaire h : specialiste.getEmploiDuTemps()) {
+                    if (h.getJourSemaine() == jourInt && h.getHeureDebut().toString().startsWith(heure)) {
+                        match = h;
+                        break;
+                    }
+                }
 
-                if (match.isPresent()) {
-                    creneauBtn.setFocusPainted(false);
-                    creneauBtn.setBorderPainted(false); // plus clean
-                    creneauBtn.setContentAreaFilled(true); // permet de colorer, mais sans bordure moche
+                // Date exacte
+                LocalDate date = startOfWeek.plusDays(jourInt - 1);
+                Date dateUtil = java.sql.Date.valueOf(date);
 
-                    creneauBtn.setText(heure);
-                    creneauBtn.setBackground(new Color(17, 169, 209));
-                    creneauBtn.addActionListener(e -> {
-                        JOptionPane.showMessageDialog(this,
-                                "RDV avec " + specialiste.getNom() +
-                                        " le " + jours[jourInt - 1] + " à " + heure);
-                    });
+                if (match!=null) {
+
+                    int idHoraire = match.getId();
+
+                    DatabaseConnection db = DatabaseConnection.getInstance("rdv_specialiste", "root", "root");
+                    RendezVousDAO rdvDAO = new RendezVousDAOImpl(db);
+                    System.out.println(specialiste.getId());
+
+                    boolean dejaReserve = rdvDAO.estDejaReserve(idHoraire, dateUtil);
+
+
+                    if (dejaReserve) {
+                        // Grise le bouton + désactive
+                        creneauBtn.setText(heure);
+                        creneauBtn.setEnabled(false);
+                        creneauBtn.setBackground(Color.LIGHT_GRAY);
+                    }
+
+                    else{
+                        creneauBtn.setFocusPainted(false);
+                        creneauBtn.setBorderPainted(false); // plus clean
+                        creneauBtn.setContentAreaFilled(true); // permet de colorer, mais sans bordure moche
+
+                        creneauBtn.setText(heure);
+                        creneauBtn.setBackground(new Color(17, 169, 209));
+                        creneauBtn.addActionListener(e -> {
+                            String message = "Souhaitez-vous réserver ce créneau ?\n\n" +
+                                    "Spécialiste : " + specialiste.getNom() + "\n" +
+                                    "Jour : " + jours[jourInt - 1] + "\n" +
+                                    "Heure : " + heure;
+
+                            int choix = JOptionPane.showOptionDialog(this, message, "Confirmation de RDV",
+                                    JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+                                    new String[]{"Confirmer", "Annuler"}, "Confirmer");
+
+                            if (choix == JOptionPane.YES_OPTION) {
+
+                                RendezVous rdv = new RendezVous(specialiste.getId(),utilisateur.getId(),idHoraire,dateUtil,"note a voir",specialiste.getLieu());
+                                boolean ok = rdvDAO.ajouterRendezVous(rdv);
+
+                                if (ok) {
+                                    JOptionPane.showMessageDialog(this, "Rendez-vous confirmé !");
+                                    creneauBtn.setEnabled(false);
+                                    creneauBtn.setBackground(Color.GRAY);
+                                }
+                                else{
+                                    JOptionPane.showMessageDialog(this, "Erreur dans la confirmation !");
+                                }
+
+                            }
+                        });
+                    }
+
+
                 } else {
                     creneauBtn.setEnabled(false); // Pas dispo
                     creneauBtn.setOpaque(false);

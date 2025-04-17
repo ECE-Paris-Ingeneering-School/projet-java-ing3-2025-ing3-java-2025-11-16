@@ -56,20 +56,15 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
             if (!lieu.equals("Lieu")) {
                 System.out.println("Lieu != rien : "+lieu);
                 stmt.setString(index++, "%" + lieu + "%");
-                System.out.println("index lieu"+index);
             }
 
            if (jour != null && !jour.trim().isEmpty()) {
                 int jourInt = Horaire.convertirJourEnInt(jour);
-                System.out.println("JourINT " + jourInt + " = " + jour);
                 stmt.setInt(index++, jourInt);
-                System.out.println("index jour"+index);
-
             }
 
             if (heure != null) {
                 stmt.setTime(index, heure);
-                System.out.println("index horaire = " + heure);
             }
 
             ResultSet rs = stmt.executeQuery();
@@ -98,7 +93,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
     public ArrayList<Horaire> chargerHorairesPourSpecialiste(int idSpecialiste) {
         ArrayList<Horaire> horaires = new ArrayList<>();
         String sql = """
-        SELECT h.jourSemaine, h.HeureDebut, h.HeureFin
+        SELECT h.ID, h.jourSemaine, h.HeureDebut, h.HeureFin
         FROM edt e
         JOIN horaire h ON e.IDHoraire = h.ID
         WHERE e.IDSpecialiste = ?
@@ -113,6 +108,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 
             while (rs.next()) {
                 Horaire h = new Horaire(
+                        rs.getInt("ID"),
                         rs.getInt("jourSemaine"),
                         rs.getTime("HeureDebut"),
                         rs.getTime("HeureFin")

@@ -1,5 +1,6 @@
 package Controleur;
 import Vue.*;
+import Modele.*;
 
 public class Main {
     public static void main(String[] args) {

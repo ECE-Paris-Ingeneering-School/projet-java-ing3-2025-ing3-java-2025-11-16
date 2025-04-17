@@ -15,6 +15,8 @@ public interface RendezVousDAO{
 
     boolean ajouterRendezVous(RendezVous rdv);
 
+    boolean estDejaReserve(int idHoraire, java.util.Date date);
+
     boolean supprimerRendezVous(int id);
 
     boolean modifierRendezVous(RendezVous rdv);
