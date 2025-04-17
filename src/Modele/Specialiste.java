@@ -1,8 +1,10 @@
 package Modele;
+import java.util.*;
 
 public class Specialiste extends Utilisateur {
     private String specialisation;
     private String lieu;
+    private ArrayList<Horaire> emploiDuTemps = new ArrayList<>();
 
     public Specialiste(int id,String nom, String prenom, String email, String mdp, String specialisation, String lieu) {
         super(id,nom, prenom, email, mdp);
@@ -27,4 +29,11 @@ public class Specialiste extends Utilisateur {
         return super.toString() + ", Spécialisation : " + specialisation + ", Lieu : " + lieu;
     }
 
+    public ArrayList<Horaire> getEmploiDuTemps() {
+        return emploiDuTemps;
+    }
+
+    public void setEmploiDuTemps(ArrayList<Horaire> emploiDuTemps) {
+        this.emploiDuTemps = emploiDuTemps;
+    }
 }

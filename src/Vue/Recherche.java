@@ -14,10 +14,11 @@ public class Recherche extends BaseFrame {
     private JComboBox<String> jourCombo;
     private JComboBox<String> heureCombo;
     private JButton rechercherBtn;
-    private JTextArea resultArea;
     private JTextField lieuField;
 
     private UtilisateurDAOImpl specialisteDAO;
+    private JPanel resultatsPanel;
+
 
     public Recherche(Utilisateur utilisateur) {
         super(utilisateur);
@@ -28,12 +29,18 @@ public class Recherche extends BaseFrame {
         DatabaseConnection db = DatabaseConnection.getInstance("rdv_specialiste", "root", "root");
         this.specialisteDAO = new UtilisateurDAOImpl(db);
 
-        JPanel recherchePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        JPanel recherchePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         motCleField = new JTextField(20);
         rechercherBtn = new JButton("Rechercher");
-        resultArea = new JTextArea(40,40);
+        motCleField.setPreferredSize(new Dimension(300, 30));
 
-        motCleField.setBorder(BorderFactory.createLineBorder(Color.RED));
+        resultatsPanel = new JPanel();
+        resultatsPanel.setLayout(new BoxLayout(resultatsPanel, BoxLayout.Y_AXIS));
+        JScrollPane scrollPane = new JScrollPane(resultatsPanel);
+        contenu.add(scrollPane, BorderLayout.CENTER);
+
+
+        motCleField.setBorder(BorderFactory.createLineBorder(new Color(15, 75, 135)));
         motCleField.setText("Nom, spécialité");
         motCleField.setForeground(Color.GRAY);
 
@@ -99,19 +106,20 @@ public class Recherche extends BaseFrame {
     // Ensuite, ajoute ce filtrePanel en haut du contenu principal :
         contenu.add(filtrePanel, BorderLayout.NORTH);
 
+        recherchePanel.setBorder(BorderFactory.createEmptyBorder(50, 10, 10, 10)); // Un peu d'espace
+
         recherchePanel.add(motCleField);
         recherchePanel.add(rechercherBtn);
         recherchePanel.setBackground(new Color(54, 153, 213));
 
-        bandeau.add(recherchePanel, BorderLayout.CENTER);
+        bandeau.add(recherchePanel);
 
         rechercherBtn.addActionListener(e -> rechercher());
 
-        contenu.add(resultArea, BorderLayout.CENTER);
         setVisible(true);
     }
 
-    private void rechercher() {
+    public void rechercher() {
         String motCle = motCleField.getText().trim();
         String lieu = lieuField.getText().trim();
         String jour = null;
@@ -151,18 +159,52 @@ public class Recherche extends BaseFrame {
     }
 
 
+    public JPanel creerPanelSpecialiste(Specialiste s) {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+        panel.setBackground(new Color(253, 249, 249));
+        panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 250)); // Hauteur fixe
 
-    private void afficherResultats(ArrayList<Specialiste> ListeSpecialistes) {
-        resultArea.setText("");
-        if (ListeSpecialistes.isEmpty()) {
-            resultArea.append("Aucun spécialiste trouvé.\n");
-        } else {
-            for (int i = 0; i < ListeSpecialistes.size(); i++) {
-                Specialiste s = ListeSpecialistes.get(i);
-                resultArea.append(s.getPrenom() + " " + s.getNom() +
-                        " - " + s.getSpecialisation() + " - " + s.getLieu() + "\n");
-            }
+        // Partie gauche - Infos perso
+        JPanel infosPanel = new JPanel();
+        infosPanel.setLayout(new BoxLayout(infosPanel, BoxLayout.Y_AXIS));
+        infosPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        infosPanel.setBackground(new Color(253, 249, 249));
 
-        }
+        JLabel nomPrenom = new JLabel(s.getPrenom() + " " + s.getNom());
+        nomPrenom.setFont(new Font("Arial", Font.BOLD, 20));
+        JLabel specialisation = new JLabel("Spécialité : " + s.getSpecialisation());
+        JLabel lieu = new JLabel("Lieu : " + s.getLieu());
+
+        infosPanel.add(nomPrenom);
+        infosPanel.add(specialisation);
+        infosPanel.add(lieu);
+
+        // Partie droite - Emploi du temps
+        Calendrier calendrierPanel = new Calendrier(s);
+
+        panel.add(infosPanel, BorderLayout.WEST);
+        panel.add(calendrierPanel, BorderLayout.EAST);
+
+        return panel;
     }
+
+
+    public void afficherResultats(ArrayList<Specialiste> listeSpecialistes) {
+        resultatsPanel.removeAll(); // Vider les anciens résultats
+
+        if (listeSpecialistes.isEmpty()) {
+            JLabel label = new JLabel("Aucun spécialiste trouvé.");
+            label.setFont(new Font("Arial", Font.PLAIN, 16));
+            resultatsPanel.add(label);
+        } else {
+            for (Specialiste s : listeSpecialistes) {
+                resultatsPanel.add(creerPanelSpecialiste(s));
+            }
+        }
+
+        resultatsPanel.revalidate();
+        resultatsPanel.repaint();
+    }
+
 }

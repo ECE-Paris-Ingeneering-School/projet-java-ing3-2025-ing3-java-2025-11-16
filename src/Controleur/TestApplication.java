@@ -8,7 +8,7 @@ import java.util.*;
 
 public class TestApplication {
 
-    private static final Scanner scanner = new Scanner(System.in);
+    /*private static final Scanner scanner = new Scanner(System.in);
     private static final DatabaseConnection db = DatabaseConnection.getInstance("rdv_specialiste", "root", "root");
     private static final UtilisateurDAO utilisateurDAO = db.getUtilisateurDAO();
     private static final HoraireDAO horaireDAO = db.getHoraireDAO();
@@ -164,5 +164,5 @@ public class TestApplication {
                 System.out.println("--------------------------------------------------");
             }
         }
-    }
+    }*/
 }
