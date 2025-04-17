@@ -1,20 +1,32 @@
 package Controleur;
 
-import Modele.Patient;
+import Modele.RendezVous;
 import java.util.ArrayList;
+import java.util.List;
 
-public class RendezVousController {
-    /*
-    prendreRendezVous(RendezVous rdv) : boolean
+public class  RendezVousController {
 
-    annulerRendezVous(int idRdv) : boolean
+    // Liste temporaire pour stocker les rendez-vous en mémoire
+    private List<RendezVous> listeRendezVous;
 
-    modifierRendezVous(RendezVous rdv) : boolean
+    // Constructeur
+    public RendezVousController() {
+        this.listeRendezVous = new ArrayList<>();
+    }
 
-    listerRendezVousParPatient(int idPatient) : List<RendezVous>
+    // ✅ Ajouter un rendez-vous
+    public boolean ajouterRendezVous(RendezVous rdv) {
+        if (rdv != null) {
+            listeRendezVous.add(rdv);
+            return true;
+        }
+        return false;
+    }
 
-    listerRendezVousParSpecialiste(int idSpecialiste) : List<RendezVous>
-*/
+    // ✅ Obtenir la liste de tous les rendez-vous
+    public List<RendezVous> getRendezVous() {
+        return listeRendezVous;
+    }
 }
 
 

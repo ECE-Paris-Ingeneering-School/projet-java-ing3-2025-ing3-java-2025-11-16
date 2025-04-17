@@ -17,7 +17,8 @@ public class UtilisateurController {
 
     public Utilisateur chercherUtilisateurParID(int id) {
         for (Utilisateur u : utilisateurs) {
-            if (u.getID() == id) {
+            if (u.getId() == id)
+            {
                 return u;
             }
         }
@@ -35,7 +36,9 @@ public class UtilisateurController {
         }
     }
 
-    public void afficherUtilisateurs() {
+
+
+    public void affichertousUtilisateurs() {
         System.out.println("Liste des utilisateurs enregistrés :");
         for (Utilisateur u : utilisateurs) {
             u.afficherUtilisateur();
