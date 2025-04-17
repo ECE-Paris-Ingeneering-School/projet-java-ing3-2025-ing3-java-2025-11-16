@@ -124,7 +124,7 @@ public class BaseFrame extends JFrame {
             menuDeroulant.add(deconnexionItem);
             deconnexionItem.addActionListener(e -> {
                 dispose();
-                new PageAccueil();
+                new ChoixConnexion();
             });
 
             rightPanel.add(compteButton, gbc);
@@ -148,13 +148,9 @@ public class BaseFrame extends JFrame {
     }
 
 
-    public JPanel getMainPanel() {
-        return (JPanel) getContentPane();
-    }
+    public JPanel getMainPanel() { return (JPanel) getContentPane();}
 
-    public JPanel getCenterPanel() {
-        return centerPanel;
-    }
+    public JPanel getCenterPanel() { return centerPanel;}
 
     public JPanel getNorthPanel() { return topPanel; }
 

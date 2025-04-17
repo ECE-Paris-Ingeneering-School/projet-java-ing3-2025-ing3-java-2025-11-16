@@ -19,13 +19,18 @@ public class Connexion extends BaseFrame {
         JPanel contenu = getCenterPanel();
         JPanel boutonPanel = new JPanel(new BorderLayout());
 
+        JLabel titreLabel = new JLabel("Connexion", SwingConstants.CENTER);
+        titreLabel.setFont(new Font("Arial", Font.BOLD, 30));
+        titreLabel.setBorder(BorderFactory.createEmptyBorder(30,0,0,0));
+        contenu.add(titreLabel, BorderLayout.NORTH);
+
         JPanel panel = new JPanel(new GridLayout(8, 1, 10, 10));
         panel.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
         boutonPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
         JButton btnRetour = new JButton("Retour");
         btnRetour.addActionListener(e -> {
-            new ChoixConnexion(typeUtilisateur);
+            new ChoixConnexion();
             dispose();
         });
 
@@ -46,16 +51,29 @@ public class Connexion extends BaseFrame {
             }
         });
 
-        Font bigFont = new Font("Arial", Font.BOLD, 20);
-        Dimension bigSize = new Dimension(250, 60);
+        JButton signupBtn = new JButton("Pas de compte?");
+        signupBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new CreationCompte(typeUtilisateur);
+                dispose();
+            }
+        });
+
+        Font bigFont = new Font("Arial", Font.BOLD, 18);
+        Dimension bigSize = new Dimension(200, 30);
+        Dimension size2 = new Dimension(150, 20);
 
         loginBtn.setFont(bigFont);
+        signupBtn.setFont(bigFont);
         btnRetour.setFont(bigFont);
 
         loginBtn.setPreferredSize(bigSize);
+        signupBtn.setPreferredSize(size2);
         btnRetour.setPreferredSize(bigSize);
 
         boutonPanel.add(loginBtn, BorderLayout.EAST);
+        boutonPanel.add(signupBtn, BorderLayout.CENTER);
         boutonPanel.add(btnRetour, BorderLayout.WEST);
 
         contenu.add(boutonPanel, BorderLayout.SOUTH);

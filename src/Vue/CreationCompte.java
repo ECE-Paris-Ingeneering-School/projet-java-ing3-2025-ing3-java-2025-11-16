@@ -19,6 +19,11 @@ public class CreationCompte extends BaseFrame {
         JPanel Contenu = getCenterPanel();
         JPanel boutonsPanel = new JPanel(new BorderLayout());
 
+        JLabel titreLabel = new JLabel("Création de Compte", SwingConstants.CENTER);
+        titreLabel.setFont(new Font("Arial", Font.BOLD, 30));
+        titreLabel.setBorder(BorderFactory.createEmptyBorder(30,0,0,0));
+        Contenu.add(titreLabel, BorderLayout.NORTH);
+
         JPanel panel = new JPanel(new GridLayout(8, 1, 10, 10));
         panel.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
         boutonsPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
@@ -32,7 +37,7 @@ public class CreationCompte extends BaseFrame {
 
         JButton btnRetour = new JButton("Retour");
         btnRetour.addActionListener(e -> {
-            new ChoixConnexion(typeUtilisateur);
+            new Connexion(typeUtilisateur);
             dispose();
         });
 
