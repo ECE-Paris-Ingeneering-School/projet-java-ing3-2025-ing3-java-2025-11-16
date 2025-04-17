@@ -48,13 +48,14 @@ public class Calendrier extends JPanel{
         String[] jours = {"Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"};
         String[] heures = {"08:00", "09:00", "10:00", "11:00", "14:00", "15:00", "16:00"};
 
-        JPanel grid = new JPanel(new GridLayout(heures.length + 1, jours.length + 1));
-        grid.add(new JLabel("")); // Coin vide
+        JPanel grid = new JPanel(new GridLayout(heures.length + 1, jours.length,10,10));
+        grid.setBorder(BorderFactory.createEmptyBorder()); // pas de contour
+
 
         for (String jour : jours) grid.add(new JLabel(jour, SwingConstants.CENTER));
 
         for (String heure : heures) {
-            grid.add(new JLabel(heure, SwingConstants.CENTER));
+            //grid.add(new JLabel(heure, SwingConstants.CENTER));
             for (int i = 0; i < jours.length; i++) {
                 JButton creneauBtn = new JButton();
                 int jourInt = i + 1; // Lundi = 1
@@ -66,8 +67,12 @@ public class Calendrier extends JPanel{
                         .findFirst();
 
                 if (match.isPresent()) {
-                    creneauBtn.setText("RDV");
-                    creneauBtn.setBackground(Color.GREEN);
+                    creneauBtn.setFocusPainted(false);
+                    creneauBtn.setBorderPainted(false); // plus clean
+                    creneauBtn.setContentAreaFilled(true); // permet de colorer, mais sans bordure moche
+
+                    creneauBtn.setText(heure);
+                    creneauBtn.setBackground(new Color(17, 169, 209));
                     creneauBtn.addActionListener(e -> {
                         JOptionPane.showMessageDialog(this,
                                 "RDV avec " + specialiste.getNom() +
@@ -75,12 +80,15 @@ public class Calendrier extends JPanel{
                     });
                 } else {
                     creneauBtn.setEnabled(false); // Pas dispo
+                    creneauBtn.setOpaque(false);
+                    creneauBtn.setBorderPainted(false);
                 }
 
                 grid.add(creneauBtn);
             }
         }
 
+        setBackground(new Color(229, 247, 255));
         add(grid, BorderLayout.CENTER);
         revalidate();
         repaint();

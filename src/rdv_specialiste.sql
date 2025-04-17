@@ -33,6 +33,7 @@ CREATE TABLE `specialiste` (
    `ID` INT(11) NOT NULL,
    `Specialisation` VARCHAR(255) NOT NULL,
    `Lieu` VARCHAR(255) NOT NULL,
+   `Photo` VARCHAR(255) NOT NULL,
    PRIMARY KEY (`ID`),
    CONSTRAINT `fk_specialiste_utilisateur` FOREIGN KEY (`ID`) REFERENCES `utilisateur`(`ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

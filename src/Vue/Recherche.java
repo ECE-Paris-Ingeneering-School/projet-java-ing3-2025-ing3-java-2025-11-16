@@ -29,9 +29,10 @@ public class Recherche extends BaseFrame {
         DatabaseConnection db = DatabaseConnection.getInstance("rdv_specialiste", "root", "root");
         this.specialisteDAO = new UtilisateurDAOImpl(db);
 
-        JPanel recherchePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        JPanel recherchePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         motCleField = new JTextField(20);
         rechercherBtn = new JButton("Rechercher");
+        motCleField.setPreferredSize(new Dimension(300, 30));
 
         resultatsPanel = new JPanel();
         resultatsPanel.setLayout(new BoxLayout(resultatsPanel, BoxLayout.Y_AXIS));
@@ -39,7 +40,7 @@ public class Recherche extends BaseFrame {
         contenu.add(scrollPane, BorderLayout.CENTER);
 
 
-        motCleField.setBorder(BorderFactory.createLineBorder(Color.RED));
+        motCleField.setBorder(BorderFactory.createLineBorder(new Color(15, 75, 135)));
         motCleField.setText("Nom, spécialité");
         motCleField.setForeground(Color.GRAY);
 
@@ -105,11 +106,13 @@ public class Recherche extends BaseFrame {
     // Ensuite, ajoute ce filtrePanel en haut du contenu principal :
         contenu.add(filtrePanel, BorderLayout.NORTH);
 
+        recherchePanel.setBorder(BorderFactory.createEmptyBorder(50, 10, 10, 10)); // Un peu d'espace
+
         recherchePanel.add(motCleField);
         recherchePanel.add(rechercherBtn);
         recherchePanel.setBackground(new Color(54, 153, 213));
 
-        bandeau.add(recherchePanel, BorderLayout.CENTER);
+        bandeau.add(recherchePanel);
 
         rechercherBtn.addActionListener(e -> rechercher());
 
@@ -179,20 +182,6 @@ public class Recherche extends BaseFrame {
 
         // Partie droite - Emploi du temps
         Calendrier calendrierPanel = new Calendrier(s);
-        /*edtPanel.setLayout(new BoxLayout(edtPanel, BoxLayout.Y_AXIS));
-        edtPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        edtPanel.setBackground(new Color(253, 249, 249));
-
-        ArrayList<Horaire> emploiDuTemps = s.getEmploiDuTemps();
-        if (emploiDuTemps != null && !emploiDuTemps.isEmpty()) {
-            for (Horaire h : emploiDuTemps) {
-                String jourStr = Horaire.convertirJourIntEnString(h.getJourSemaine());
-                JLabel horaireLabel = new JLabel(jourStr + " : " + h.getHeureDebut() + " - " + h.getHeureFin());
-                edtPanel.add(horaireLabel);
-            }
-        } else {
-            edtPanel.add(new JLabel("Aucun créneau disponible."));
-        }*/
 
         panel.add(infosPanel, BorderLayout.WEST);
         panel.add(calendrierPanel, BorderLayout.EAST);
