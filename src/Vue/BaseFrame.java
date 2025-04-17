@@ -81,7 +81,7 @@ public class BaseFrame extends JFrame {
 
                 RDVItem.addActionListener(e -> {
                     dispose();
-                    new RendezVousVue();
+                    new RendezVousVue(utilisateurConnecte);
                 });
 
 
@@ -103,26 +103,20 @@ public class BaseFrame extends JFrame {
 
                 RDVItem.addActionListener(e -> {
                     dispose();
-                    new RendezVousVue();
+                    new RendezVousVue(utilisateurConnecte);
                 });
 
             }
             else if(utilisateurConnecte instanceof Admin){
                 JMenuItem profilItem = new JMenuItem("Profil");
-                JMenuItem RDVItem = new JMenuItem("Mes Rendez-vous");
 
                 menuDeroulant.add(profilItem);
-                menuDeroulant.add(RDVItem);
 
                 // Ajoutez des ActionListeners aux éléments du menu
                 profilItem.addActionListener(e -> {
                     JOptionPane.showMessageDialog(this, "Affichage du profil");
                 });
 
-                RDVItem.addActionListener(e -> {
-                    dispose();
-                    new RendezVousVue();
-                });
 
             }
 

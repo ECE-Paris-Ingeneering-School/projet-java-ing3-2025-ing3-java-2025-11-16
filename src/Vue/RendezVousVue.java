@@ -1,10 +1,7 @@
 package Vue;
 
-import Modele.RendezVous;
-import Modele.Utilisateur;
-
-import java.util.BitSet;
-import java.util.List;
+import Modele.*;
+import java.util.*;
 
 public class RendezVousVue extends BaseFrame {
 
