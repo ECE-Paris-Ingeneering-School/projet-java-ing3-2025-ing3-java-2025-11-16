@@ -1,23 +1,25 @@
 package Vue;
 
-import Modele.*;
-import Dao.*;
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 
 public class CreationCompte extends BaseFrame {
-    private JTextField nomField, prenomField, emailField,SpecialiteField,LieuField;
+    private JTextField nomField, prenomField, emailField, SpecialiteField, LieuField;
     private JPasswordField mdpField;
     private JComboBox<String> typePatientBox; // visible si patient
     private String typeUtilisateur;
+    private JButton btnRetour, creerBtn;
 
     public CreationCompte(String typeUtilisateur) {
         super();
         this.typeUtilisateur = typeUtilisateur;
         JPanel Contenu = getCenterPanel();
         JPanel boutonsPanel = new JPanel(new BorderLayout());
+
+        JLabel titreLabel = new JLabel("Création de Compte", SwingConstants.CENTER);
+        titreLabel.setFont(new Font("Arial", Font.BOLD, 30));
+        titreLabel.setBorder(BorderFactory.createEmptyBorder(30, 0, 0, 0));
+        Contenu.add(titreLabel, BorderLayout.NORTH);
 
         JPanel panel = new JPanel(new GridLayout(8, 1, 10, 10));
         panel.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
@@ -30,12 +32,7 @@ public class CreationCompte extends BaseFrame {
         SpecialiteField = new JTextField(10);
         LieuField = new JTextField(10);
 
-        JButton btnRetour = new JButton("Retour");
-        btnRetour.addActionListener(e -> {
-            new ChoixConnexion(typeUtilisateur);
-            dispose();
-        });
-
+        btnRetour = new JButton("Retour");
         panel.add(new JLabel("Nom :"));
         panel.add(nomField);
         panel.add(new JLabel("Prénom :"));
@@ -60,7 +57,7 @@ public class CreationCompte extends BaseFrame {
                 break;
         }
 
-        JButton creerBtn = new JButton("Créer le compte");
+        creerBtn = new JButton("Créer le compte");
         Font bigFont = new Font("Arial", Font.BOLD, 20);
         Dimension bigSize = new Dimension(250, 60);
 
@@ -70,59 +67,23 @@ public class CreationCompte extends BaseFrame {
         creerBtn.setPreferredSize(bigSize);
         btnRetour.setPreferredSize(bigSize);
 
-        creerBtn.addActionListener(this::creerCompte);
-
         boutonsPanel.add(btnRetour, BorderLayout.WEST);
         boutonsPanel.add(creerBtn, BorderLayout.EAST);
         Contenu.add(panel, BorderLayout.CENTER);
-
         Contenu.add(boutonsPanel, BorderLayout.SOUTH);
 
         setVisible(true);
     }
 
-    private void creerCompte(ActionEvent e) {
-        String nom = nomField.getText().trim();
-        String prenom = prenomField.getText().trim();
-        String email = emailField.getText().trim();
-        String mdp = new String(mdpField.getPassword()).trim();
-
-        if (nom.isEmpty() || prenom.isEmpty() || email.isEmpty() || mdp.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Tous les champs sont obligatoires.");
-            return;
-        }
-
-        DatabaseConnection db = DatabaseConnection.getInstance("rdv_specialiste", "root", "root");
-        UtilisateurDAO utilisateurDAO = db.getUtilisateurDAO();
-
-        Utilisateur utilisateur = null;
-
-        switch (typeUtilisateur) {
-            case "patient":
-                int type = typePatientBox.getSelectedIndex() + 1;
-                utilisateur = new Patient(nom, prenom, email, mdp, type);
-                break;
-            case "specialiste":
-                String specialite = SpecialiteField.getText().trim();
-                String etablissement = LieuField.getText().trim();
-                utilisateur = new Specialiste(nom, prenom, email, mdp, specialite, etablissement);
-                break;
-            case "Admin":
-                utilisateur = new Admin(nom, prenom, email, mdp);
-                break;
-        }
-
-        if (utilisateur != null) {
-            try {
-                utilisateurDAO.ajouter(utilisateur);
-                JOptionPane.showMessageDialog(this, "Compte créé avec succès !");
-                new Connexion(typeUtilisateur);
-                dispose();
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Erreur lors de la création.");
-                ex.printStackTrace();
-            }
-
-        }
-    }
+    // Getters pour le contrôleur
+    public JTextField getNomField() { return nomField; }
+    public JTextField getPrenomField() { return prenomField; }
+    public JTextField getEmailField() { return emailField; }
+    public JPasswordField getMdpField() { return mdpField; }
+    public JTextField getSpecialiteField() { return SpecialiteField; }
+    public JTextField getLieuField() { return LieuField; }
+    public JComboBox<String> getTypePatientBox() { return typePatientBox; }
+    public String getTypeUtilisateur() { return typeUtilisateur; }
+    public JButton getBtnRetour() { return btnRetour; }
+    public JButton getCreerBtn() { return creerBtn; }
 }

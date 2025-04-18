@@ -105,6 +105,7 @@ public class RendezVousDAOImpl implements RendezVousDAO {
 
     @Override
     public boolean ajouterRendezVous(RendezVous rendezVous) {
+        boolean result = false;
         String query = "INSERT INTO rdv (IDSpecialiste, IDPatient, IDHoraire, Date, Notes, Lieu) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = db.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
@@ -123,14 +124,40 @@ public class RendezVousDAOImpl implements RendezVousDAO {
                 if (generatedKeys.next()) {
                     rendezVous.setId(generatedKeys.getInt(1));
                 }
-                return true;
+                result = true;
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return result;
+    }
+
+    @Override
+    public boolean estDejaReserve(int idHoraire, java.util.Date dateUtil) {
+        System.out.println(idHoraire);
+        System.out.println(dateUtil);
+        // Conversion de java.util.Date en java.sql.Date
+        java.sql.Date dateSQL = new java.sql.Date(dateUtil.getTime());
+
+        String query = "SELECT COUNT(*) FROM rdv WHERE IDHoraire = ? AND Date = ?";
+        try (Connection conn = db.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, idHoraire);
+            stmt.setDate(2, dateSQL);
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return false;
     }
+
+
 
     @Override
     public boolean supprimerRendezVous(int id) {

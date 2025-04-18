@@ -1,16 +1,19 @@
 package Controleur;
-import Dao.*;
-import Modele.*;
 import Vue.*;
-
-import java.sql.Time;
-import java.util.Date;
+import Modele.*;
 
 public class Main {
     public static void main(String[] args) {
         //Utilisateur u = new Patient("Petit","Marc","marc.petit@gmail.com","pass123",1);
         //new Recherche(u);
-        new PageAccueil();
+
+        //new ChoixConnexion();
+
+        ChoixConnexion vue_choix = new ChoixConnexion();
+        new ChoixConnexionControleur(vue_choix);
+
+
+
     }
 
 }

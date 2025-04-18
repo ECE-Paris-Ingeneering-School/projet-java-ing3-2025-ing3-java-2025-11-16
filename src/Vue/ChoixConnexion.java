@@ -2,60 +2,78 @@ package Vue;
 
 import javax.swing.*;
 import java.awt.*;
+import java.net.URL;
 
 public class ChoixConnexion extends BaseFrame {
 
-    public ChoixConnexion(String typeUtilisateur) {
+    private JButton patientButton;
+    private JButton specialisteButton;
+    private JButton adminButton;
+
+    public ChoixConnexion() {
         super();
-        JPanel contenu = getCenterPanel();
-        contenu.setLayout(new BorderLayout());
 
-        // ------ Centre avec les deux boutons ------
-        JPanel centerPanel = new JPanel(new GridBagLayout()); // Centrage vertical & horizontal
-        JPanel boutonsPanel = new JPanel(new GridLayout(2, 1, 20, 20)); // Espacement vertical
+        JPanel contenuPanel = getCenterPanel();
 
-        JButton btnConnexion = new JButton("Se connecter");
-        JButton btnCreerCompte = new JButton("Créer un compte");
+        JLabel titreLabel = new JLabel("Connexion", SwingConstants.CENTER);
+        titreLabel.setFont(new Font("Arial", Font.BOLD, 30));
+        titreLabel.setBorder(BorderFactory.createEmptyBorder(30, 0, 0, 0));
+        contenuPanel.add(titreLabel, BorderLayout.NORTH);
 
-        // Appliquer une police et une taille
-        Font bigFont = new Font("Arial", Font.BOLD, 20);
-        Dimension bigSize = new Dimension(250, 60);
-        btnConnexion.setFont(bigFont);
-        btnCreerCompte.setFont(bigFont);
-        btnConnexion.setPreferredSize(bigSize);
-        btnCreerCompte.setPreferredSize(bigSize);
+        JPanel casePanel = new JPanel(new GridBagLayout());
+        contenuPanel.add(casePanel, BorderLayout.CENTER);
 
-        boutonsPanel.add(btnConnexion);
-        boutonsPanel.add(btnCreerCompte);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        centerPanel.add(boutonsPanel);
-        contenu.add(centerPanel, BorderLayout.CENTER);
+        gbc.gridx = 0; gbc.gridy = 0;
+        casePanel.add(createImageLabel("../images/patient.png"), gbc);
+        gbc.gridx = 1;
+        patientButton = createButton("Patient");
+        casePanel.add(patientButton, gbc);
 
-        // ------ Bas avec bouton retour aligné à gauche ------
-        JPanel bottomPanel = new JPanel(new BorderLayout());
-        JButton btnRetour = new JButton("Retour");
-        btnRetour.setFont(new Font("Arial", Font.PLAIN, 16));
-        bottomPanel.add(btnRetour, BorderLayout.WEST);
-        bottomPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        gbc.gridx = 0; gbc.gridy = 1;
+        casePanel.add(createImageLabel("../images/specialiste.png"), gbc);
+        gbc.gridx = 1;
+        specialisteButton = createButton("Spécialiste");
+        casePanel.add(specialisteButton, gbc);
 
-        contenu.add(bottomPanel, BorderLayout.SOUTH);
-
-        // ------ Actions des boutons ------
-        btnConnexion.addActionListener(e -> {
-            new Connexion(typeUtilisateur);
-            dispose();
-        });
-
-        btnCreerCompte.addActionListener(e -> {
-            new CreationCompte(typeUtilisateur);
-            dispose();
-        });
-
-        btnRetour.addActionListener(e -> {
-            new PageAccueil();
-            dispose();
-        });
+        gbc.gridx = 0; gbc.gridy = 2;
+        casePanel.add(createImageLabel("../images/admin.png"), gbc);
+        gbc.gridx = 1;
+        adminButton = createButton("Admin");
+        casePanel.add(adminButton, gbc);
 
         setVisible(true);
     }
+
+    private JLabel createImageLabel(String imagePath) {
+        JLabel label = new JLabel();
+        try {
+            URL imageUrl = getClass().getResource(imagePath);
+            if (imageUrl != null) {
+                ImageIcon icon = new ImageIcon(imageUrl);
+                Image img = icon.getImage();
+                Image resized = img.getScaledInstance(80, 80, Image.SCALE_SMOOTH);
+                label.setIcon(new ImageIcon(resized));
+            } else {
+                System.err.println("Image non trouvée : " + imagePath);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return label;
+    }
+
+    private JButton createButton(String text) {
+        JButton button = new JButton(text);
+        button.setPreferredSize(new Dimension(150, 75));
+        return button;
+    }
+
+    // 👉 Getters pour accès aux boutons
+    public JButton getPatientButton() { return patientButton; }
+    public JButton getSpecialisteButton() { return specialisteButton; }
+    public JButton getAdminButton() { return adminButton; }
 }

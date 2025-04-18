@@ -11,6 +11,12 @@ public class Horaire {
     public Horaire() {
     }
 
+    public Horaire(int id, int jourSemaine, Time heureDebut, Time heureFin) {
+        this.id = id;
+        this.jourSemaine = jourSemaine;
+        this.heureDebut = heureDebut;
+        this.heureFin = heureFin;
+    }
     // Constructeur avec tous les paramètres (sauf id)
     public Horaire(int jourSemaine, Time heureDebut, Time heureFin) {
         this.jourSemaine = jourSemaine;
