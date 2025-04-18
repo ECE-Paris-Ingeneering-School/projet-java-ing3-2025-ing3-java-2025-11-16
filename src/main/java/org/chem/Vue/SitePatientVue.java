@@ -1,0 +1,53 @@
+package org.chem.Vue;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class SitePatientVue extends JFrame {
+    private JTextField BarDeRecherche;
+    private JTextArea affichage;
+
+    public SitePatientVue() {
+        setTitle("Portail Médical");
+        setSize(600, 400);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
+        
+        JMenuBar menuBar = new JMenuBar();
+        JMenu menu = new JMenu("Menu");
+        JMenuItem itemHistorique = new JMenuItem("Historique");
+        JMenuItem itemRdv = new JMenuItem("Mes RDV");
+
+        menu.add(itemHistorique);
+        menu.add(itemRdv);
+        menuBar.add(menu);
+        setJMenuBar(menuBar);
+
+        JPanel centrePanel = new JPanel(new BorderLayout());
+        BarDeRecherche = new JTextField(20);
+        JButton buttonRecherche = new JButton("Rechercher");
+
+        buttonRecherche.addActionListener(e -> rechercher());
+
+        JLabel labelRecherche = new JLabel("Spécialistes ou lieux : ");
+
+        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        searchPanel.add(labelRecherche);
+        searchPanel.add(BarDeRecherche);
+        searchPanel.add(buttonRecherche);
+
+        centrePanel.add(searchPanel, BorderLayout.CENTER);
+        add(centrePanel, BorderLayout.NORTH);
+
+        setVisible(true);
+    }
+
+    private void rechercher() {
+        String terme = BarDeRecherche.getText();
+
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(SitePatientVue::new);
+    }
+}
