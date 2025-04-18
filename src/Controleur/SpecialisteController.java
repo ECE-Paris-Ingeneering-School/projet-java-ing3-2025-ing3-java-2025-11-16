@@ -1,20 +1,25 @@
-
 package Controleur;
 
 import Modele.Specialiste;
 import java.util.ArrayList;
 
 public class SpecialisteController {
-    /*
-    ajouterSpecialiste(Specialiste specialiste) : boolean → Ajoute un nouveau spécialiste.
+    private ArrayList<Specialiste> specialistes;
 
-    modifierSpecialiste(Specialiste specialiste) : boolean → Met à jour les infos d’un spécialiste.
+    public SpecialisteController() {
+        this.specialistes = new ArrayList<>();
+    }
 
-    supprimerSpecialiste(int idSpecialiste) : boolean → Supprime un spécialiste par son ID.
+    public boolean ajouterSpecialiste(Specialiste s) {
+        if (s != null) {
+            specialistes.add(s);
+            System.out.println("Spécialiste ajouté : " + s.getNom());
+            return true;
+        }
+        return false;
+    }
 
-    getSpecialiste(int idSpecialiste) : Specialiste → Récupère les infos d’un spécialiste spécifique.
-
-    listerSpecialistes() : List<Specialiste> → Retourne tous les spécialistes.
-    */
-
+    public ArrayList<Specialiste> getSpecialistes() {
+        return specialistes;
+    }
 }
