@@ -1,5 +1,6 @@
 package Vue;
 
+import Controleur.CalendrierControleur;
 import Dao.*;
 import Modele.*;
 
@@ -21,11 +22,7 @@ public class Recherche extends BaseFrame {
 
 
     public Recherche() {
-
-    }
-
-    public Recherche(Utilisateur utilisateur) {
-        super(utilisateur);
+        super(Session.getUtilisateur());
 
         JPanel contenu = getCenterPanel(); // affichage des specialistes + filtres jours/horaires/Lieu
         JPanel bandeau = getNorthPanel(); // Barre de recherche dans le bandeau (Nom specialiste ou Specialité)
@@ -70,7 +67,7 @@ public class Recherche extends BaseFrame {
         filtrePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Un peu d'espace
         filtrePanel.setBackground(Color.WHITE); // ou une autre couleur douce si tu veux
 
-    // Barre de recherche pour le lieu
+        // Barre de recherche pour le lieu
         lieuField = new JTextField("Lieu", 15);
         lieuField.setForeground(Color.GRAY);
         lieuField.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -91,15 +88,15 @@ public class Recherche extends BaseFrame {
             }
         });
 
-    // ComboBox pour le jour
+        // ComboBox pour le jour
         String[] jours = {"", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"};
         jourCombo = new JComboBox<>(jours);
 
-    // ComboBox pour l'horaire
+        // ComboBox pour l'horaire
         String[] horaires = {"", "08:00", "09:00", "10:00", "11:00", "14:00", "15:00", "16:00"};
         heureCombo = new JComboBox<>(horaires);
 
-    // Ajout au panel
+        // Ajout au panel
         filtrePanel.add(new JLabel("Lieu:"));
         filtrePanel.add(lieuField);
         filtrePanel.add(new JLabel("Jour:"));
@@ -107,7 +104,7 @@ public class Recherche extends BaseFrame {
         filtrePanel.add(new JLabel("Horaire:"));
         filtrePanel.add(heureCombo);
 
-    // Ensuite, ajoute ce filtrePanel en haut du contenu principal :
+        // Ensuite, ajoute ce filtrePanel en haut du contenu principal :
         contenu.add(filtrePanel, BorderLayout.NORTH);
 
         recherchePanel.setBorder(BorderFactory.createEmptyBorder(50, 10, 10, 10)); // Un peu d'espace
@@ -118,48 +115,7 @@ public class Recherche extends BaseFrame {
 
         bandeau.add(recherchePanel);
 
-        rechercherBtn.addActionListener(e -> rechercher());
-
         setVisible(true);
-    }
-
-    public void rechercher() {
-        String motCle = motCleField.getText().trim();
-        String lieu = lieuField.getText().trim();
-        String jour = null;
-        Time heure = null;
-
-        System.out.println(motCle);
-        System.out.println(lieu);
-
-        // Récupérer le jour s’il est sélectionné
-        if (jourCombo.getSelectedItem() != null && !jourCombo.getSelectedItem().toString().isEmpty()) {
-            jour = jourCombo.getSelectedItem().toString().toLowerCase();
-            System.out.println("Jour: " + jour);
-        }
-
-        // Récupérer l'heure si sélectionnée
-        if (heureCombo.getSelectedItem() != null && !heureCombo.getSelectedItem().toString().isEmpty()) {
-            try {
-                heure = Time.valueOf(heureCombo.getSelectedItem().toString() + ":00");
-                System.out.println("Heure: " + heure);
-            } catch (IllegalArgumentException ex) {
-                JOptionPane.showMessageDialog(this, "Heure invalide (ex : 09:00)");
-                return;
-            }
-        }
-
-        if(motCle.trim().isEmpty() || motCle.equalsIgnoreCase("Nom, spécialité")) {
-            System.out.println("MotCle: " + motCle);
-            JOptionPane.showMessageDialog(this, "Saisir un nom ou une spécialité","Champ requis", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        // Appel au DAO
-        ArrayList<Specialiste> resultats = specialisteDAO.rechercherSpecialistes(motCle, jour, heure, lieu);
-
-        // Affichage
-        afficherResultats(resultats);
     }
 
 
@@ -185,30 +141,40 @@ public class Recherche extends BaseFrame {
         infosPanel.add(lieu);
 
         // Partie droite - Emploi du temps
-        Calendrier calendrierPanel = new Calendrier(s,utilisateurConnecte);
+        //Calendrier calendrierVue = new Calendrier(s);
+        //new CalendrierControleur (calendrierVue,s);
+
+        PriseRDV calendrierVue = new PriseRDV(s,utilisateurConnecte);
 
         panel.add(infosPanel, BorderLayout.WEST);
-        panel.add(calendrierPanel, BorderLayout.EAST);
+        panel.add(calendrierVue, BorderLayout.EAST);
 
         return panel;
     }
 
 
-    public void afficherResultats(ArrayList<Specialiste> listeSpecialistes) {
-        resultatsPanel.removeAll(); // Vider les anciens résultats
-
-        if (listeSpecialistes.isEmpty()) {
-            JLabel label = new JLabel("Aucun spécialiste trouvé.");
-            label.setFont(new Font("Arial", Font.PLAIN, 16));
-            resultatsPanel.add(label);
-        } else {
-            for (Specialiste s : listeSpecialistes) {
-                resultatsPanel.add(creerPanelSpecialiste(s));
-            }
-        }
-
-        resultatsPanel.revalidate();
-        resultatsPanel.repaint();
+    public JTextField getMotCleField() {
+        return motCleField;
     }
 
+    public JTextField getLieuField() {
+        return lieuField;
+    }
+
+    public JComboBox<String> getJourCombo() {
+        return jourCombo;
+    }
+
+    public JComboBox<String> getHeureCombo() {
+        return heureCombo;
+    }
+
+    public JButton getRechercherBtn() {
+        return rechercherBtn;
+    }
+
+    public JPanel getResultatsPanel() {
+        return resultatsPanel;
+
+    }
 }
