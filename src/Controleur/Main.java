@@ -1,4 +1,6 @@
 package Controleur;
+import Dao.*;
+import Modele.*;
 import Vue.*;
 import Modele.*;
 
@@ -12,8 +14,7 @@ public class Main {
         ChoixConnexion vue_choix = new ChoixConnexion();
         new ChoixConnexionControleur(vue_choix);
 
-
-
+        //new PageAccueil();
     }
 
 }
