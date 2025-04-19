@@ -19,8 +19,9 @@ public class App {
         if (input != null) {
             props.load(input);
             String login = props.getProperty("autoconnect.email");
+            vue_connexion.setLogin(login);
             String pwd = props.getProperty("autoconnect.pwd");
-            vue_connexion = new Connexion(login, pwd);
+            vue_connexion.setPassword(pwd);
         }
         } catch (Exception e) {
         }
