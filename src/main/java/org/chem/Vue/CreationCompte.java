@@ -50,12 +50,6 @@ public class CreationCompte extends BaseFrame {
         panel.add(mdpField);
 
         switch (typeUtilisateur) {
-            case TypeUtilisateur.PATIENT:
-                typePatientBox = new JComboBox<>(new String[]{"1 - Nouveau", "2 - Ancien"});
-                typePatientBox.setVisible(true);
-                panel.add(typePatientBox);
-                break;
-
             case TypeUtilisateur.SPECIALISTE  :
                 panel.add(new JLabel("Specialité :"));
                 panel.add(SpecialiteField);
