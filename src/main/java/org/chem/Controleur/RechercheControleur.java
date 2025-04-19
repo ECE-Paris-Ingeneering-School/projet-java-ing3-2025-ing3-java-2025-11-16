@@ -16,7 +16,7 @@ public class RechercheControleur {
 
     public RechercheControleur(Recherche vue) {
         this.vue = vue;
-        DatabaseConnection db = DatabaseConnection.getInstance("rdv_specialiste", "root", "root");
+        DatabaseConnection db = DatabaseConnection.getInstance();
         this.specialisteDAO = new UtilisateurDAOImpl(db);
 
         this.vue.getRechercherBtn().addActionListener(e -> rechercher());

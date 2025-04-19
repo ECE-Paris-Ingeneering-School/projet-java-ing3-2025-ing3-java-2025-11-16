@@ -26,7 +26,7 @@ public class Recherche extends BaseFrame {
         JPanel contenu = getCenterPanel(); // affichage des specialistes + filtres jours/horaires/Lieu
         JPanel bandeau = getNorthPanel(); // Barre de recherche dans le bandeau (Nom specialiste ou Specialité)
 
-        DatabaseConnection db = DatabaseConnection.getInstance("rdv_specialiste", "root", "root");
+        DatabaseConnection db = DatabaseConnection.getInstance();
         this.specialisteDAO = new UtilisateurDAOImpl(db);
 
         JPanel recherchePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));

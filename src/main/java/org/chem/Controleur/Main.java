@@ -8,7 +8,6 @@ public class Main {
         //new Recherche(u);
 
         //new ChoixConnexion();
-
         ChoixConnexion vue_choix = new ChoixConnexion();
         new ChoixConnexionControleur(vue_choix);
 
