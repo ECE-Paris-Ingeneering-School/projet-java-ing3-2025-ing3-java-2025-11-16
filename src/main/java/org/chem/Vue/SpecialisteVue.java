@@ -81,7 +81,7 @@ public class SpecialisteVue extends BaseFrame {
             String lieu = JOptionPane.showInputDialog(this, "Lieu d'exercice :");
 
             if (nom != null && prenom != null && email != null && mdp != null && specialisation != null && lieu != null) {
-                Specialiste s = new Specialiste(nom, prenom, email, mdp, specialisation, lieu);
+                Specialiste s = new Specialiste(Utilisateur.ID_NEW_USER,nom, prenom, email, mdp, specialisation, lieu);
                 boolean success = controller.ajouterSpecialiste(s);
                 if (success) {
                     JOptionPane.showMessageDialog(this, "✅ Spécialiste ajouté avec succès !");

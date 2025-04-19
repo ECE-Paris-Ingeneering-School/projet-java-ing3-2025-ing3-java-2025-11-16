@@ -39,13 +39,13 @@ public class ConnexionControleur {
         DatabaseConnection db = DatabaseConnection.getInstance();
         UtilisateurDAO utilisateurDAO = db.getUtilisateurDAO();
 
-        Utilisateur utilisateur = utilisateurDAO.seConnecter(email, mdp, vue.getTypeUtilisateur());
+        Utilisateur utilisateur = utilisateurDAO.seConnecter(email, mdp);
 
         if (utilisateur != null) {
 
             Session.setUtilisateur(utilisateur);
 
-            JOptionPane.showMessageDialog(vue, "Bienvenue " + utilisateur.getPrenom() + " !");
+            JOptionPane.showMessageDialog(vue, "Bienvenue " +utilisateur.getTypeUtilisateur().getLabel() + " " + utilisateur.getPrenom() + " !");
             vue.dispose();
 
             switch (utilisateur) {

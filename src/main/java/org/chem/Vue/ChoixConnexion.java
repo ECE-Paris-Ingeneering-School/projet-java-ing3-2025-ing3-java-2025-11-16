@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
 
-import static org.chem.Modele.RoleUtilisateur.*;
+import static org.chem.Modele.TypeUtilisateur.*;
 
 public class ChoixConnexion extends BaseFrame {
 
@@ -32,19 +32,19 @@ public class ChoixConnexion extends BaseFrame {
         gbc.gridx = 0; gbc.gridy = 0;
         casePanel.add(createImageLabel(PATIENT.getImagePath()), gbc);
         gbc.gridx = 1;
-        patientButton = createButton("Patient");
+        patientButton = createButton(PATIENT.getLabel());
         casePanel.add(patientButton, gbc);
 
         gbc.gridx = 0; gbc.gridy = 1;
         casePanel.add(createImageLabel(SPECIALISTE.getImagePath()), gbc);
         gbc.gridx = 1;
-        specialisteButton = createButton("Spécialiste");
+        specialisteButton = createButton(SPECIALISTE.getLabel());
         casePanel.add(specialisteButton, gbc);
 
         gbc.gridx = 0; gbc.gridy = 2;
         casePanel.add(createImageLabel(ADMIN.getImagePath()), gbc);
         gbc.gridx = 1;
-        adminButton = createButton("Admin");
+        adminButton = createButton(ADMIN.getLabel());
         casePanel.add(adminButton, gbc);
 
         setVisible(true);

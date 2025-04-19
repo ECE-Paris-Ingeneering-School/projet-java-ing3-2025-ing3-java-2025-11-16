@@ -4,7 +4,7 @@ import org.chem.Vue.*;
 
 public class Main {
     public static void main(String[] args) {
-        Utilisateur u = new Specialiste("Petit","Marc","marc.petit@gmail.com","pass123","J","d");
+        Utilisateur u = new Specialiste(Utilisateur.ID_NEW_USER,"Petit","Marc","marc.petit@gmail.com","pass123","J","d");
         //new Recherche(u);
 
         //new ChoixConnexion();
