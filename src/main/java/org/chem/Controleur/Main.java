@@ -1,6 +1,6 @@
 package org.chem.Controleur;
-import org.chem.Vue.ChoixConnexion;
 import org.chem.Modele.*;
+import org.chem.Vue.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -9,9 +9,12 @@ public class Main {
 
         //new ChoixConnexion();
 
+        Utilisateur a = new Admin("Petit","Marc","marc.petit@gmail.com","pass123");
+
         ChoixConnexion vue_choix = new ChoixConnexion();
         new ChoixConnexionControleur(vue_choix);
 
+        //new AdminControleur(new AdminVue(a));
     }
 
 }

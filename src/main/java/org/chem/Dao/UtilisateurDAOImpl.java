@@ -52,13 +52,13 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
             stmt.setString(4, likeMotCle); // Nom + Prénom
             stmt.setString(5, likeMotCle); // Prénom + Nom
 
-            int index=6;
+            int index = 6;
             if (!lieu.equals("Lieu")) {
-                System.out.println("Lieu != rien : "+lieu);
+                System.out.println("Lieu != rien : " + lieu);
                 stmt.setString(index++, "%" + lieu + "%");
             }
 
-           if (jour != null && !jour.trim().isEmpty()) {
+            if (jour != null && !jour.trim().isEmpty()) {
                 int jourInt = Horaire.convertirJourEnInt(jour);
                 stmt.setInt(index++, jourInt);
             }
@@ -124,19 +124,18 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
     }
 
 
-
     @Override
     public Utilisateur seConnecter(String email, String mdp, String type) {
         Utilisateur utilisateur = null;
 
         String query = """
-            SELECT u.ID, u.Nom, u.Prenom, u.Email, u.Mdp, p.type, s.Specialisation, s.Lieu
-            FROM utilisateur u
-            LEFT JOIN patient p ON u.ID = p.ID
-            LEFT JOIN specialiste s ON u.ID = s.ID
-            LEFT JOIN admin a ON u.ID = a.ID
-            WHERE u.Email = ? AND u.Mdp = ?
-        """;
+        SELECT u.ID, u.Nom, u.Prenom, u.Email, u.Mdp, p.ID AS patientID, s.ID AS specialisteID, a.ID AS adminID
+        FROM utilisateur u
+        LEFT JOIN patient p ON u.ID = p.ID
+        LEFT JOIN specialiste s ON u.ID = s.ID
+        LEFT JOIN admin a ON u.ID = a.ID
+        WHERE u.Email = ? AND u.Mdp = ?
+    """;
 
         try (Connection conn = Data.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -153,15 +152,22 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 
                 switch (type.toLowerCase()) {
                     case "patient" -> {
-                        int patientType = rs.getInt("type");
-                        utilisateur = new Patient(id, nom, prenom, email, mdp, patientType);
+                        if (rs.getInt("patientID") != 0) { // Vérifie si l'utilisateur est un patient
+                            utilisateur = new Patient(id, nom, prenom, email, mdp, rs.getInt("type"));
+                        }
                     }
                     case "specialiste" -> {
-                        String specialisation = rs.getString("Specialisation");
-                        String lieu = rs.getString("Lieu");
-                        utilisateur = new Specialiste(id, nom, prenom, email, mdp, specialisation, lieu);
+                        if (rs.getInt("specialisteID") != 0) { // Vérifie si l'utilisateur est un spécialiste
+                            String specialisation = rs.getString("Specialisation");
+                            String lieu = rs.getString("Lieu");
+                            utilisateur = new Specialiste(id, nom, prenom, email, mdp, specialisation, lieu);
+                        }
                     }
-                    case "admin" -> utilisateur = new Admin(id, nom, prenom, email, mdp);
+                    case "admin" -> {
+                        if (rs.getInt("adminID") != 0) { // Vérifie si l'utilisateur est un admin
+                            utilisateur = new Admin(id, nom, prenom, email, mdp);
+                        }
+                    }
                 }
             }
 
@@ -221,50 +227,43 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         }
     }
 
-    /*@Override
-    public ArrayList<Utilisateur> getAll() {
-        ArrayList<Utilisateur> listeUtilisateurs = new ArrayList<>();
-        try {
-            Connection connexion = Data.getConnection();
-            Statement statement = connexion.createStatement();
-            ResultSet resultats = statement.executeQuery("""
-                SELECT u.ID, u.Nom, u.Prenom, u.Email, u.Mdp,
-                       p.ID AS patientID, p.type,
-                       s.Specialisation, s.Lieu,
-                       a.ID AS adminID
-                FROM utilisateur u
-                LEFT JOIN patient p ON u.ID = p.ID
-                LEFT JOIN specialiste s ON u.ID = s.ID
-                LEFT JOIN admin a ON u.ID = a.ID
-            """);
+    @Override
+    public ArrayList<Specialiste> getAllSpecialistes() {
+        ArrayList<Specialiste> specialistes = new ArrayList<>();
 
-            while (resultats.next()) {
-                int id = resultats.getInt("ID");
-                String nom = resultats.getString("Nom");
-                String prenom = resultats.getString("Prenom");
-                String email = resultats.getString("Email");
-                String mdp = resultats.getString("Mdp");
+        String sql = """
+        SELECT u.ID, u.Nom, u.Prenom, u.Email, u.Mdp, s.Specialisation, s.Lieu
+        FROM utilisateur u
+        JOIN specialiste s ON u.ID = s.ID
+    """;
 
-                if (resultats.getInt("patientID") != 0) {
-                    int type = resultats.getInt("type");
-                    listeUtilisateurs.add(new Patient(id, nom, prenom, email, mdp, type));
-                } else if (resultats.getString("Specialisation") != null) {
-                    String specialisation = resultats.getString("Specialisation");
-                    String lieu = resultats.getString("Lieu");
-                    listeUtilisateurs.add(new Specialiste(id, nom, prenom, email, mdp, specialisation, lieu));
-                } else if (resultats.getInt("adminID") != 0) {
-                    listeUtilisateurs.add(new Admin(id, nom, prenom, email, mdp));
-                } else {
-                    listeUtilisateurs.add(new Utilisateur(id, nom, prenom, email, mdp));
-                }
+        try (Connection conn = Data.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                Specialiste s = new Specialiste(
+                        rs.getInt("ID"),
+                        rs.getString("Nom"),
+                        rs.getString("Prenom"),
+                        rs.getString("Email"),
+                        rs.getString("Mdp"),
+                        rs.getString("Specialisation"),
+                        rs.getString("Lieu")
+                );
+                s.setEmploiDuTemps(chargerHorairesPourSpecialiste(s.getId()));
+                specialistes.add(s);
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return listeUtilisateurs;
-    }*/
 
-    /*@Override
+        return specialistes;
+    }
+
+
+    @Override
     public void supprimer(Utilisateur utilisateur) {
         try {
             Connection connexion = Data.getConnection();
@@ -290,9 +289,9 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }*/
+    }
 
-    /*@Override
+    @Override
     public void modifier(Utilisateur utilisateur) {
         try {
             Connection connexion = Data.getConnection();
@@ -322,49 +321,6 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }*/
+    }
 
-    /*@Override
-    public Utilisateur getUtilisateurById(int id) {
-        Utilisateur utilisateur = null;
-        try (Connection conn = Data.getConnection();
-             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM utilisateur WHERE ID = ?")) {
-            stmt.setInt(1, id);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                utilisateur = new Utilisateur(
-                        rs.getInt("ID"),
-                        rs.getString("Nom"),
-                        rs.getString("Prenom"),
-                        rs.getString("Email"),
-                        rs.getString("Mdp")
-                );
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return utilisateur;
-    }*/
-
-    /*@Override
-    public Utilisateur getUtilisateurByEmail(String email) {
-        Utilisateur utilisateur = null;
-        try (Connection conn = Data.getConnection();
-             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM utilisateur WHERE Email = ?")) {
-            stmt.setString(1, email);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                utilisateur = new Utilisateur(
-                        rs.getInt("ID"),
-                        rs.getString("Nom"),
-                        rs.getString("Prenom"),
-                        rs.getString("Email"),
-                        rs.getString("Mdp")
-                );
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return utilisateur;
-    }*/
 }

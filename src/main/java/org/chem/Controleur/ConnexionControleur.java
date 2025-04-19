@@ -56,7 +56,7 @@ public class ConnexionControleur {
                     new SpecialisteVue(utilisateur);
                     break;
                 case Admin admin :
-                    new AdminVue(utilisateur);
+                    new AdminControleur(new AdminVue(utilisateur));
                     break;
                 default :
                     JOptionPane.showMessageDialog(vue, "Type d'utilisateur non reconnu.");

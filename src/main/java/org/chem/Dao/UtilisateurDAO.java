@@ -8,7 +8,8 @@ import java.sql.Time;
 import java.util.*;
 
 public interface UtilisateurDAO {
-    //ArrayList<Utilisateur> getAll(); // Récupérer tous les utilisateurs
+
+    ArrayList<Specialiste> getAllSpecialistes();
 
     ArrayList<Specialiste> rechercherSpecialistes(String motCle, String jour, Time heure, String lieu);
 
@@ -18,14 +19,9 @@ public interface UtilisateurDAO {
 
     void ajouter(Utilisateur utilisateur);
 
-    //void supprimer(Utilisateur utilisateur);
+    void supprimer(Utilisateur utilisateur);
 
-    //void modifier(Utilisateur utilisateur);
+    void modifier(Utilisateur utilisateur);
 
-    //Utilisateur chercher(int id);
-
-    //Utilisateur getUtilisateurById(int id);
-
-    //Utilisateur getUtilisateurByEmail(String email);
 
 }

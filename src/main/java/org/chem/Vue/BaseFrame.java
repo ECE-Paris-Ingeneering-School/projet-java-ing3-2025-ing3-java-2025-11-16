@@ -3,6 +3,7 @@ package org.chem.Vue;
 import javax.swing.*;
 import java.awt.*;
 
+import org.chem.Controleur.AdminControleur;
 import org.chem.Controleur.ChoixConnexionControleur;
 import org.chem.Modele.Admin;
 import org.chem.Modele.Patient;
@@ -112,17 +113,22 @@ public class BaseFrame extends JFrame {
                 });
 
             }
-            else if(utilisateurConnecte instanceof Admin){
+            else if(utilisateurConnecte instanceof Admin) {
+
                 JMenuItem profilItem = new JMenuItem("Profil");
+                JMenuItem testItem = new JMenuItem("test");
 
                 menuDeroulant.add(profilItem);
+                menuDeroulant.add(testItem);
 
                 // Ajoutez des ActionListeners aux éléments du menu
                 profilItem.addActionListener(e -> {
                     JOptionPane.showMessageDialog(this, "Affichage du profil");
                 });
 
-
+                testItem.addActionListener(e -> {
+                    new AdminControleur(new AdminVue(utilisateurConnecte));
+                });
             }
 
             JMenuItem deconnexionItem = new JMenuItem("Déconnexion");
