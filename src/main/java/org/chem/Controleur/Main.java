@@ -2,6 +2,7 @@ package org.chem.Controleur;
 import org.chem.Vue.ChoixConnexion;
 import org.chem.Modele.*;
 
+
 public class Main {
     public static void main(String[] args) {
         Utilisateur u = new Specialiste("Petit","Marc","marc.petit@gmail.com","pass123","J","d");

@@ -10,6 +10,7 @@ public class RendezVous {
     private String notes;
     private String lieu;
 
+
     // Constructeur
     public RendezVous(int idSpecialiste, int idPatient, int idHoraire, Date date, String notes, String lieu) {
         this.idSpecialiste = idSpecialiste;
@@ -39,5 +40,6 @@ public class RendezVous {
     public void setDate(Date date) { this.date = date; }
     public void setNotes(String notes) { this.notes = notes; }
     public void setLieu(String lieu) { this.lieu = lieu; }
+
 
 }
