@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
 
+import static org.chem.Modele.RoleUtilisateur.*;
+
 public class ChoixConnexion extends BaseFrame {
 
     private JButton patientButton;
@@ -28,19 +30,19 @@ public class ChoixConnexion extends BaseFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         gbc.gridx = 0; gbc.gridy = 0;
-        casePanel.add(createImageLabel("../images/patient.png"), gbc);
+        casePanel.add(createImageLabel(PATIENT.getImagePath()), gbc);
         gbc.gridx = 1;
         patientButton = createButton("Patient");
         casePanel.add(patientButton, gbc);
 
         gbc.gridx = 0; gbc.gridy = 1;
-        casePanel.add(createImageLabel("../images/specialiste.png"), gbc);
+        casePanel.add(createImageLabel(SPECIALISTE.getImagePath()), gbc);
         gbc.gridx = 1;
         specialisteButton = createButton("Spécialiste");
         casePanel.add(specialisteButton, gbc);
 
         gbc.gridx = 0; gbc.gridy = 2;
-        casePanel.add(createImageLabel("../images/admin.png"), gbc);
+        casePanel.add(createImageLabel(ADMIN.getImagePath()), gbc);
         gbc.gridx = 1;
         adminButton = createButton("Admin");
         casePanel.add(adminButton, gbc);
@@ -52,6 +54,7 @@ public class ChoixConnexion extends BaseFrame {
         JLabel label = new JLabel();
         try {
             URL imageUrl = getClass().getResource(imagePath);
+
             if (imageUrl != null) {
                 ImageIcon icon = new ImageIcon(imageUrl);
                 Image img = icon.getImage();
@@ -72,7 +75,6 @@ public class ChoixConnexion extends BaseFrame {
         return button;
     }
 
-    // 👉 Getters pour accès aux boutons
     public JButton getPatientButton() { return patientButton; }
     public JButton getSpecialisteButton() { return specialisteButton; }
     public JButton getAdminButton() { return adminButton; }
