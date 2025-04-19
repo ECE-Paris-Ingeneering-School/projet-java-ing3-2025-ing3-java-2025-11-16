@@ -11,6 +11,7 @@ public class BaseFrame extends JFrame {
     protected Utilisateur utilisateurConnecte;
     protected JPanel centerPanel; // ✅ Le panel pour le contenu "hors bandeau"
     protected JPanel topPanel;
+    protected JPanel bottomPanel;
 
     public BaseFrame(Utilisateur utilisateurConnecte) {
         this.utilisateurConnecte = utilisateurConnecte;
@@ -144,6 +145,10 @@ public class BaseFrame extends JFrame {
         centerPanel.setLayout(new BorderLayout());
         mainPanel.add(centerPanel, BorderLayout.CENTER);
 
+        bottomPanel = new JPanel();
+        bottomPanel.setLayout(new BorderLayout());
+        mainPanel.add(bottomPanel, BorderLayout.SOUTH);
+
         setVisible(true);
     }
 
@@ -153,6 +158,8 @@ public class BaseFrame extends JFrame {
     public JPanel getCenterPanel() { return centerPanel;}
 
     public JPanel getNorthPanel() { return topPanel; }
+
+    public JPanel getSouthPanel() { return bottomPanel; }
 
     public void setUserText(String texte) {
         if (userLabel != null) {

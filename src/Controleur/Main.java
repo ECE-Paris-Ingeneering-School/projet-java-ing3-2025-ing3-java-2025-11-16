@@ -6,7 +6,7 @@ import Modele.*;
 
 public class Main {
     public static void main(String[] args) {
-        //Utilisateur u = new Patient("Petit","Marc","marc.petit@gmail.com","pass123",1);
+        Utilisateur u = new Specialiste("Petit","Marc","marc.petit@gmail.com","pass123","J","d");
         //new Recherche(u);
 
         //new ChoixConnexion();
@@ -14,7 +14,8 @@ public class Main {
         ChoixConnexion vue_choix = new ChoixConnexion();
         new ChoixConnexionControleur(vue_choix);
 
-        //new PageAccueil();
+        //new SpecialisteVue(u);
+
     }
 
 }
