@@ -6,10 +6,10 @@ import java.sql.*;
 import java.util.*;
 
 public class UtilisateurDAOImpl implements UtilisateurDAO {
-    private DatabaseConnection Data;
+    private DatabaseConnection databaseConnection;
 
-    public UtilisateurDAOImpl(DatabaseConnection Data) {
-        this.Data = Data;
+    public UtilisateurDAOImpl(DatabaseConnection data) {
+        this.databaseConnection = data;
     }
 
     @Override
@@ -41,7 +41,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
             sql += " AND h.HeureDebut = ?";
         }
 
-        try (Connection conn = Data.getConnection();
+        try (Connection conn = databaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             String likeMotCle = "%" + motCle + "%";
@@ -100,7 +100,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         ORDER BY h.jourSemaine, h.HeureDebut
     """;
 
-        try (Connection conn = Data.getConnection();
+        try (Connection conn = databaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, idSpecialiste);
@@ -126,23 +126,18 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 
 
     @Override
-    public Utilisateur seConnecter(String email, String mdp, String type) {
+    public Utilisateur seConnecter(String email, String mdp) {
         Utilisateur utilisateur = null;
 
         String query = """
-            SELECT u.ID, u.Nom, u.Prenom, u.Email, u.Mdp, p.type, s.Specialisation, s.Lieu
+            SELECT u.ID, u.Nom, u.Prenom, u.Email, u.Mdp, u.type
             FROM utilisateur u
-            LEFT JOIN patient p ON u.ID = p.ID
-            LEFT JOIN specialiste s ON u.ID = s.ID
-            LEFT JOIN admin a ON u.ID = a.ID
             WHERE u.Email = ?
         """;
 
-        try (Connection conn = Data.getConnection();
+        try (Connection conn = databaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
-
             stmt.setString(1, email);
-
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
@@ -153,18 +148,17 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
                 }
                 String nom = rs.getString("Nom");
                 String prenom = rs.getString("Prenom");
+                TypeUtilisateur typeUtilisateur = TypeUtilisateur.fromCode(rs.getString("type"));
 
-                switch (type.toLowerCase()) {
-                    case "patient" -> {
-                        int patientType = rs.getInt("type");
-                        utilisateur = new Patient(id, nom, prenom, email, mdp, patientType);
+
+                switch (typeUtilisateur) {
+                    case TypeUtilisateur.PATIENT -> {
+                        utilisateur = connexionPatient(id, nom, prenom, email, mdp);
                     }
-                    case "specialiste" -> {
-                        String specialisation = rs.getString("Specialisation");
-                        String lieu = rs.getString("Lieu");
-                        utilisateur = new Specialiste(id, nom, prenom, email, mdp, specialisation, lieu);
+                    case TypeUtilisateur.SPECIALISTE -> {
+                        utilisateur = connexionSpecialiste(id, nom, prenom, email, mdp);
                     }
-                    case "admin" -> utilisateur = new Admin(id, nom, prenom, email, mdp);
+                    case TypeUtilisateur.ADMIN ->  utilisateur = new Admin(id, nom, prenom, email, mdp);
                 }
             }
 
@@ -175,12 +169,65 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         return utilisateur;
     }
 
+    private  Patient connexionPatient(int id, String nom, String prenom,String email, String mdp ) {
+        Patient utilisateur = null;
+        String query = """
+            SELECT p.type
+            FROM patient p
+            WHERE p.ID = ?
+        """;
+
+        try (Connection conn = databaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                int patientType = rs.getInt("type");
+                utilisateur = new Patient(id, nom, prenom, email, mdp, patientType);
+            }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+        return utilisateur;
+    }
+
+    private  Specialiste connexionSpecialiste(int id, String nom, String prenom,String email, String mdp ) {
+        Specialiste utilisateur = null;
+        String query = """
+            SELECT s.specialisation, s.lieu, s.photo 
+            FROM specialiste s
+            WHERE s.ID = ?
+        """;
+
+        try (Connection conn = databaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                String specialisation = rs.getString("specialisation");
+                String lieu = rs.getString("lieu");
+              /*  Blob blob = rs.getBlob("Photo");
+                InputStream inputStream = blob.getBinaryStream();
+                BufferedImage image = ImageIO.read(inputStream);
+                JLabel label = new JLabel(new ImageIcon(image));*/
+
+                utilisateur = new Specialiste(id, nom, prenom, email, mdp, specialisation, lieu);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return utilisateur;
+    }
 
 
     @Override
     public void ajouter(Utilisateur utilisateur) {
         try {
-            Connection connexion = Data.getConnection();
+            Connection connexion = databaseConnection.getConnection();
             String query = "INSERT INTO utilisateur (Nom, Prenom, Email, Mdp) VALUES (?, ?, ?, ?)";
             PreparedStatement preparedStatement = connexion.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, utilisateur.getNom());

@@ -1,16 +1,18 @@
 package org.chem.Modele;
 
-public enum RoleUtilisateur {
-    ADMIN("A", "/images/admin.png"),
-    PATIENT("P", "/images/patient.png"),
-    SPECIALISTE("S", "/images/specialiste.png");
+public enum TypeUtilisateur {
+    ADMIN("A", "/images/admin.png", "Admin" ),
+    PATIENT("P", "/images/patient.png", "Patient"),
+    SPECIALISTE("S", "/images/specialiste.png", "Spécialiste");
 
     private final String code;
     private final String imagePath;
+    private final String label;
 
-    RoleUtilisateur(String code, String imagePath) {
+    TypeUtilisateur(String code, String imagePath, String label) {
         this.code = code;
         this.imagePath = imagePath;
+        this.label = label;
     }
 
     public String getCode() {
@@ -21,13 +23,17 @@ public enum RoleUtilisateur {
         return imagePath;
     }
 
+    public String getLabel() {
+        return label;
+    }
+
     @Override
     public String toString() {
         return name() + " (" + code + ") -> " + imagePath;
     }
 
-    public static RoleUtilisateur fromCode(String code) {
-        for (RoleUtilisateur role : RoleUtilisateur.values()) {
+    public static TypeUtilisateur fromCode(String code) {
+        for (TypeUtilisateur role : TypeUtilisateur.values()) {
             if (role.code.equalsIgnoreCase(code)) {
                 return role;
             }

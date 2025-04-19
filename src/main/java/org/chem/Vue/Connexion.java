@@ -7,7 +7,7 @@ public class Connexion extends BaseFrame {
 
     private JTextField emailField;
     private JPasswordField passwordField;
-    private String typeUtilisateur;
+    //private String typeUtilisateur;
 
     private JButton btnRetour;
     private JButton loginBtn;
@@ -15,7 +15,24 @@ public class Connexion extends BaseFrame {
 
     public Connexion(String typeUtilisateur) {
         super();
-        this.typeUtilisateur = typeUtilisateur;
+       // this.typeUtilisateur = typeUtilisateur;
+        initConnection();
+    }
+
+    public Connexion() {
+        super();
+        initConnection();
+    }
+
+    public Connexion(String login, String password) {
+        super();
+        initConnection();
+        emailField.setText(login);
+        passwordField.setText(password);
+    }
+
+
+    private void initConnection() {
         JPanel contenu = getCenterPanel();
         JPanel boutonPanel = new JPanel(new BorderLayout());
 
@@ -69,5 +86,5 @@ public class Connexion extends BaseFrame {
 
     public String getEmail() { return emailField.getText().trim(); }
     public String getMotDePasse() { return new String(passwordField.getPassword()).trim(); }
-    public String getTypeUtilisateur() { return typeUtilisateur; }
+    public String getTypeUtilisateur() { return null; }
 }
