@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 import org.chem.Controleur.ChoixConnexionControleur;
+import org.chem.Controleur.ConnexionControleur;
 import org.chem.Modele.Admin;
 import org.chem.Modele.Patient;
 import org.chem.Modele.Specialiste;
@@ -129,7 +130,7 @@ public class BaseFrame extends JFrame {
             menuDeroulant.add(deconnexionItem);
             deconnexionItem.addActionListener(e -> {
                 dispose();
-                new ChoixConnexionControleur(new ChoixConnexion());
+                new ConnexionControleur(new Connexion());
             });
 
             rightPanel.add(compteButton, gbc);
