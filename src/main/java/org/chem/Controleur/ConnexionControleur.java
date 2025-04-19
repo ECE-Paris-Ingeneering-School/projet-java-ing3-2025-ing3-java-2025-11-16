@@ -36,7 +36,7 @@ public class ConnexionControleur {
             return;
         }
 
-        DatabaseConnection db = DatabaseConnection.getInstance("rdv_specialiste", "root", "root");
+        DatabaseConnection db = DatabaseConnection.getInstance();
         UtilisateurDAO utilisateurDAO = db.getUtilisateurDAO();
 
         Utilisateur utilisateur = utilisateurDAO.seConnecter(email, mdp, vue.getTypeUtilisateur());

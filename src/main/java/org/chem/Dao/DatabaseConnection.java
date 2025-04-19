@@ -1,10 +1,13 @@
 package org.chem.Dao;
 
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 public class DatabaseConnection {
+    private static DatabaseConnection instance;
     private static String url;
     private String username;
     private String password;
@@ -17,12 +20,12 @@ public class DatabaseConnection {
 
     /**
      * Méthode permettant d'obtenir une instance de DatabaseConnection
-     * @param database Nom de la base de données
+     * @param databaseUrl Url de la base de données
      * @param username Nom d'utilisateur
      * @param password Mot de passe
      * @return Instance de DaoFactory
      */
-    public static DatabaseConnection getInstance(String database, String username, String password) {
+    public static DatabaseConnection getInstance(String databaseUrl, String username, String password) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
@@ -30,10 +33,32 @@ public class DatabaseConnection {
             e.printStackTrace();
         }
 
-        url = "jdbc:mysql://localhost:3306/" + database + "?serverTimezone=UTC";
-        return new DatabaseConnection(url, username, password);
+        return new DatabaseConnection(databaseUrl, username, password);
     }
 
+    public static DatabaseConnection getInstance() {
+        if (instance == null) {
+            try {
+                Properties props = new Properties();
+                InputStream input = DatabaseConnection.class.getResourceAsStream("/connection.properties");
+
+                if (input == null) {
+                    throw new RuntimeException("Fichier connection.properties non trouvé !");
+                }
+
+                props.load(input);
+                String databaseUrl = props.getProperty("databaseUrl");
+                String username = props.getProperty("username");
+                String password = props.getProperty("password");
+
+                instance = new DatabaseConnection(databaseUrl, username, password);
+            } catch (Exception e) {
+                System.out.println("Erreur lors de l'initialisation de la connexion à la BDD :");
+                e.printStackTrace();
+            }
+        }
+        return instance;
+    }
     /**
      * Méthode pour obtenir une connexion à la base de données
      * @return Connection JDBC
