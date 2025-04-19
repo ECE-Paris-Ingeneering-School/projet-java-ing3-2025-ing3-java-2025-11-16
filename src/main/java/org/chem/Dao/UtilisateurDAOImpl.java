@@ -52,9 +52,8 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
             stmt.setString(4, likeMotCle); // Nom + Prénom
             stmt.setString(5, likeMotCle); // Prénom + Nom
 
-            int index=6;
+            int index = 6;
             if (!lieu.equals("Lieu")) {
-                System.out.println("Lieu != rien : "+lieu);
                 stmt.setString(index++, "%" + lieu + "%");
             }
 
@@ -142,6 +141,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, email);
+            stmt.setString(2, mdp);
 
             ResultSet rs = stmt.executeQuery();
 
@@ -224,50 +224,43 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         }
     }
 
-    /*@Override
-    public ArrayList<Utilisateur> getAll() {
-        ArrayList<Utilisateur> listeUtilisateurs = new ArrayList<>();
-        try {
-            Connection connexion = Data.getConnection();
-            Statement statement = connexion.createStatement();
-            ResultSet resultats = statement.executeQuery("""
-                SELECT u.ID, u.Nom, u.Prenom, u.Email, u.Mdp,
-                       p.ID AS patientID, p.type,
-                       s.Specialisation, s.Lieu,
-                       a.ID AS adminID
-                FROM utilisateur u
-                LEFT JOIN patient p ON u.ID = p.ID
-                LEFT JOIN specialiste s ON u.ID = s.ID
-                LEFT JOIN admin a ON u.ID = a.ID
-            """);
+    @Override
+    public ArrayList<Specialiste> getAllSpecialistes() {
+        ArrayList<Specialiste> specialistes = new ArrayList<>();
 
-            while (resultats.next()) {
-                int id = resultats.getInt("ID");
-                String nom = resultats.getString("Nom");
-                String prenom = resultats.getString("Prenom");
-                String email = resultats.getString("Email");
-                String mdp = resultats.getString("Mdp");
+        String sql = """
+        SELECT u.ID, u.Nom, u.Prenom, u.Email, u.Mdp, s.Specialisation, s.Lieu
+        FROM utilisateur u
+        JOIN specialiste s ON u.ID = s.ID
+    """;
 
-                if (resultats.getInt("patientID") != 0) {
-                    int type = resultats.getInt("type");
-                    listeUtilisateurs.add(new Patient(id, nom, prenom, email, mdp, type));
-                } else if (resultats.getString("Specialisation") != null) {
-                    String specialisation = resultats.getString("Specialisation");
-                    String lieu = resultats.getString("Lieu");
-                    listeUtilisateurs.add(new Specialiste(id, nom, prenom, email, mdp, specialisation, lieu));
-                } else if (resultats.getInt("adminID") != 0) {
-                    listeUtilisateurs.add(new Admin(id, nom, prenom, email, mdp));
-                } else {
-                    listeUtilisateurs.add(new Utilisateur(id, nom, prenom, email, mdp));
-                }
+        try (Connection conn = Data.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                Specialiste s = new Specialiste(
+                        rs.getInt("ID"),
+                        rs.getString("Nom"),
+                        rs.getString("Prenom"),
+                        rs.getString("Email"),
+                        rs.getString("Mdp"),
+                        rs.getString("Specialisation"),
+                        rs.getString("Lieu")
+                );
+                s.setEmploiDuTemps(chargerHorairesPourSpecialiste(s.getId()));
+                specialistes.add(s);
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return listeUtilisateurs;
-    }*/
 
-    /*@Override
+        return specialistes;
+    }
+
+
+    @Override
     public void supprimer(Utilisateur utilisateur) {
         try {
             Connection connexion = Data.getConnection();
@@ -293,9 +286,9 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }*/
+    }
 
-    /*@Override
+    @Override
     public void modifier(Utilisateur utilisateur) {
         try {
             Connection connexion = Data.getConnection();
@@ -325,49 +318,6 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }*/
+    }
 
-    /*@Override
-    public Utilisateur getUtilisateurById(int id) {
-        Utilisateur utilisateur = null;
-        try (Connection conn = Data.getConnection();
-             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM utilisateur WHERE ID = ?")) {
-            stmt.setInt(1, id);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                utilisateur = new Utilisateur(
-                        rs.getInt("ID"),
-                        rs.getString("Nom"),
-                        rs.getString("Prenom"),
-                        rs.getString("Email"),
-                        rs.getString("Mdp")
-                );
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return utilisateur;
-    }*/
-
-    /*@Override
-    public Utilisateur getUtilisateurByEmail(String email) {
-        Utilisateur utilisateur = null;
-        try (Connection conn = Data.getConnection();
-             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM utilisateur WHERE Email = ?")) {
-            stmt.setString(1, email);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                utilisateur = new Utilisateur(
-                        rs.getInt("ID"),
-                        rs.getString("Nom"),
-                        rs.getString("Prenom"),
-                        rs.getString("Email"),
-                        rs.getString("Mdp")
-                );
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return utilisateur;
-    }*/
 }
