@@ -2,6 +2,7 @@ package Modele;
 import java.util.*;
 
 public class Specialiste extends Utilisateur {
+    // Domaine de spécialisation du spécialiste (ex : cardiologie, dermatologie)
     private String specialisation;
     private String lieu;
     private ArrayList<Horaire> emploiDuTemps = new ArrayList<>();
@@ -23,7 +24,7 @@ public class Specialiste extends Utilisateur {
 
     public String getLieu() { return lieu; }
     public void setLieu(String lieu) { this.lieu = lieu; }
-
+ // Ajout de la spécialisation et du lieu au toString
     @Override
     public String toString() {
         return super.toString() + ", Spécialisation : " + specialisation + ", Lieu : " + lieu;

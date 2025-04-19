@@ -9,7 +9,9 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class SpecialisteVue extends BaseFrame {
+    // Contrôleur pour interagir avec la couche métier
     private final SpecialisteController controller;
+    // Zone de texte centrale pour l'affichage
     private final JTextArea affichage;
 
     public SpecialisteVue(Utilisateur utilisateur) {
@@ -39,11 +41,11 @@ public class SpecialisteVue extends BaseFrame {
 
         JButton btnLister = new JButton("📄 Lister les spécialistes");
         JButton btnAjouter = new JButton("➕ Ajouter un spécialiste");
-
+        // Uniformisation des tailles et polices des boutons
         Dimension btnSize = new Dimension(240, 40);
         btnLister.setPreferredSize(btnSize);
         btnAjouter.setPreferredSize(btnSize);
-
+        // Actions des bouttons
         btnLister.setFont(new Font("Segoe UI", Font.PLAIN, 15));
         btnAjouter.setFont(new Font("Segoe UI", Font.PLAIN, 15));
 
@@ -73,13 +75,14 @@ public class SpecialisteVue extends BaseFrame {
 
     private void ajouterSpecialiste() {
         try {
+            // Saisie utilisateur via JOptionPane
             String nom = JOptionPane.showInputDialog(this, "Nom du spécialiste :");
             String prenom = JOptionPane.showInputDialog(this, "Prénom :");
             String email = JOptionPane.showInputDialog(this, "Email :");
             String mdp = JOptionPane.showInputDialog(this, "Mot de passe :");
             String specialisation = JOptionPane.showInputDialog(this, "Spécialisation :");
             String lieu = JOptionPane.showInputDialog(this, "Lieu d'exercice :");
-
+            // Vérification que toutes les saisies sont valides
             if (nom != null && prenom != null && email != null && mdp != null && specialisation != null && lieu != null) {
                 Specialiste s = new Specialiste(nom, prenom, email, mdp, specialisation, lieu);
                 boolean success = controller.ajouterSpecialiste(s);

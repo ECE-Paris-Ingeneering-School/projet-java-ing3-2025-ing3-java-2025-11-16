@@ -4,6 +4,7 @@ import java.sql.Time;
 
 public class Horaire {
     private int id;
+    // Jour de la semaine représenté par un entier
     private int jourSemaine; // 1 = Dimanche, 2 = Lundi, ..., 7 = Samedi
     private Time heureDebut;
     private Time heureFin;
@@ -39,11 +40,11 @@ public class Horaire {
             case 5 -> "Vendredi";
             case 6 -> "Samedi";
             case 7 -> "Dimanche";
-            default -> "Inconnu";
+            default -> "Inconnu"; //Gestion du cas invalide
         };
     }
 
-    public static int convertirJourEnInt(String jour) {
+    public static int convertirJourEnInt(String jour) { //Ici on convertit un nom de jour en entier
         return switch (jour.toLowerCase()) {
             case "lundi" -> 1;
             case "mardi" -> 2;

@@ -5,8 +5,11 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class SeConnecterVue extends JDialog {
+    // Champs de saisie pour l'identifiant et le mot de passe
     private JTextField idField;
     private JPasswordField MdPField;
+
+    // Boutons pour les actions de connexion et d'inscription
     private JButton connectButton;
     private JButton inscrireButton;
 
@@ -14,8 +17,9 @@ public class SeConnecterVue extends JDialog {
         setTitle("Connexion");
         setSize(800, 500);
         setVisible(true);
-
+        // Le Panel Principal
         JPanel panel = new JPanel(new BorderLayout(10, 10));
+        // Ici , la zone de saisie
         JPanel inputPanel = new JPanel(new GridLayout(2, 2,1,1));
 
         JLabel idLabel = new JLabel("ID:");
@@ -30,7 +34,7 @@ public class SeConnecterVue extends JDialog {
         inputPanel.add(MdPField);
 
         panel.add(inputPanel, BorderLayout.CENTER);
-
+        // C'est la zone des bouttons
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
 
         connectButton = new JButton("Se connecter");
@@ -41,7 +45,7 @@ public class SeConnecterVue extends JDialog {
 
         panel.add(buttonPanel, BorderLayout.SOUTH);
 
-
+        // Ici , l'action des bouttons
         connectButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -51,7 +55,7 @@ public class SeConnecterVue extends JDialog {
             }
         });
 
-
+//Lorsqu'on clique sur s'inscrire, on ouvre la vue d'inscription
         inscrireButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -59,6 +63,7 @@ public class SeConnecterVue extends JDialog {
                 new InscrireVue();
             }
         });
+        // On ajoute du panel global à la fenêtre
         getContentPane().add(panel);
     }
 
