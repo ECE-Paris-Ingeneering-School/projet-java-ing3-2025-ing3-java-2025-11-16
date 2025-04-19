@@ -12,6 +12,8 @@ import org.chem.Vue.CreationCompte;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
+import static org.chem.Modele.Utilisateur.ID_NEW_USER;
+
 public class CreationCompteControleur {
     private CreationCompte vue;
 
@@ -23,7 +25,7 @@ public class CreationCompteControleur {
     private void ajouterListeners() {
         vue.getCreerBtn().addActionListener(this::creerCompte);
         vue.getBtnRetour().addActionListener(e -> {
-            Connexion vueConnexion = new Connexion(vue.getTypeUtilisateur());
+            Connexion vueConnexion = new Connexion(vue.getTypeUtilisateurCode());
             new ConnexionControleur(vueConnexion);
             vue.dispose();
         });
@@ -46,17 +48,17 @@ public class CreationCompteControleur {
         Utilisateur utilisateur = null;
 
         switch (vue.getTypeUtilisateur()) {
-            case "patient":
+            case PATIENT:
                 int type = vue.getTypePatientBox().getSelectedIndex() + 1;
-                utilisateur = new Patient(nom, prenom, email, mdp, type);
+                utilisateur = new Patient(ID_NEW_USER, nom, prenom, email, mdp, type);
                 break;
-            case "specialiste":
+            case SPECIALISTE:
                 String specialite = vue.getSpecialiteField().getText().trim();
                 String etablissement = vue.getLieuField().getText().trim();
-                utilisateur = new Specialiste(nom, prenom, email, mdp, specialite, etablissement);
+                utilisateur = new Specialiste(ID_NEW_USER,  nom, prenom, email, mdp, specialite, etablissement);
                 break;
-            case "admin":
-                utilisateur = new Admin(nom, prenom, email, mdp);
+            case ADMIN:
+                utilisateur = new Admin(ID_NEW_USER, nom, prenom, email, mdp);
                 break;
         }
 
@@ -64,7 +66,7 @@ public class CreationCompteControleur {
             try {
                 utilisateurDAO.ajouter(utilisateur);
                 JOptionPane.showMessageDialog(vue, "Compte créé avec succès !");
-                new ConnexionControleur(new Connexion(vue.getTypeUtilisateur()));
+                new ConnexionControleur(new Connexion(vue.getTypeUtilisateurCode()));
                 vue.dispose();
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(vue, "Erreur lors de la création.");
