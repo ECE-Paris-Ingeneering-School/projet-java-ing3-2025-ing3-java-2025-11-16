@@ -27,8 +27,16 @@ public class Connexion extends BaseFrame {
     public Connexion(String login, String password) {
         super();
         initConnection();
-        emailField.setText(login);
+        setLogin(login);
+        setPassword(password);
+    }
+
+    public void setPassword(String password) {
         passwordField.setText(password);
+    }
+
+    public void setLogin(String login) {
+        emailField.setText(login);
     }
 
 
