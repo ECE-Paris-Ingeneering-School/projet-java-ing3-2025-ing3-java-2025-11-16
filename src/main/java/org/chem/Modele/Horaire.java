@@ -4,7 +4,7 @@ import java.sql.Time;
 
 public class Horaire {
     private int id;
-    private int jourSemaine; // 1 = Dimanche, 2 = Lundi, ..., 7 = Samedi
+    private int jourSemaine;
     private Time heureDebut;
     private Time heureFin;
 
