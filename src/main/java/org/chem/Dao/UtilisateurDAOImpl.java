@@ -129,7 +129,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         Utilisateur utilisateur = null;
 
         String query = """
-        SELECT u.ID, u.Nom, u.Prenom, u.Email, u.Mdp, p.ID AS patientID, s.ID AS specialisteID, a.ID AS adminID
+        SELECT u.ID, u.Nom, u.Prenom, u.Email, u.Mdp, p.ID AS patientID, p.type AS patientType, s.ID AS specialisteID, s.Specialisation AS Specialisation, s.Lieu AS Lieu, a.ID AS adminID
         FROM utilisateur u
         LEFT JOIN patient p ON u.ID = p.ID
         LEFT JOIN specialiste s ON u.ID = s.ID
@@ -141,7 +141,6 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, email);
-            //stmt.setString(2, mdp);
 
             ResultSet rs = stmt.executeQuery();
 
@@ -157,7 +156,10 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
                     switch (type.toLowerCase()) {
                         case "patient" -> {
                             if (rs.getInt("patientID") != 0) { // Vérifie si l'utilisateur est un patient
-                                utilisateur = new Patient(id, nom, prenom, email, hashedMdp, rs.getInt("type"));
+                                int typePatient = rs.getInt("patientType");
+                                System.out.println("Patient not connected, type = " + typePatient);
+
+                                utilisateur = new Patient(id, nom, prenom, email, hashedMdp, typePatient);
                             }
                         }
                         case "specialiste" -> {

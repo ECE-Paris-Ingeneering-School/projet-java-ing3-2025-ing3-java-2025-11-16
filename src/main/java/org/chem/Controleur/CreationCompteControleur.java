@@ -53,7 +53,6 @@ public class CreationCompteControleur {
                 break;
             case "admin":
                 utilisateur = new Admin(nom, prenom, email, mdp);
-                System.out.println("utilisateur initialisé");
 
                 break;
         }
@@ -61,7 +60,6 @@ public class CreationCompteControleur {
 
         if (utilisateur != null) {
             try {
-                System.out.println("Hello");
                 utilisateurDAO.ajouter(utilisateur);
                 JOptionPane.showMessageDialog(vue, "Compte créé avec succès !");
                 new ConnexionControleur(new Connexion(vue.getTypeUtilisateur()));

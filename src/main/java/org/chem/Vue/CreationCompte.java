@@ -1,7 +1,5 @@
 package org.chem.Vue;
 
-import org.chem.Modele.TypeUtilisateur;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -9,13 +7,12 @@ public class CreationCompte extends BaseFrame {
     private JTextField nomField, prenomField, emailField, SpecialiteField, LieuField;
     private JPasswordField mdpField;
     private JComboBox<String> typePatientBox; // visible si patient
-    private JButton btnRetour, creerBtn;
     private String typeUtilisateur;
+    private JButton btnRetour, creerBtn;
 
     public CreationCompte(String typeUtilisateur) {
         super();
         this.typeUtilisateur = typeUtilisateur;
-
         JPanel Contenu = getCenterPanel();
         JPanel boutonsPanel = new JPanel(new BorderLayout());
 
@@ -45,8 +42,7 @@ public class CreationCompte extends BaseFrame {
         panel.add(new JLabel("Mot de passe :"));
         panel.add(mdpField);
 
-        switch (typeUtilisateur) {
-            case "Specialiste"  :
+        if (typeUtilisateur.equalsIgnoreCase("specialiste")) {
                 panel.add(new JLabel("Specialité :"));
                 panel.add(SpecialiteField);
                 panel.add(new JLabel("Lieu :"));
@@ -80,7 +76,7 @@ public class CreationCompte extends BaseFrame {
     public JTextField getSpecialiteField() { return SpecialiteField; }
     public JTextField getLieuField() { return LieuField; }
     public JComboBox<String> getTypePatientBox() { return typePatientBox; }
+    public String getTypeUtilisateur() { return typeUtilisateur; }
     public JButton getBtnRetour() { return btnRetour; }
     public JButton getCreerBtn() { return creerBtn; }
-    public String getTypeUtilisateur() {return typeUtilisateur;}
 }
