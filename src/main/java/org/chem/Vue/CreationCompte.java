@@ -3,6 +3,7 @@ package org.chem.Vue;
 import javax.swing.*;
 import java.awt.*;
 
+
 public class CreationCompte extends BaseFrame {
     private JTextField nomField, prenomField, emailField, SpecialiteField, LieuField;
     private JPasswordField mdpField;
@@ -47,7 +48,6 @@ public class CreationCompte extends BaseFrame {
                 panel.add(SpecialiteField);
                 panel.add(new JLabel("Lieu :"));
                 panel.add(LieuField);
-                break;
         }
 
         creerBtn = new JButton("Créer le compte");
