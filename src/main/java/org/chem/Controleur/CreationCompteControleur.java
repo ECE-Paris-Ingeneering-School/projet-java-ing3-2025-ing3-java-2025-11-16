@@ -43,8 +43,8 @@ public class CreationCompteControleur {
 
         switch (vue.getTypeUtilisateur().toLowerCase()) {
             case "patient":
-                int type = vue.getTypePatientBox().getSelectedIndex() + 1;
-                utilisateur = new Patient(nom, prenom, email, mdp, type);
+                //int type = vue.getTypePatientBox().getSelectedIndex() + 1;
+                utilisateur = new Patient(nom, prenom, email, mdp, 1);
                 break;
             case "specialiste":
                 String specialite = vue.getSpecialiteField().getText().trim();
