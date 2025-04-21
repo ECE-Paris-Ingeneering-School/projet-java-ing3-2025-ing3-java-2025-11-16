@@ -44,7 +44,7 @@ public class Connexion extends BaseFrame {
         JPanel contenu = getCenterPanel();
         JPanel boutonPanel = new JPanel(new BorderLayout());
 
-        JLabel titreLabel = new JLabel("Connexion", SwingConstants.CENTER);
+        JLabel titreLabel = new JLabel("Connexion "+typeUtilisateur, SwingConstants.CENTER);
         titreLabel.setFont(new Font("Arial", Font.BOLD, 30));
         titreLabel.setBorder(BorderFactory.createEmptyBorder(30, 0, 0, 0));
         contenu.add(titreLabel, BorderLayout.NORTH);
