@@ -40,7 +40,6 @@ public class ConnexionControleur {
         UtilisateurDAO utilisateurDAO = db.getUtilisateurDAO();
 
 
-
         Utilisateur utilisateur = utilisateurDAO.seConnecter(email, mdp,vue.getTypeUtilisateur());
 
         if (utilisateur != null) {
