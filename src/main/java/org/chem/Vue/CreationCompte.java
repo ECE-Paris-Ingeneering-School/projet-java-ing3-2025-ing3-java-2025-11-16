@@ -16,7 +16,7 @@ public class CreationCompte extends BaseFrame {
         JPanel Contenu = getCenterPanel();
         JPanel boutonsPanel = new JPanel(new BorderLayout());
 
-        JLabel titreLabel = new JLabel("Création de Compte", SwingConstants.CENTER);
+        JLabel titreLabel = new JLabel("Création de Compte "+typeUtilisateur, SwingConstants.CENTER);
         titreLabel.setFont(new Font("Arial", Font.BOLD, 30));
         titreLabel.setBorder(BorderFactory.createEmptyBorder(30, 0, 0, 0));
         Contenu.add(titreLabel, BorderLayout.NORTH);

@@ -44,8 +44,9 @@ public class CreationCompteControleur {
         UtilisateurDAO utilisateurDAO = db.getUtilisateurDAO();
 
         Utilisateur utilisateur = null;
+        System.out.println("utilisateur = null");
 
-        switch (vue.getTypeUtilisateur()) {
+        switch (vue.getTypeUtilisateur().toLowerCase()) {
             case "patient":
                 int type = vue.getTypePatientBox().getSelectedIndex() + 1;
                 utilisateur = new Patient(nom, prenom, email, mdp, type);
@@ -57,11 +58,14 @@ public class CreationCompteControleur {
                 break;
             case "admin":
                 utilisateur = new Admin(nom, prenom, email, mdp);
+                System.out.println("utilisateur initialisé");
+
                 break;
         }
 
         if (utilisateur != null) {
             try {
+                System.out.println("Hello");
                 utilisateurDAO.ajouter(utilisateur);
                 JOptionPane.showMessageDialog(vue, "Compte créé avec succès !");
                 new ConnexionControleur(new Connexion(vue.getTypeUtilisateur()));

@@ -2,6 +2,7 @@ package org.chem.Dao;
 
 import org.chem.Modele.*;
 
+import org.mindrot.jbcrypt.BCrypt;
 import java.sql.*;
 import java.util.*;
 
@@ -134,38 +135,43 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         LEFT JOIN patient p ON u.ID = p.ID
         LEFT JOIN specialiste s ON u.ID = s.ID
         LEFT JOIN admin a ON u.ID = a.ID
-        WHERE u.Email = ? AND u.Mdp = ?
+        WHERE u.Email = ?
     """;
 
         try (Connection conn = Data.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, email);
-            stmt.setString(2, mdp);
+            //stmt.setString(2, mdp);
 
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                int id = rs.getInt("ID");
-                String nom = rs.getString("Nom");
-                String prenom = rs.getString("Prenom");
 
-                switch (type.toLowerCase()) {
-                    case "patient" -> {
-                        if (rs.getInt("patientID") != 0) { // Vérifie si l'utilisateur est un patient
-                            utilisateur = new Patient(id, nom, prenom, email, mdp, rs.getInt("type"));
+                String hashedMdp = rs.getString("Mdp");
+
+                if (BCrypt.checkpw(mdp, hashedMdp)) {
+                    int id = rs.getInt("ID");
+                    String nom = rs.getString("Nom");
+                    String prenom = rs.getString("Prenom");
+
+                    switch (type.toLowerCase()) {
+                        case "patient" -> {
+                            if (rs.getInt("patientID") != 0) { // Vérifie si l'utilisateur est un patient
+                                utilisateur = new Patient(id, nom, prenom, email, hashedMdp, rs.getInt("type"));
+                            }
                         }
-                    }
-                    case "specialiste" -> {
-                        if (rs.getInt("specialisteID") != 0) { // Vérifie si l'utilisateur est un spécialiste
-                            String specialisation = rs.getString("Specialisation");
-                            String lieu = rs.getString("Lieu");
-                            utilisateur = new Specialiste(id, nom, prenom, email, mdp, specialisation, lieu);
+                        case "specialiste" -> {
+                            if (rs.getInt("specialisteID") != 0) { // Vérifie si l'utilisateur est un spécialiste
+                                String specialisation = rs.getString("Specialisation");
+                                String lieu = rs.getString("Lieu");
+                                utilisateur = new Specialiste(id, nom, prenom, email, hashedMdp, specialisation, lieu);
+                            }
                         }
-                    }
-                    case "admin" -> {
-                        if (rs.getInt("adminID") != 0) { // Vérifie si l'utilisateur est un admin
-                            utilisateur = new Admin(id, nom, prenom, email, mdp);
+                        case "admin" -> {
+                            if (rs.getInt("adminID") != 0) { // Vérifie si l'utilisateur est un admin
+                                utilisateur = new Admin(id, nom, prenom, email, hashedMdp);
+                            }
                         }
                     }
                 }
@@ -189,7 +195,13 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
             preparedStatement.setString(1, utilisateur.getNom());
             preparedStatement.setString(2, utilisateur.getPrenom());
             preparedStatement.setString(3, utilisateur.getEmail());
-            preparedStatement.setString(4, utilisateur.getMdp());
+
+            String hashedPassword = BCrypt.hashpw(utilisateur.getMdp(), BCrypt.gensalt());
+            System.out.println("mdp = " + utilisateur.getMdp()+"cripte = " + hashedPassword);
+
+            preparedStatement.setString(4, hashedPassword);
+
+            //preparedStatement.setString(4, utilisateur.getMdp());
             preparedStatement.executeUpdate();
 
             ResultSet rs = preparedStatement.getGeneratedKeys();
@@ -213,6 +225,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
                         ps.executeUpdate();
                     }
                     case Admin admin -> {
+                        System.out.println("admin ajout");
                         PreparedStatement ps = connexion.prepareStatement("INSERT INTO admin (ID) VALUES (?)");
                         ps.setInt(1, id);
                         ps.executeUpdate();
