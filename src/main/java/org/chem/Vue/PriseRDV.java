@@ -94,7 +94,7 @@ public class PriseRDV extends JPanel{
 
                     int idHoraire = match.getId();
 
-                    DatabaseConnection db = DatabaseConnection.getInstance();
+                    DatabaseConnection db = DatabaseConnection.getInstance("rdv_specialiste", "root", "root");
                     RendezVousDAO rdvDAO = new RendezVousDAOImpl(db);
                     System.out.println(specialiste.getId());
 
