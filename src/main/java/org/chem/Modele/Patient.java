@@ -15,6 +15,7 @@ public class Patient extends Utilisateur {
         this.type = typePatient;
     }
 
+
     public int getType() { return type; }
     public void setType(int typePatient) { this.type = typePatient; }
 
