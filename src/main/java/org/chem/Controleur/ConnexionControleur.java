@@ -36,17 +36,20 @@ public class ConnexionControleur {
             return;
         }
 
-        DatabaseConnection db = DatabaseConnection.getInstance();
+        DatabaseConnection db = DatabaseConnection.getInstance("rdv_specialiste", "root", "root");
         UtilisateurDAO utilisateurDAO = db.getUtilisateurDAO();
 
-        Utilisateur utilisateur = utilisateurDAO.seConnecter(email, mdp);
+
+
+        Utilisateur utilisateur = utilisateurDAO.seConnecter(email, mdp,vue.getTypeUtilisateur());
 
         if (utilisateur != null) {
 
             Session.setUtilisateur(utilisateur);
 
-            JOptionPane.showMessageDialog(vue, "Bienvenue " +utilisateur.getTypeUtilisateur().getLabel() + " " + utilisateur.getPrenom() + " !");
+            JOptionPane.showMessageDialog(vue, "Bienvenue " + utilisateur.getPrenom() + " !");
             vue.dispose();
+
 
             switch (utilisateur) {
                 case Patient patient :

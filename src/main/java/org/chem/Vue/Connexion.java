@@ -7,7 +7,7 @@ public class Connexion extends BaseFrame {
 
     private JTextField emailField;
     private JPasswordField passwordField;
-    //private String typeUtilisateur;
+    private String typeUtilisateur;
 
     private JButton btnRetour;
     private JButton loginBtn;
@@ -15,7 +15,7 @@ public class Connexion extends BaseFrame {
 
     public Connexion(String typeUtilisateur) {
         super();
-       // this.typeUtilisateur = typeUtilisateur;
+        this.typeUtilisateur = typeUtilisateur;
         initConnection();
     }
 
@@ -94,5 +94,5 @@ public class Connexion extends BaseFrame {
 
     public String getEmail() { return emailField.getText().trim(); }
     public String getMotDePasse() { return new String(passwordField.getPassword()).trim(); }
-    public String getTypeUtilisateur() { return null; }
+    public String getTypeUtilisateur() { return typeUtilisateur; }
 }

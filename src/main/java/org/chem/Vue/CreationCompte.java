@@ -9,16 +9,12 @@ public class CreationCompte extends BaseFrame {
     private JTextField nomField, prenomField, emailField, SpecialiteField, LieuField;
     private JPasswordField mdpField;
     private JComboBox<String> typePatientBox; // visible si patient
-    private TypeUtilisateur typeUtilisateur;
     private JButton btnRetour, creerBtn;
+    private String typeUtilisateur;
 
-    public CreationCompte(String typeUtilisateurS) {
+    public CreationCompte(String typeUtilisateur) {
         super();
-        if (typeUtilisateur != null) {
-            this.typeUtilisateur = TypeUtilisateur.fromCode(typeUtilisateurS);
-        } else {
-            this.typeUtilisateur = TypeUtilisateur.PATIENT;
-        }
+        this.typeUtilisateur = typeUtilisateur;
 
         JPanel Contenu = getCenterPanel();
         JPanel boutonsPanel = new JPanel(new BorderLayout());
@@ -50,7 +46,7 @@ public class CreationCompte extends BaseFrame {
         panel.add(mdpField);
 
         switch (typeUtilisateur) {
-            case TypeUtilisateur.SPECIALISTE  :
+            case "Specialiste"  :
                 panel.add(new JLabel("Specialité :"));
                 panel.add(SpecialiteField);
                 panel.add(new JLabel("Lieu :"));
@@ -84,8 +80,7 @@ public class CreationCompte extends BaseFrame {
     public JTextField getSpecialiteField() { return SpecialiteField; }
     public JTextField getLieuField() { return LieuField; }
     public JComboBox<String> getTypePatientBox() { return typePatientBox; }
-    public String getTypeUtilisateurCode() { return typeUtilisateur.getCode(); }
-    public TypeUtilisateur getTypeUtilisateur() { return typeUtilisateur; }
     public JButton getBtnRetour() { return btnRetour; }
     public JButton getCreerBtn() { return creerBtn; }
+    public String getTypeUtilisateur() {return typeUtilisateur;}
 }

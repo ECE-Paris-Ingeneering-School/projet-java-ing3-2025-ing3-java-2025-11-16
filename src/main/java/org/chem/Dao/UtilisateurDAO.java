@@ -15,7 +15,7 @@ public interface UtilisateurDAO {
 
     ArrayList<Horaire> chargerHorairesPourSpecialiste(int idSpecialiste);
 
-    Utilisateur seConnecter(String email, String mdp);
+    Utilisateur seConnecter(String email, String mdp,String type);
 
     void ajouter(Utilisateur utilisateur);
 
