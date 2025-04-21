@@ -9,6 +9,11 @@ public class Patient extends Utilisateur {
         this.type = typePatient;
     }
 
+    public Patient(String nom, String prenom, String email, String mdp, int typePatient) {
+        super(nom, prenom, email, mdp);
+        this.type = typePatient;
+    }
+
     public int getType() { return type; }
     public void setType(int typePatient) { this.type = typePatient; }
 

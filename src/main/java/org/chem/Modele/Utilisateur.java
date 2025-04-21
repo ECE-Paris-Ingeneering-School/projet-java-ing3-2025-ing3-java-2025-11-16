@@ -23,6 +23,12 @@ public class Utilisateur {
         this.typeUtilisateur = typeUtilisateur;
     }
 
+    public Utilisateur(String nom,String prenom, String email, String mdp) {
+        this.nom = nom;
+        this.prenom = prenom;
+        this.email = email;
+        this.mdp = mdp;
+    }
 
     public int getId() { return id; }
     public void setId(int ID) { this.id = ID; }

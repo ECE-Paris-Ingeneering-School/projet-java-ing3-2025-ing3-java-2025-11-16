@@ -12,6 +12,12 @@ public class Specialiste extends Utilisateur {
         this.lieu = lieu;
     }
 
+    public Specialiste(String nom, String prenom, String email, String mdp, String specialisation, String lieu) {
+        super(nom,prenom,email,mdp);
+        this.specialisation = specialisation;
+        this.lieu = lieu;
+    }
+
     public String getSpecialisation() { return specialisation; }
     public void setSpecialisation(String specialisation) { this.specialisation = specialisation; }
 

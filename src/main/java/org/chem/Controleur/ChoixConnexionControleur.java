@@ -1,5 +1,4 @@
 package org.chem.Controleur;
-import org.chem.Modele.TypeUtilisateur;
 import org.chem.Vue.ChoixConnexion;
 import org.chem.Vue.Connexion;
 
@@ -14,17 +13,17 @@ public class ChoixConnexionControleur {
 
     private void ajouterListeners() {
         vue.getPatientButton().addActionListener(e -> {
-            typeUtilisateur = TypeUtilisateur.PATIENT.getCode();
+            typeUtilisateur = "Patient";
             ouvrirConnexion();
         });
 
         vue.getSpecialisteButton().addActionListener(e -> {
-            typeUtilisateur = TypeUtilisateur.SPECIALISTE.getCode();
+            typeUtilisateur = "Specialiste";
             ouvrirConnexion();
         });
 
         vue.getAdminButton().addActionListener(e -> {
-            typeUtilisateur = TypeUtilisateur.ADMIN.getCode();
+            typeUtilisateur = "Admin";
             ouvrirConnexion();
         });
     }
