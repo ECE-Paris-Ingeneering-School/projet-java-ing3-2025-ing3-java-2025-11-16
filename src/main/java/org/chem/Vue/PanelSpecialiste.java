@@ -11,6 +11,7 @@ public class PanelSpecialiste extends JPanel {
 
     private final Specialiste specialiste;
     private final JButton btnSupprimerSpecialiste;
+    private final JButton btnModifierSpecialiste;
     private final JButton btnAjouterHoraire;
     private final JPanel edtPanel;
 
@@ -29,12 +30,14 @@ public class PanelSpecialiste extends JPanel {
         infoPanel.setOpaque(false);
         infoPanel.add(nomLabel);
 
+        btnModifierSpecialiste = new JButton("Modifier le spécialiste");
         btnSupprimerSpecialiste = new JButton("Supprimer le spécialiste");
         btnAjouterHoraire = new JButton("Ajouter un horaire");
 
         JPanel actionsPanel = new JPanel();
         actionsPanel.setOpaque(false);
         actionsPanel.add(btnAjouterHoraire);
+        actionsPanel.add(btnModifierSpecialiste);
         actionsPanel.add(btnSupprimerSpecialiste);
 
         // Emploi du temps
@@ -74,6 +77,7 @@ public class PanelSpecialiste extends JPanel {
 
     }
 
+    public JButton getBtnModifierSpecialiste() { return btnModifierSpecialiste; }
     public JButton getBtnSupprimerSpecialiste() { return btnSupprimerSpecialiste; }
     public JButton getBtnAjouterHoraire() { return btnAjouterHoraire; }
     public Specialiste getSpecialiste() { return specialiste; }
