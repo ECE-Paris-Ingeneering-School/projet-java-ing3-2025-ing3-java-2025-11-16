@@ -22,9 +22,10 @@ public class AdminControleur {
         DatabaseConnection db = DatabaseConnection.getInstance("rdv_specialiste", "root", "root");
         UtilisateurDAOImpl utilisateurDAO = new UtilisateurDAOImpl(db);
         HoraireDAOImpl horaireDAO = new HoraireDAOImpl(db);
+        EdtDAOImpl edtDAO = new EdtDAOImpl(db);
 
         // === Onglet Spécialistes ===
-        new AdminSpecialisteControleur(panelSpecialistes, utilisateurDAO, horaireDAO);
+        new AdminSpecialisteControleur(panelSpecialistes, utilisateurDAO, horaireDAO, edtDAO);
 
         adminVue.getGestionSpecialistesPanel().add(panelSpecialistes);
 

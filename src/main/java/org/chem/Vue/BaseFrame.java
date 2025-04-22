@@ -51,7 +51,7 @@ public class BaseFrame extends JFrame {
         rightPanel.setOpaque(false);
 
         if (utilisateurConnecte != null) {
-            JButton compteButton = new JButton("Mon compte");
+            JButton compteButton = new JButton("<html><b>Mon compte</b><br><i>" + utilisateurConnecte.getPrenom() + " " + utilisateurConnecte.getNom() + "</i></html>");
 
             Font bigFont = new Font("Arial", Font.BOLD, 17);
             Dimension bigSize = new Dimension(200, 60);

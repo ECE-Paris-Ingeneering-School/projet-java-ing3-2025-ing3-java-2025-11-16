@@ -39,8 +39,6 @@ public class PriseRDV extends JPanel{
         String moisAnnee = startOfWeek.format(formatter);
         JLabel semaineLabel = new JLabel(moisAnnee, SwingConstants.CENTER);
 
-
-
         previousWeek.addActionListener(e -> {
             startOfWeek = startOfWeek.minusWeeks(1);
             buildUI();
@@ -58,7 +56,7 @@ public class PriseRDV extends JPanel{
 
         // --- GRID: tableau des créneaux
         String[] jours = {"Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"};
-        String[] heures = {"08:00", "09:00", "10:00", "11:00", "14:00", "15:00", "16:00"};
+        String[] heures = {"08:00", "09:00", "10:00", "11:00", "13:00","14:00", "15:00", "16:00"};
 
         JPanel grid = new JPanel(new GridLayout(heures.length + 1, jours.length,10,10));
         grid.setBorder(BorderFactory.createEmptyBorder()); // pas de contour

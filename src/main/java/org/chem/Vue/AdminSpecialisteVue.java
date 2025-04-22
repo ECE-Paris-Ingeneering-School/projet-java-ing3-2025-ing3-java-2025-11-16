@@ -18,7 +18,7 @@ public class AdminSpecialisteVue extends JPanel {
         rechercherBtn = new JButton("Rechercher");
         ajouterBtn = new JButton("Ajouter un spécialiste");
 
-        topPanel.add(new JLabel("Spécialité :"));
+        topPanel.add(new JLabel("Spécialité ou nom :"));
         topPanel.add(rechercheField);
         topPanel.add(rechercherBtn);
         topPanel.add(ajouterBtn);

@@ -1,6 +1,8 @@
 package org.chem.Dao;
 
 import org.chem.Modele.Horaire;
+
+import java.sql.Time;
 import java.util.List;
 
 public interface HoraireDAO {
@@ -14,4 +16,6 @@ public interface HoraireDAO {
     boolean supprimerHoraire(int id);
 
     boolean mettreAJourHoraire(Horaire horaire);
+
+    int getIdHoraireExistant(int jour, Time heureDebut);
 }
