@@ -222,3 +222,23 @@ INSERT INTO edt (IDSpecialiste, IDHoraire) VALUES
 -- Manon Carvalho (Cardiologue, Marseille)
 INSERT INTO edt (IDSpecialiste, IDHoraire) VALUES
        (15, 19), (15, 20), (15, 41), (15, 42);
+
+-- ✅ RDV pour Jean Dupont (ID=1, Cardiologue à Paris), dispo horaire 1, lundi 22 avril
+INSERT INTO rdv (IDSpecialiste, IDPatient, IDHoraire, Date, Notes, Lieu) VALUES
+    (1, 4, 1, '2025-04-28', 'Suivi tension artérielle', 'Paris');
+
+-- ✅ RDV pour Claire Martin (ID=2, Dermatologue à Lyon), dispo horaire 13, mardi 23 avril
+INSERT INTO rdv (IDSpecialiste, IDPatient, IDHoraire, Date, Notes, Lieu) VALUES
+    (2, 5, 13, '2025-04-29', 'Examen de grain de beauté', 'Lyon');
+
+-- ✅ RDV pour Linh Nguyen (ID=3, Psychologue à Marseille), dispo horaire 27, jeudi 24 avril
+INSERT INTO rdv (IDSpecialiste, IDPatient, IDHoraire, Date, Notes, Lieu) VALUES
+    (3, 6, 27, '2025-04-24', 'Séance d’accompagnement', 'Marseille');
+
+-- ✅ RDV pour Julie Moreau (ID=10, Cardiologue à Paris), dispo horaire 4, lundi 22 avril
+INSERT INTO rdv (IDSpecialiste, IDPatient, IDHoraire, Date, Notes, Lieu) VALUES
+    (10, 5, 4, '2025-04-28', 'Bilan cardiaque annuel', 'Paris');
+
+-- ✅ RDV pour Lucia Fernandez (ID=12, Cardiologue à Bordeaux), dispo horaire 5, lundi 22 avril
+INSERT INTO rdv (IDSpecialiste, IDPatient, IDHoraire, Date, Notes, Lieu) VALUES
+    (12, 6, 5, '2025-04-28', 'Consultation fatigue', 'Bordeaux');

@@ -277,6 +277,40 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 
 
     @Override
+    public ArrayList<Patient> getAllPatients() {
+        ArrayList<Patient> patients = new ArrayList<>();
+
+        String sql = """
+        SELECT u.ID, u.Nom, u.Prenom, u.Email, u.Mdp, p.Type AS PatientType
+        FROM utilisateur u
+        JOIN patient p ON u.ID = p.ID
+    """;
+
+        try (Connection conn = Data.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                Patient p = new Patient(
+                        rs.getInt("ID"),
+                        rs.getString("Nom"),
+                        rs.getString("Prenom"),
+                        rs.getString("Email"),
+                        rs.getString("Mdp"),
+                        rs.getInt("PatientType")
+                );
+                patients.add(p);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return patients;
+    }
+
+
+    @Override
     public void supprimer(Utilisateur utilisateur) {
         try {
             Connection connexion = Data.getConnection();
@@ -335,5 +369,55 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public Utilisateur getById(int id) {
+        Utilisateur utilisateur = null;
+
+        String query = """
+        SELECT u.ID, u.Nom, u.Prenom, u.Email, u.Mdp, 
+               p.ID AS patientID, p.type AS patientType, 
+               s.ID AS specialisteID, s.Specialisation, s.Lieu,
+               a.ID AS adminID
+        FROM utilisateur u
+        LEFT JOIN patient p ON u.ID = p.ID
+        LEFT JOIN specialiste s ON u.ID = s.ID
+        LEFT JOIN admin a ON u.ID = a.ID
+        WHERE u.ID = ?
+    """;
+
+        try (Connection conn = Data.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                String nom = rs.getString("Nom");
+                String prenom = rs.getString("Prenom");
+                String email = rs.getString("Email");
+                String mdp = rs.getString("Mdp");
+
+                if (rs.getInt("patientID") != 0) {
+                    int typePatient = rs.getInt("patientType");
+                    utilisateur = new Patient(id, nom, prenom, email, mdp, typePatient);
+                } else if (rs.getInt("specialisteID") != 0) {
+                    String specialisation = rs.getString("Specialisation");
+                    String lieu = rs.getString("Lieu");
+                    Specialiste specialiste = new Specialiste(id, nom, prenom, email, mdp, specialisation, lieu);
+                    specialiste.setEmploiDuTemps(chargerHorairesPourSpecialiste(id));
+                    utilisateur = specialiste;
+                } else if (rs.getInt("adminID") != 0) {
+                    utilisateur = new Admin(id, nom, prenom, email, mdp);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return utilisateur;
+    }
+
 
 }

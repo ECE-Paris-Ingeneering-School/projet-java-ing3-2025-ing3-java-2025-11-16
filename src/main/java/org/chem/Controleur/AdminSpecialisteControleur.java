@@ -6,26 +6,27 @@ import org.chem.Dao.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.sql.Time;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
 
 public class AdminSpecialisteControleur extends JFrame {
 
     private final AdminSpecialisteVue vue;
-    private final UtilisateurDAOImpl specialisteDAO;
+    private final UtilisateurDAOImpl utilisateurDAO;
     private final HoraireDAOImpl horaireDAO;
     private final EdtDAOImpl edtDAO;
+    private RendezVousDAOImpl rendezVousDAO;
 
-    public AdminSpecialisteControleur(AdminSpecialisteVue vue, UtilisateurDAOImpl Specialistedao, HoraireDAOImpl horaireDAO,EdtDAOImpl edtDAO) {
+
+    public AdminSpecialisteControleur(AdminSpecialisteVue vue, UtilisateurDAOImpl Specialistedao, HoraireDAOImpl horaireDAO,EdtDAOImpl edtDAO, RendezVousDAOImpl rendezVousDAO) {
         this.vue = vue;
-        this.specialisteDAO = Specialistedao;
+        this.utilisateurDAO = Specialistedao;
         this.horaireDAO = horaireDAO;
         this.edtDAO = edtDAO;
+        this.rendezVousDAO = rendezVousDAO;
 
         // Initialisation des listeners
         vue.getRechercherBtn().addActionListener(e -> rechercher());
@@ -37,12 +38,12 @@ public class AdminSpecialisteControleur extends JFrame {
 
     private void rechercher() {
         String filtre = vue.getRechercheField().getText().trim();
-        ArrayList<Specialiste> liste = specialisteDAO.rechercherSpecialistes(filtre,"",null,"Lieu");
+        ArrayList<Specialiste> liste = utilisateurDAO.rechercherSpecialistes(filtre,"",null,"Lieu");
         afficherSpecialistes(liste);
     }
 
     private void afficherTousLesSpecialistes() {
-        ArrayList<Specialiste> liste = specialisteDAO.getAllSpecialistes();
+        ArrayList<Specialiste> liste = utilisateurDAO.getAllSpecialistes();
         afficherSpecialistes(liste);
     }
 
@@ -69,7 +70,7 @@ public class AdminSpecialisteControleur extends JFrame {
 
             if (!nom.isEmpty() && !prenom.isEmpty() && !email.isEmpty() && !mdp.isEmpty() && !specialite.isEmpty() && !lieu.isEmpty()) {
                 Specialiste s = new Specialiste(nom, prenom, email,mdp, specialite, lieu);
-                specialisteDAO.ajouter(s);
+                utilisateurDAO.ajouter(s);
                 afficherTousLesSpecialistes();
             } else {
                 JOptionPane.showMessageDialog(null, "Tous les champs ne sont pas rempli!.");
@@ -79,13 +80,38 @@ public class AdminSpecialisteControleur extends JFrame {
 
     public void afficherSpecialistes(ArrayList<Specialiste> liste) {
         JPanel panel = vue.getListeSpecialistesPanel();
+
         panel.removeAll();
 
         JComboBox<String> jourCombo = new JComboBox<>();
         JComboBox<String> heureCombo = new JComboBox<>();
 
         for (Specialiste s : liste) {
-            PanelSpecialiste p = new PanelSpecialiste(s);
+
+            ArrayList<RendezVous> listRdv = rendezVousDAO.getRendezVousBySpecialiste(s.getId());
+            PanelSpecialiste p = new PanelSpecialiste(s,listRdv);
+
+            ArrayList<String> rdvFormates = new ArrayList<>();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+
+            if(listRdv.isEmpty()){
+                System.out.println("liste vide");
+                rdvFormates.add("Aucun rendez-vous.");
+            }
+            else{
+                for (RendezVous rdv : listRdv) {
+                    Utilisateur patient = utilisateurDAO.getById(rdv.getIdPatient());
+                    Horaire h = horaireDAO.getHoraireById(rdv.getIdHoraire());
+
+                    String nomPatient = patient.getPrenom() + " " + patient.getNom();
+                    String jour = Horaire.convertirJourIntEnString(h.getJourSemaine());
+
+                    String heure = h.getHeureDebut().toLocalTime().format(formatter) + " - " + h.getHeureFin().toLocalTime().format(formatter);
+                    String texte = jour + " " + rdv.getDate() + " (" + heure + ") avec " + nomPatient + " : "+rdv.getNotes();
+                    rdvFormates.add(texte);
+
+                }
+            }
 
             for (Component c : p.getEmploiDuTempsPanel().getComponents()) {
                 if (c instanceof JPanel ligne) {
@@ -102,6 +128,8 @@ public class AdminSpecialisteControleur extends JFrame {
             ajouterActionModifierSpecialiste(p.getBtnModifierSpecialiste(), s);
             ajouterActionSupprimerSpecialiste(p.getBtnSupprimerSpecialiste(), s);
             ajouterActionAjouterHoraire(p.getBtnAjouterHoraire(), s, jourCombo, heureCombo);
+
+            p.afficherRendezVous(rdvFormates);
 
             panel.add(p); // Ajout du panel du spécialiste
             panel.revalidate(); // Recalcule la mise en page
@@ -183,7 +211,7 @@ public class AdminSpecialisteControleur extends JFrame {
                 if (!nom.isEmpty() && !prenom.isEmpty() && !email.isEmpty() && !mdp.isEmpty() && !specialite.isEmpty() && !lieu.isEmpty()) {
                     Specialiste sModifie = new Specialiste(nom, prenom, email, mdp, specialite, lieu);
                     sModifie.setId(s.getId());  // Il est important de définir l'ID du spécialiste
-                    specialisteDAO.modifier(sModifie);
+                    utilisateurDAO.modifier(sModifie);
                     refresh();
                 } else {
                     JOptionPane.showMessageDialog(null, "Tous les champs ne sont pas remplis !");
@@ -196,7 +224,7 @@ public class AdminSpecialisteControleur extends JFrame {
         bouton.addActionListener(e -> {
             int confirm = JOptionPane.showConfirmDialog(null, "Supprimer ce spécialiste ?", "Confirmer", JOptionPane.YES_NO_OPTION);
             if (confirm == JOptionPane.YES_OPTION) {
-                specialisteDAO.supprimer(s);
+                utilisateurDAO.supprimer(s);
                 refresh();
             }
         });

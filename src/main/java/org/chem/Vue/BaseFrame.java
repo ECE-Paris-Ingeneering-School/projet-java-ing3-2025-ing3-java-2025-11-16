@@ -117,17 +117,17 @@ public class BaseFrame extends JFrame {
             else if(utilisateurConnecte instanceof Admin) {
 
                 JMenuItem profilItem = new JMenuItem("Profil");
-                JMenuItem testItem = new JMenuItem("test");
+                JMenuItem actionItem = new JMenuItem("Gérer patients et specialiste");
 
                 menuDeroulant.add(profilItem);
-                menuDeroulant.add(testItem);
+                menuDeroulant.add(actionItem);
 
                 // Ajoutez des ActionListeners aux éléments du menu
                 profilItem.addActionListener(e -> {
                     JOptionPane.showMessageDialog(this, "Affichage du profil");
                 });
 
-                testItem.addActionListener(e -> {
+                actionItem.addActionListener(e -> {
                     new AdminControleur(new AdminVue(utilisateurConnecte));
                 });
             }
@@ -136,7 +136,7 @@ public class BaseFrame extends JFrame {
             menuDeroulant.add(deconnexionItem);
             deconnexionItem.addActionListener(e -> {
                 dispose();
-                new ConnexionControleur(new Connexion());
+                new ChoixConnexionControleur(new ChoixConnexion());
             });
 
             rightPanel.add(compteButton, gbc);

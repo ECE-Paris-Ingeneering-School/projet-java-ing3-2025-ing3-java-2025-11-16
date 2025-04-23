@@ -14,8 +14,9 @@ public class PanelSpecialiste extends JPanel {
     private final JButton btnModifierSpecialiste;
     private final JButton btnAjouterHoraire;
     private final JPanel edtPanel;
+    private final JPanel RdvPanel;
 
-    public PanelSpecialiste(Specialiste s) {
+    public PanelSpecialiste(Specialiste s, ArrayList<RendezVous> listRdv) {
         this.specialiste = s;
 
         setLayout(new BorderLayout());
@@ -71,10 +72,23 @@ public class PanelSpecialiste extends JPanel {
                 edtPanel.add(ligne);
             }
         }
-        add(infoPanel, BorderLayout.NORTH);
-        add(edtPanel, BorderLayout.CENTER);
-        add(actionsPanel, BorderLayout.SOUTH);
+        RdvPanel = new JPanel(new GridLayout(0, 1));
+        RdvPanel.setOpaque(false);
 
+        add(infoPanel, BorderLayout.NORTH);
+        add(edtPanel, BorderLayout.WEST);
+        add(actionsPanel, BorderLayout.SOUTH);
+        add(RdvPanel, BorderLayout.EAST);
+
+    }
+
+    public void afficherRendezVous(ArrayList<String> rdvFormates) {
+        RdvPanel.removeAll(); // Optionnel : pour rafraîchir s’il y avait déjà des rdv
+        for (String texte : rdvFormates) {
+            RdvPanel.add(new JLabel("• " + texte));
+        }
+        RdvPanel.revalidate();
+        RdvPanel.repaint();
     }
 
     public JButton getBtnModifierSpecialiste() { return btnModifierSpecialiste; }
@@ -82,4 +96,5 @@ public class PanelSpecialiste extends JPanel {
     public JButton getBtnAjouterHoraire() { return btnAjouterHoraire; }
     public Specialiste getSpecialiste() { return specialiste; }
     public JPanel getEmploiDuTempsPanel() { return edtPanel; } // pour le contrôleur si besoin
+
 }

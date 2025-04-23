@@ -17,17 +17,25 @@ public class AdminControleur {
 
     private void initialiserOnglets() {
 
-        AdminSpecialisteVue panelSpecialistes = new AdminSpecialisteVue();
-
         DatabaseConnection db = DatabaseConnection.getInstance("rdv_specialiste", "root", "root");
         UtilisateurDAOImpl utilisateurDAO = new UtilisateurDAOImpl(db);
         HoraireDAOImpl horaireDAO = new HoraireDAOImpl(db);
         EdtDAOImpl edtDAO = new EdtDAOImpl(db);
+        RendezVousDAOImpl rendezVousDAO = new RendezVousDAOImpl(db);
+
+        // === Onglet Patient ===
+
+        AdminPatientVue panelPatients = new AdminPatientVue();
+        new AdminPatientControleur(panelPatients,utilisateurDAO,rendezVousDAO,horaireDAO);
+        adminVue.getGestionPatientsPanel().add(panelPatients);
 
         // === Onglet Spécialistes ===
-        new AdminSpecialisteControleur(panelSpecialistes, utilisateurDAO, horaireDAO, edtDAO);
 
+        AdminSpecialisteVue panelSpecialistes = new AdminSpecialisteVue();
+        new AdminSpecialisteControleur(panelSpecialistes, utilisateurDAO, horaireDAO, edtDAO,rendezVousDAO);
         adminVue.getGestionSpecialistesPanel().add(panelSpecialistes);
+
+
 
 
     }

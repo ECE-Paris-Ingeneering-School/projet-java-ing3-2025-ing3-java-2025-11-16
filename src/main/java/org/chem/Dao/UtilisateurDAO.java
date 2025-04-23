@@ -1,6 +1,7 @@
 package org.chem.Dao;
 
 import org.chem.Modele.Horaire;
+import org.chem.Modele.Patient;
 import org.chem.Modele.Specialiste;
 import org.chem.Modele.Utilisateur;
 
@@ -10,6 +11,8 @@ import java.util.*;
 public interface UtilisateurDAO {
 
     ArrayList<Specialiste> getAllSpecialistes();
+
+    ArrayList<Patient> getAllPatients();
 
     ArrayList<Specialiste> rechercherSpecialistes(String motCle, String jour, Time heure, String lieu);
 
@@ -23,5 +26,6 @@ public interface UtilisateurDAO {
 
     void modifier(Utilisateur utilisateur);
 
+    Utilisateur getById(int id);
 
 }
