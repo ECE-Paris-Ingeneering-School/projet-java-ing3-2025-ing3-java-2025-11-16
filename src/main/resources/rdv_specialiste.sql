@@ -87,7 +87,7 @@ INSERT INTO specialiste (ID, Specialisation, Lieu) VALUES
 -- 👨‍👩‍👧 Insertion des patients
 INSERT INTO utilisateur (nom, prenom, email, mdp) VALUES
               ('Bernard', 'Lucie', 'lucie.bernard@gmail.com', '$2a$12$WXhZ2SgV4qAKrq1om6BLVOiAt1hbYBev8CpPq90e3iU3j.BcOl0OC'),
-              ('Petit', 'Marc', 'marc.petit@gmail.com', '$$2a$12$WXhZ2SgV4qAKrq1om6BLVOiAt1hbYBev8CpPq90e3iU3j.BcOl0OC'),
+              ('Petit', 'Marc', 'marc.petit@gmail.com', '$2a$12$WXhZ2SgV4qAKrq1om6BLVOiAt1hbYBev8CpPq90e3iU3j.BcOl0OC'),
               ('Lemoine', 'Sophie', 'sophie.lemoine@gmail.com', '$2a$12$WXhZ2SgV4qAKrq1om6BLVOiAt1hbYBev8CpPq90e3iU3j.BcOl0OC');
 
 INSERT INTO patient (ID, type) VALUES
