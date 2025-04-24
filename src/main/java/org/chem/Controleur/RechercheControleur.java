@@ -16,11 +16,19 @@ public class RechercheControleur {
 
     public RechercheControleur(Recherche vue) {
         this.vue = vue;
-        DatabaseConnection db = DatabaseConnection.getInstance("rdv_specialiste", "root", "root");
+        DatabaseConnection db = DatabaseConnection.getDefaultInstance();
         this.specialisteDAO = new UtilisateurDAOImpl(db);
+
+        afficherTousLesSpecialistes();
 
         this.vue.getRechercherBtn().addActionListener(e -> rechercher());
     }
+
+    private void afficherTousLesSpecialistes() {
+        ArrayList<Specialiste> tousLesSpecialistes = specialisteDAO.getAllSpecialistes();
+        afficherResultats(tousLesSpecialistes);
+    }
+
 
     private void rechercher() {
         String motCle = vue.getMotCleField().getText().trim();
