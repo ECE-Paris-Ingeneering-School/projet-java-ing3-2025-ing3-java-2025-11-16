@@ -35,7 +35,7 @@ public class CreationCompteControleur {
             return;
         }
 
-        DatabaseConnection db = DatabaseConnection.getInstance("rdv_specialiste", "root", "root");
+        DatabaseConnection db = DatabaseConnection.getDefaultInstance();
         UtilisateurDAO utilisateurDAO = db.getUtilisateurDAO();
 
         Utilisateur utilisateur = null;

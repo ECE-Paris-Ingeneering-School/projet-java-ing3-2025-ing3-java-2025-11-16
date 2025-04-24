@@ -34,6 +34,11 @@ public class DatabaseConnection {
         return new DatabaseConnection(url, username, password);
     }
 
+    public static DatabaseConnection getDefaultInstance() {
+        return getInstance("rdv_specialiste", "root", "root");
+    }
+
+
     /**
      * Méthode pour obtenir une connexion à la base de données
      * @return Connection JDBC

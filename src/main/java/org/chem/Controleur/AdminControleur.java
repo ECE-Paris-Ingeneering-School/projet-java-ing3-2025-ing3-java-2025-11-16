@@ -17,7 +17,7 @@ public class AdminControleur {
 
     private void initialiserOnglets() {
 
-        DatabaseConnection db = DatabaseConnection.getInstance("rdv_specialiste", "root", "root");
+        DatabaseConnection db = DatabaseConnection.getDefaultInstance();
         UtilisateurDAOImpl utilisateurDAO = new UtilisateurDAOImpl(db);
         HoraireDAOImpl horaireDAO = new HoraireDAOImpl(db);
         EdtDAOImpl edtDAO = new EdtDAOImpl(db);

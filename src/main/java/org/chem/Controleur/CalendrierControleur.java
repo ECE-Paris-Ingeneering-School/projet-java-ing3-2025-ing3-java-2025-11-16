@@ -23,7 +23,7 @@ public class CalendrierControleur {
         this.vue = vue;
         this.specialiste = specialiste;
 
-        DatabaseConnection db = DatabaseConnection.getInstance("rdv_specialiste", "root", "root");
+        DatabaseConnection db = DatabaseConnection.getDefaultInstance();
         this.rdvDAO = new RendezVousDAOImpl(db);
 
         attacherListeners();
