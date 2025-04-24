@@ -20,13 +20,11 @@ public class Connexion extends BaseFrame {
     }
 
     public Connexion() {
-        super();
-        initConnection();
+        this("Utilisateur");
     }
 
     public Connexion(String login, String password) {
-        super();
-        initConnection();
+        this("Utilisateur");
         setLogin(login);
         setPassword(password);
     }
