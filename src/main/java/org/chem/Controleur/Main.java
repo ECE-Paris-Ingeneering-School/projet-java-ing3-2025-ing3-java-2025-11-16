@@ -8,6 +8,11 @@ public class Main {
         ChoixConnexion vue_choix = new ChoixConnexion();
         new ChoixConnexionControleur(vue_choix);
 
+        Patient patient = new Patient(1, "", "", "", "", 0);
+
+        RendezVousVue fenetre = new RendezVousVue(patient);
+        fenetre.setVisible(true);
+
     }
 
 }
