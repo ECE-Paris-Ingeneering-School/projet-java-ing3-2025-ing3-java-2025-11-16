@@ -1,32 +1,21 @@
 package org.chem.Controleur;
 
+import org.chem.Dao.RendezVousDAO;
 import org.chem.Modele.RendezVous;
-import java.util.ArrayList;
+import org.chem.Vue.RendezVousVue;
+
 import java.util.List;
 
-public class  RendezVousController {
+public class RendezVousController {
+    private final RendezVousVue vue;
+    private final RendezVousDAO dao;
 
-    // Liste temporaire pour stocker les rendez-vous en mémoire
-    private List<RendezVous> listeRendezVous;
-
-    // Constructeur
-    public RendezVousController() {
-        this.listeRendezVous = new ArrayList<>();
+    public RendezVousController(RendezVousVue vue, RendezVousDAO dao) {
+        this.vue = vue;
+        this.dao = dao;
     }
 
-    // ✅ Ajouter un rendez-vous
-    public boolean ajouterRendezVous(RendezVous rdv) {
-        if (rdv != null) {
-            listeRendezVous.add(rdv);
-            return true;
-        }
-        return false;
-    }
-
-    // ✅ Obtenir la liste de tous les rendez-vous
-    public List<RendezVous> getRendezVous() {
-        return listeRendezVous;
+    public void afficherRendezVousPatient(int idPatient) {
+        vue.afficherRendezVous(idPatient);
     }
 }
-
-
