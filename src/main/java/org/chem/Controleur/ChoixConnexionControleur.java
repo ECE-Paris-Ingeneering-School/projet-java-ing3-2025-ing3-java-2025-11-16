@@ -13,17 +13,17 @@ public class ChoixConnexionControleur {
 
     private void ajouterListeners() {
         vue.getPatientButton().addActionListener(e -> {
-            typeUtilisateur = "patient";
+            typeUtilisateur = "Patient";
             ouvrirConnexion();
         });
 
         vue.getSpecialisteButton().addActionListener(e -> {
-            typeUtilisateur = "specialiste";
+            typeUtilisateur = "Specialiste";
             ouvrirConnexion();
         });
 
         vue.getAdminButton().addActionListener(e -> {
-            typeUtilisateur = "admin";
+            typeUtilisateur = "Admin";
             ouvrirConnexion();
         });
     }

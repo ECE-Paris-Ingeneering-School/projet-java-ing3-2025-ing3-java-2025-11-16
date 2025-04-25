@@ -99,4 +99,23 @@ public class HoraireDAOImpl implements HoraireDAO {
         }
         return false;
     }
+
+    @Override
+    public int getIdHoraireExistant(int jour, Time heureDebut) {
+        try (Connection conn =db.getConnection()) {
+            String sql = "SELECT ID FROM horaire WHERE jourSemaine = ? AND HeureDebut = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, jour);
+            stmt.setTime(2, heureDebut);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("ID");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
 }

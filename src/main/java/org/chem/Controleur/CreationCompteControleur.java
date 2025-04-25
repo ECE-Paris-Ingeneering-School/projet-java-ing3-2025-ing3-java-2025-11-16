@@ -1,16 +1,12 @@
 package org.chem.Controleur;
 
-import org.chem.Dao.DatabaseConnection;
-import org.chem.Dao.UtilisateurDAO;
-import org.chem.Modele.Admin;
-import org.chem.Modele.Patient;
-import org.chem.Modele.Specialiste;
-import org.chem.Modele.Utilisateur;
-import org.chem.Vue.Connexion;
-import org.chem.Vue.CreationCompte;
+import org.chem.Dao.*;
+import org.chem.Modele.*;
+import org.chem.Vue.*;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+
 
 public class CreationCompteControleur {
     private CreationCompte vue;
@@ -23,8 +19,7 @@ public class CreationCompteControleur {
     private void ajouterListeners() {
         vue.getCreerBtn().addActionListener(this::creerCompte);
         vue.getBtnRetour().addActionListener(e -> {
-            Connexion vueConnexion = new Connexion(vue.getTypeUtilisateur());
-            new ConnexionControleur(vueConnexion);
+            new ConnexionControleur(new Connexion(vue.getTypeUtilisateur()));
             vue.dispose();
         });
     }
@@ -40,15 +35,16 @@ public class CreationCompteControleur {
             return;
         }
 
-        DatabaseConnection db = DatabaseConnection.getInstance("rdv_specialiste", "root", "root");
+        DatabaseConnection db = DatabaseConnection.getDefaultInstance();
         UtilisateurDAO utilisateurDAO = db.getUtilisateurDAO();
 
         Utilisateur utilisateur = null;
+        System.out.println("utilisateur = null");
 
-        switch (vue.getTypeUtilisateur()) {
+        switch (vue.getTypeUtilisateur().toLowerCase()) {
             case "patient":
-                int type = vue.getTypePatientBox().getSelectedIndex() + 1;
-                utilisateur = new Patient(nom, prenom, email, mdp, type);
+                //int type = vue.getTypePatientBox().getSelectedIndex() + 1;
+                utilisateur = new Patient(nom, prenom, email, mdp, 1);
                 break;
             case "specialiste":
                 String specialite = vue.getSpecialiteField().getText().trim();
@@ -57,8 +53,10 @@ public class CreationCompteControleur {
                 break;
             case "admin":
                 utilisateur = new Admin(nom, prenom, email, mdp);
+
                 break;
         }
+
 
         if (utilisateur != null) {
             try {

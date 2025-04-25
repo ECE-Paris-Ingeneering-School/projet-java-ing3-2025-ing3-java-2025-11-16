@@ -1,6 +1,8 @@
 package org.chem.Vue;
 
+import org.chem.Controleur.PriseRDVControleur;
 import org.chem.Dao.DatabaseConnection;
+import org.chem.Dao.RendezVousDAOImpl;
 import org.chem.Dao.UtilisateurDAOImpl;
 import org.chem.Modele.Session;
 import org.chem.Modele.Specialiste;
@@ -16,7 +18,6 @@ public class Recherche extends BaseFrame {
     private JButton rechercherBtn;
     private JTextField lieuField;
 
-    private UtilisateurDAOImpl specialisteDAO;
     private JPanel resultatsPanel;
 
 
@@ -25,9 +26,6 @@ public class Recherche extends BaseFrame {
 
         JPanel contenu = getCenterPanel(); // affichage des specialistes + filtres jours/horaires/Lieu
         JPanel bandeau = getNorthPanel(); // Barre de recherche dans le bandeau (Nom specialiste ou Specialité)
-
-        DatabaseConnection db = DatabaseConnection.getInstance("rdv_specialiste", "root", "root");
-        this.specialisteDAO = new UtilisateurDAOImpl(db);
 
         JPanel recherchePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         motCleField = new JTextField(20);
@@ -122,7 +120,7 @@ public class Recherche extends BaseFrame {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
         panel.setBackground(new Color(253, 249, 249));
-        panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 250)); // Hauteur fixe
+        panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 350)); // Hauteur fixe
 
         // Partie gauche - Infos perso
         JPanel infosPanel = new JPanel();
@@ -140,13 +138,16 @@ public class Recherche extends BaseFrame {
         infosPanel.add(lieu);
 
         // Partie droite - Emploi du temps
-        //Calendrier calendrierVue = new Calendrier(s);
-        //new CalendrierControleur (calendrierVue,s);
+        DatabaseConnection db = DatabaseConnection.getDefaultInstance();
+        RendezVousDAOImpl rendezVousDAO = new RendezVousDAOImpl(db);
 
-        PriseRDV calendrierVue = new PriseRDV(s,utilisateurConnecte);
+        PriseRDVVue rdvv = new PriseRDVVue();
+        PriseRDVControleur rdvControleur = new PriseRDVControleur(rdvv,s,utilisateurConnecte,rendezVousDAO);
+
+        //PriseRDV calendrierVue = new PriseRDV(s,utilisateurConnecte);
 
         panel.add(infosPanel, BorderLayout.WEST);
-        panel.add(calendrierVue, BorderLayout.EAST);
+        panel.add(rdvv, BorderLayout.EAST);
 
         return panel;
     }

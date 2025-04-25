@@ -2,18 +2,17 @@ package org.chem.Vue;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.InputStream;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 
-import org.chem.Controleur.ChoixConnexionControleur;
-import org.chem.Modele.Admin;
-import org.chem.Modele.Patient;
-import org.chem.Modele.Specialiste;
 import org.chem.Modele.Utilisateur;
 
 public class BaseFrame extends JFrame {
 
     private JLabel userLabel;
     protected Utilisateur utilisateurConnecte;
-    protected JPanel centerPanel; // ✅ Le panel pour le contenu "hors bandeau"
+    protected JPanel centerPanel;
     protected JPanel topPanel;
     protected JPanel bottomPanel;
 
@@ -29,145 +28,59 @@ public class BaseFrame extends JFrame {
     public void initUI() {
         setTitle("Application Rendez-vous");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(2000, 600);
+        setSize(1440, 760);
         setLocationRelativeTo(null);
 
         JPanel mainPanel = new JPanel(new BorderLayout());
         setContentPane(mainPanel);
 
-        // ---------------- Bandeau top ----------------
+        // ---------------- HEADER ----------------
         topPanel = new JPanel(new BorderLayout());
-        topPanel.setBackground(new Color(54, 153, 213));
+        topPanel.setBackground(Color.decode("#649FCB"));
+        topPanel.setBorder(BorderFactory.createEmptyBorder(10, 30, 10, 30));
+
+        JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        leftPanel.setOpaque(false);
+
+        try {
+            InputStream is = getClass().getResourceAsStream("/images/logo.png");
+            if (is != null) {
+                BufferedImage logo = ImageIO.read(is);
+                JLabel logoLabel = new JLabel(new ImageIcon(logo.getScaledInstance(80, 80, Image.SCALE_SMOOTH)));
+                leftPanel.add(logoLabel);
+            }
+        } catch (Exception e) {
+            System.out.println("Erreur chargement du logo");
+        }
 
         JLabel titreLabel = new JLabel("MediLink");
         titreLabel.setForeground(Color.WHITE);
-        titreLabel.setFont(new Font("Brush Script MT", Font.BOLD, 40));
-        titreLabel.setBorder(BorderFactory.createEmptyBorder(50, 10, 10, 10));
-        topPanel.add(titreLabel, BorderLayout.WEST);
-
-        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT)); // Utilisez FlowLayout
-        rightPanel.setOpaque(false);
-
-        if (utilisateurConnecte != null) {
-            JButton compteButton = new JButton("Mon compte");
-
-            Font bigFont = new Font("Arial", Font.BOLD, 17);
-            Dimension bigSize = new Dimension(200, 60);
-
-            compteButton.setFont(bigFont);
-            compteButton.setPreferredSize(bigSize);
-
-            compteButton.setBackground(new Color(10, 98, 156));
-            compteButton.setForeground(Color.WHITE);
-
-            rightPanel.setLayout(new GridBagLayout());
-            GridBagConstraints gbc = new GridBagConstraints();
-            gbc.gridx = 0;
-            gbc.gridy = 0;
-            gbc.insets = new Insets(5, 0, 0, 5); // 50 pixels d'espace en haut
-
-            JPopupMenu menuDeroulant = new JPopupMenu();
-            // Ajoutez un ActionListener au bouton pour afficher le menu déroulant
-            compteButton.addActionListener(e -> {
-                menuDeroulant.show(compteButton, 0, compteButton.getHeight());
-            });
-
-            if(utilisateurConnecte instanceof Patient){
-                JMenuItem profilItem = new JMenuItem("Profil");
-                JMenuItem RDVItem = new JMenuItem("Mes Rendez-vous");
-
-                menuDeroulant.add(profilItem);
-                menuDeroulant.add(RDVItem);
-
-                // Ajoutez des ActionListeners aux éléments du menu
-                profilItem.addActionListener(e -> {
-                    JOptionPane.showMessageDialog(this, "Affichage du profil");
-                });
-
-                RDVItem.addActionListener(e -> {
-                    dispose();
-                    new RendezVousVue(utilisateurConnecte);
-                });
-
-
-            }
-            else if (utilisateurConnecte instanceof Specialiste) {
-
-                JMenuItem profilItem = new JMenuItem("Profil");
-                JMenuItem RDVItem = new JMenuItem("Mes Rendez-vous");
-                JMenuItem EdtItem = new JMenuItem("Emploi du temps");  // Modifier son edt
-
-                menuDeroulant.add(profilItem);
-                menuDeroulant.add(RDVItem);
-                menuDeroulant.add(EdtItem);
-
-                // Ajoutez des ActionListeners aux éléments du menu
-                profilItem.addActionListener(e -> {
-                    JOptionPane.showMessageDialog(this, "Affichage du profil");
-                });
-
-                RDVItem.addActionListener(e -> {
-                    dispose();
-                    new RendezVousVue(utilisateurConnecte);
-                });
-
-            }
-            else if(utilisateurConnecte instanceof Admin){
-                JMenuItem profilItem = new JMenuItem("Profil");
-
-                menuDeroulant.add(profilItem);
-
-                // Ajoutez des ActionListeners aux éléments du menu
-                profilItem.addActionListener(e -> {
-                    JOptionPane.showMessageDialog(this, "Affichage du profil");
-                });
-
-
-            }
-
-            JMenuItem deconnexionItem = new JMenuItem("Déconnexion");
-            menuDeroulant.add(deconnexionItem);
-            deconnexionItem.addActionListener(e -> {
-                dispose();
-                new ChoixConnexionControleur(new ChoixConnexion());
-            });
-
-            rightPanel.add(compteButton, gbc);
-
-        }
-
-        if (utilisateurConnecte == null) {
-            userLabel = new JLabel("Non connecté");
-            rightPanel.add(userLabel, BorderLayout.CENTER);
-        }
-
-        topPanel.add(rightPanel, BorderLayout.EAST);
+        titreLabel.setFont(new Font("SansSerif", Font.BOLD, 45));
+        leftPanel.add(titreLabel);
+        topPanel.add(leftPanel, BorderLayout.WEST);
         mainPanel.add(topPanel, BorderLayout.NORTH);
 
-        //  ---------------- Panel pour le contenu central ----------------
+
+        //  ---------------- CONTENU CENTRAL ----------------
         centerPanel = new JPanel();
         centerPanel.setLayout(new BorderLayout());
+        centerPanel.setBackground(Color.WHITE);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
-
-        bottomPanel = new JPanel();
-        bottomPanel.setLayout(new BorderLayout());
-        mainPanel.add(bottomPanel, BorderLayout.SOUTH);
 
         setVisible(true);
     }
 
-
-    public JPanel getMainPanel() { return (JPanel) getContentPane();}
+    public JPanel getMainPanel() {return (JPanel) getContentPane();}
 
     public JPanel getCenterPanel() { return centerPanel;}
 
     public JPanel getNorthPanel() { return topPanel; }
 
-    public JPanel getSouthPanel() { return bottomPanel; }
+    public JPanel getSouthPanel() {return bottomPanel;}
 
     public void setUserText(String texte) {
         if (userLabel != null) {
-            userLabel.setText("👤 " + texte);
+            userLabel.setText(" " + texte);
         }
     }
 }

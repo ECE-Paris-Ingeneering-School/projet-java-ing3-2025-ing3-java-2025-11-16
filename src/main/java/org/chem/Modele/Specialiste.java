@@ -7,13 +7,13 @@ public class Specialiste extends Utilisateur {
     private ArrayList<Horaire> emploiDuTemps = new ArrayList<>();
 
     public Specialiste(int id,String nom, String prenom, String email, String mdp, String specialisation, String lieu) {
-        super(id,nom, prenom, email, mdp);
+        super(id ,nom, prenom, email, mdp, TypeUtilisateur.SPECIALISTE);
         this.specialisation = specialisation;
         this.lieu = lieu;
     }
 
     public Specialiste(String nom, String prenom, String email, String mdp, String specialisation, String lieu) {
-        super(nom, prenom, email, mdp);
+        super(nom,prenom,email,mdp);
         this.specialisation = specialisation;
         this.lieu = lieu;
     }

@@ -3,6 +3,7 @@ package org.chem.Vue;
 import javax.swing.*;
 import java.awt.*;
 
+
 public class CreationCompte extends BaseFrame {
     private JTextField nomField, prenomField, emailField, SpecialiteField, LieuField;
     private JPasswordField mdpField;
@@ -16,7 +17,7 @@ public class CreationCompte extends BaseFrame {
         JPanel Contenu = getCenterPanel();
         JPanel boutonsPanel = new JPanel(new BorderLayout());
 
-        JLabel titreLabel = new JLabel("Création de Compte", SwingConstants.CENTER);
+        JLabel titreLabel = new JLabel("Création de Compte "+typeUtilisateur, SwingConstants.CENTER);
         titreLabel.setFont(new Font("Arial", Font.BOLD, 30));
         titreLabel.setBorder(BorderFactory.createEmptyBorder(30, 0, 0, 0));
         Contenu.add(titreLabel, BorderLayout.NORTH);
@@ -42,19 +43,11 @@ public class CreationCompte extends BaseFrame {
         panel.add(new JLabel("Mot de passe :"));
         panel.add(mdpField);
 
-        switch (typeUtilisateur) {
-            case "patient":
-                typePatientBox = new JComboBox<>(new String[]{"1 - Nouveau", "2 - Ancien"});
-                typePatientBox.setVisible(true);
-                panel.add(typePatientBox);
-                break;
-
-            case "specialiste":
+        if (typeUtilisateur.equalsIgnoreCase("specialiste")) {
                 panel.add(new JLabel("Specialité :"));
                 panel.add(SpecialiteField);
                 panel.add(new JLabel("Lieu :"));
                 panel.add(LieuField);
-                break;
         }
 
         creerBtn = new JButton("Créer le compte");

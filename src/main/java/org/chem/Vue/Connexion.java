@@ -16,10 +16,33 @@ public class Connexion extends BaseFrame {
     public Connexion(String typeUtilisateur) {
         super();
         this.typeUtilisateur = typeUtilisateur;
+        initConnection();
+    }
+
+    public Connexion() {
+        this("Utilisateur");
+    }
+
+    public Connexion(String login, String password) {
+        this("Utilisateur");
+        setLogin(login);
+        setPassword(password);
+    }
+
+    public void setPassword(String password) {
+        passwordField.setText(password);
+    }
+
+    public void setLogin(String login) {
+        emailField.setText(login);
+    }
+
+
+    private void initConnection() {
         JPanel contenu = getCenterPanel();
         JPanel boutonPanel = new JPanel(new BorderLayout());
 
-        JLabel titreLabel = new JLabel("Connexion", SwingConstants.CENTER);
+        JLabel titreLabel = new JLabel("Connexion "+typeUtilisateur, SwingConstants.CENTER);
         titreLabel.setFont(new Font("Arial", Font.BOLD, 30));
         titreLabel.setBorder(BorderFactory.createEmptyBorder(30, 0, 0, 0));
         contenu.add(titreLabel, BorderLayout.NORTH);

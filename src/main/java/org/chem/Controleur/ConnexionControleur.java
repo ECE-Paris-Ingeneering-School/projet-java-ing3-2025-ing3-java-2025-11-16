@@ -20,11 +20,6 @@ public class ConnexionControleur {
             new CreationCompteControleur(new CreationCompte(vue.getTypeUtilisateur()));
             vue.dispose();
         });
-
-        vue.getBtnRetour().addActionListener(e -> {
-            new ChoixConnexionControleur(new ChoixConnexion());
-            vue.dispose();
-        });
     }
 
     private void seConnecter() {
@@ -36,10 +31,11 @@ public class ConnexionControleur {
             return;
         }
 
-        DatabaseConnection db = DatabaseConnection.getInstance("rdv_specialiste", "root", "root");
+        DatabaseConnection db = DatabaseConnection.getDefaultInstance();
         UtilisateurDAO utilisateurDAO = db.getUtilisateurDAO();
 
-        Utilisateur utilisateur = utilisateurDAO.seConnecter(email, mdp, vue.getTypeUtilisateur());
+
+        Utilisateur utilisateur = utilisateurDAO.seConnecter(email, mdp,vue.getTypeUtilisateur());
 
         if (utilisateur != null) {
 
@@ -47,6 +43,7 @@ public class ConnexionControleur {
 
             JOptionPane.showMessageDialog(vue, "Bienvenue " + utilisateur.getPrenom() + " !");
             vue.dispose();
+
 
             switch (utilisateur) {
                 case Patient patient :
@@ -56,7 +53,7 @@ public class ConnexionControleur {
                     new SpecialisteVue(utilisateur);
                     break;
                 case Admin admin :
-                    new AdminVue(utilisateur);
+                    new AdminControleur(new AdminVue(utilisateur));
                     break;
                 default :
                     JOptionPane.showMessageDialog(vue, "Type d'utilisateur non reconnu.");

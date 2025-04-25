@@ -14,8 +14,8 @@ public class RendezVousDAOImpl implements RendezVousDAO {
     }
 
     @Override
-    public List<RendezVous> getAllRendezVous() {
-        List<RendezVous> rendezVousList = new ArrayList<>();
+    public ArrayList<RendezVous> getAllRendezVous() {
+        ArrayList<RendezVous> rendezVousList = new ArrayList<>();
         String query = "SELECT * FROM rdv";
 
         try (Connection conn = db.getConnection();
@@ -64,8 +64,8 @@ public class RendezVousDAOImpl implements RendezVousDAO {
     }
 
     @Override
-    public List<RendezVous> getRendezVousBySpecialiste(int idSpecialiste) {
-        List<RendezVous> liste = new ArrayList<>();
+    public ArrayList<RendezVous> getRendezVousBySpecialiste(int idSpecialiste) {
+        ArrayList<RendezVous> liste = new ArrayList<>();
         String query = "SELECT * FROM rdv WHERE IDSpecialiste = ? ORDER BY Date, IDHoraire";
         try (Connection conn = db.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -84,8 +84,8 @@ public class RendezVousDAOImpl implements RendezVousDAO {
     }
 
     @Override
-    public List<RendezVous> getRendezVousByPatient(int idPatient) {
-        List<RendezVous> liste = new ArrayList<>();
+    public ArrayList<RendezVous> getRendezVousByPatient(int idPatient) {
+        ArrayList<RendezVous> liste = new ArrayList<>();
         String query = "SELECT * FROM rdv WHERE IDPatient = ? ORDER BY Date, IDHoraire";
         try (Connection conn = db.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {

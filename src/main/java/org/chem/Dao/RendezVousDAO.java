@@ -5,13 +5,13 @@ import org.chem.Modele.RendezVous;
 
 public interface RendezVousDAO{
 
-    List<RendezVous> getAllRendezVous();
+    ArrayList<RendezVous> getAllRendezVous();
 
     RendezVous getRendezVousById(int id);
 
-    List<RendezVous> getRendezVousBySpecialiste(int idSpecialiste);
+    ArrayList<RendezVous> getRendezVousBySpecialiste(int idSpecialiste);
 
-    List<RendezVous> getRendezVousByPatient(int idPatient);
+    ArrayList<RendezVous> getRendezVousByPatient(int idPatient);
 
     boolean ajouterRendezVous(RendezVous rdv);
 
