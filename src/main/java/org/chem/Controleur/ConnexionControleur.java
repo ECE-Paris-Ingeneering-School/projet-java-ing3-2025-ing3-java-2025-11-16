@@ -20,6 +20,11 @@ public class ConnexionControleur {
             new CreationCompteControleur(new CreationCompte(vue.getTypeUtilisateur()));
             vue.dispose();
         });
+
+        vue.getBtnRetour().addActionListener(e -> {
+            new ChoixConnexionControleur(new ChoixConnexion());
+            vue.dispose();
+        });
     }
 
     private void seConnecter() {
@@ -48,6 +53,7 @@ public class ConnexionControleur {
             switch (utilisateur) {
                 case Patient patient :
                     new RechercheControleur(new Recherche());
+                    new RendezVousController(new RendezVousVue(utilisateur));
                     break;
                 case Specialiste specialiste :
                     new SpecialisteVue(utilisateur);

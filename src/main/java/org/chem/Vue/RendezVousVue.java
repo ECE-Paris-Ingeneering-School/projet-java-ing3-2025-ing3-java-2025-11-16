@@ -27,7 +27,7 @@ public class RendezVousVue extends BaseFrame {
 
 
     public void afficherRendezVous(int idPatient) {
-        DatabaseConnection db = DatabaseConnection.getInstance("medilink", "root", "");
+        DatabaseConnection db = DatabaseConnection.getDefaultInstance();
         RendezVousDAO rdvDao = db.getRendezVousDAO();
         List<RendezVous> rdvs = rdvDao.getRendezVousByPatient(idPatient);
 
