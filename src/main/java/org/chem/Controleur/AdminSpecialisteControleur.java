@@ -69,7 +69,7 @@ public class AdminSpecialisteControleur extends JFrame {
             String lieu = lieuField.getText().trim();
 
             if (!nom.isEmpty() && !prenom.isEmpty() && !email.isEmpty() && !mdp.isEmpty() && !specialite.isEmpty() && !lieu.isEmpty()) {
-                Specialiste s = new Specialiste(nom, prenom, email,mdp, specialite, lieu);
+                Specialiste s = new Specialiste(nom, prenom, email, mdp, specialite, lieu);
                 utilisateurDAO.ajouter(s);
                 afficherTousLesSpecialistes();
             } else {
@@ -193,7 +193,7 @@ public class AdminSpecialisteControleur extends JFrame {
             JTextField nomField = new JTextField(s.getNom(), 20);
             JTextField prenomField = new JTextField(s.getPrenom(), 20);
             JTextField emailField = new JTextField(s.getEmail(), 20);
-            JPasswordField mdpField = new JPasswordField(s.getMdp(), 20);
+            JPasswordField mdpField = new JPasswordField(20);
             JTextField specialiteField = new JTextField(s.getSpecialisation(), 20);
             JTextField lieuField = new JTextField(s.getLieu(), 20);
 
@@ -208,8 +208,14 @@ public class AdminSpecialisteControleur extends JFrame {
                 String specialite = specialiteField.getText().trim();
                 String lieu = lieuField.getText().trim();
 
-                if (!nom.isEmpty() && !prenom.isEmpty() && !email.isEmpty() && !mdp.isEmpty() && !specialite.isEmpty() && !lieu.isEmpty()) {
-                    Specialiste sModifie = new Specialiste(nom, prenom, email, mdp, specialite, lieu);
+                if (!nom.isEmpty() && !prenom.isEmpty() && !email.isEmpty() && !specialite.isEmpty() && !lieu.isEmpty()) {
+                    String motDePasseFinal;
+                    if (mdp.isEmpty()) {
+                        motDePasseFinal = s.getMdp();
+                    } else {
+                        motDePasseFinal = mdp;
+                    }
+                    Specialiste sModifie = new Specialiste(nom, prenom, email, motDePasseFinal, specialite, lieu);
                     sModifie.setId(s.getId());  // Il est important de définir l'ID du spécialiste
                     utilisateurDAO.modifier(sModifie);
                     refresh();

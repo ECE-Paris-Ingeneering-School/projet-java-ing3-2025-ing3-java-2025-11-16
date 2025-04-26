@@ -343,12 +343,14 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         try {
             Connection connexion = Data.getConnection();
 
+            String mdpCrypte = BCrypt.hashpw(utilisateur.getMdp(), BCrypt.gensalt());
+
             PreparedStatement psUtilisateur = connexion.prepareStatement(
                     "UPDATE utilisateur SET Nom = ?, Prenom = ?, Email = ?, Mdp = ? WHERE ID = ?");
             psUtilisateur.setString(1, utilisateur.getNom());
             psUtilisateur.setString(2, utilisateur.getPrenom());
             psUtilisateur.setString(3, utilisateur.getEmail());
-            psUtilisateur.setString(4, utilisateur.getMdp());
+            psUtilisateur.setString(4, mdpCrypte);
             psUtilisateur.setInt(5, utilisateur.getId());
             psUtilisateur.executeUpdate();
 

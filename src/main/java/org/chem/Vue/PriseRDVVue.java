@@ -1,11 +1,6 @@
 package org.chem.Vue;
-import org.chem.Controleur.PriseRDVControleur;
-import org.chem.Modele.Specialiste;
 
 import java.awt.*;
-import java.time.*;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
 import javax.swing.*;
 
 public class PriseRDVVue extends JPanel {

@@ -76,13 +76,12 @@ public class PriseRDVControleur {
                     bouton.setBackground(new Color(17, 169, 209));
                     bouton.addActionListener(e -> reserverCreneau(match.getId(), dateUtil, jourInt, heure));
                 }
-
                 grid.add(bouton);
             }
         }
-
         return grid;
     }
+
 
     private void reserverCreneau(int idHoraire, Date date, int jourInt, String heure) {
         String message = "Souhaitez-vous réserver ce créneau ?\n" +
@@ -95,7 +94,14 @@ public class PriseRDVControleur {
                 new String[]{"Confirmer", "Annuler"}, "Confirmer");
 
         if (choix == JOptionPane.YES_OPTION) {
-            RendezVous rdv = new RendezVous(specialiste.getId(), utilisateur.getId(), idHoraire, date, "note à voir", specialiste.getLieu());
+            String note = JOptionPane.showInputDialog(vue, "Veuillez saisir une note pour ce rendez-vous :", "Note du rendez-vous", JOptionPane.PLAIN_MESSAGE);
+
+            if (note == null) {
+                note = "aucune note";
+            }
+
+            RendezVous rdv = new RendezVous(specialiste.getId(), utilisateur.getId(), idHoraire, date, note, specialiste.getLieu());
+
             boolean ok = rdvDAO.ajouterRendezVous(rdv);
             JOptionPane.showMessageDialog(vue, ok ? "Rendez-vous confirmé !" : "Erreur !");
             updateView(); // refresh

@@ -11,8 +11,6 @@ public class AdminVue extends BaseFrame {
 
     private JPanel gestionPatientsPanel;
     private JPanel gestionSpecialistesPanel;
-    private JPanel gestionRendezVousPanel;
-    private JPanel historiquePatientsPanel;
 
     public AdminVue(Utilisateur admin) {
         super(admin);
@@ -27,9 +25,6 @@ public class AdminVue extends BaseFrame {
         gestionSpecialistesPanel = new JPanel(new BorderLayout());
         onglets.addTab("Gérer les specialistes", gestionSpecialistesPanel);
 
-        // Onglet pour les RDV
-        gestionRendezVousPanel = new JPanel(new BorderLayout());
-        onglets.addTab("Ajouter des Rendez-vous", gestionRendezVousPanel);
 
         getCenterPanel().add(onglets, BorderLayout.CENTER);
 
@@ -39,5 +34,4 @@ public class AdminVue extends BaseFrame {
     // Getters pour chaque panel si besoin dans les contrôleurs
     public JPanel getGestionPatientsPanel() { return gestionPatientsPanel; }
     public JPanel getGestionSpecialistesPanel() { return gestionSpecialistesPanel; }
-    public JPanel getGestionRendezVousPanel() { return gestionRendezVousPanel; }
 }

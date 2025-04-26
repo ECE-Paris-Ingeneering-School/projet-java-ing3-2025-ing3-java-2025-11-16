@@ -61,8 +61,8 @@ public class Recherche extends BaseFrame {
         });
 
         JPanel filtrePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
-        filtrePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Un peu d'espace
-        filtrePanel.setBackground(Color.WHITE); // ou une autre couleur douce si tu veux
+        filtrePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        filtrePanel.setBackground(Color.WHITE);
 
         // Barre de recherche pour le lieu
         lieuField = new JTextField("Lieu", 15);
@@ -101,14 +101,13 @@ public class Recherche extends BaseFrame {
         filtrePanel.add(new JLabel("Horaire:"));
         filtrePanel.add(heureCombo);
 
-        // Ensuite, ajoute ce filtrePanel en haut du contenu principal :
         contenu.add(filtrePanel, BorderLayout.NORTH);
 
         recherchePanel.setBorder(BorderFactory.createEmptyBorder(50, 10, 10, 10)); // Un peu d'espace
 
         recherchePanel.add(motCleField);
         recherchePanel.add(rechercherBtn);
-        recherchePanel.setBackground(new Color(54, 153, 213));
+        recherchePanel.setBackground(Color.decode("#649FCB"));
 
         bandeau.add(recherchePanel);
 
@@ -143,8 +142,6 @@ public class Recherche extends BaseFrame {
 
         PriseRDVVue rdvv = new PriseRDVVue();
         PriseRDVControleur rdvControleur = new PriseRDVControleur(rdvv,s,utilisateurConnecte,rendezVousDAO);
-
-        //PriseRDV calendrierVue = new PriseRDV(s,utilisateurConnecte);
 
         panel.add(infosPanel, BorderLayout.WEST);
         panel.add(rdvv, BorderLayout.EAST);
