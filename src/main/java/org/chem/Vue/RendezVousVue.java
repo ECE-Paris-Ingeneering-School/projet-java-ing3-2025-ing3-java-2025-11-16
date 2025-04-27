@@ -22,7 +22,7 @@ public class RendezVousVue extends BaseFrame {
         if (utilisateurConnecte instanceof Patient patient) {
             afficherRendezVous(patient.getId());
         } else {
-            JOptionPane.showMessageDialog(this, "Seuls les patients peuvent consulter leurs rendez-vous.");
+            JOptionPane.showMessageDialog(this, "Patients peuvent consulter les rdv.");
         }
     }
 
@@ -43,8 +43,18 @@ public class RendezVousVue extends BaseFrame {
             if (specialiste != null && specialiste instanceof org.chem.Modele.Specialiste specialisteCast) {
                 for (var h : specialisteCast.getEmploiDuTemps()) {
                     if (h.getId() == rdv.getIdHoraire()) {
-                    String heureDebut = (h.getHeureDebut() != null) ? h.getHeureDebut().toString() : "Inconnue";
-                    String heureFin = (h.getHeureFin() != null) ? h.getHeureFin().toString() : "Inconnue";
+                        String heureDebut;
+                        if (h.getHeureDebut() != null) {
+                            heureDebut = h.getHeureDebut().toString();
+                        } else {
+                            heureDebut = "Inconnue";
+                        }
+                        String heureFin;
+                        if (h.getHeureFin() != null) {
+                            heureFin = h.getHeureFin().toString();
+                        } else {
+                            heureFin = "Inconnue";
+                        }
                     heure = heureDebut + " - " + heureFin;
                     break;
                     }
