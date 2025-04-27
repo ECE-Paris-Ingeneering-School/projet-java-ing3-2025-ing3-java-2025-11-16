@@ -67,7 +67,6 @@ public class ConnexionControleur {
             switch (utilisateur) {
                 case Patient patient -> {
                     new RechercheControleur(new Recherche());
-                    new RendezVousController(new RendezVousVue(utilisateur));
                 }
                 case Specialiste specialiste -> new SpecialisteVue(utilisateur);
                 case Admin admin -> new AdminControleur(new AdminVue(utilisateur));
