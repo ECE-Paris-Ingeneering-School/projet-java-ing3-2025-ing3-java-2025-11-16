@@ -12,37 +12,28 @@ public class CreationCompte extends BaseFrame {
 
     /** Champ de texte pour le nom de l'utilisateur. */
     private JTextField nomField;
-
     /** Champ de texte pour le prénom de l'utilisateur. */
     private JTextField prenomField;
-
     /** Champ de texte pour l'email de l'utilisateur. */
     private JTextField emailField;
-
     /** Champ de texte pour la spécialité (visible uniquement si l'utilisateur est un spécialiste). */
     private JTextField specialiteField;
-
     /** Champ de texte pour le lieu (visible uniquement si l'utilisateur est un spécialiste). */
     private JTextField lieuField;
-
     /** Champ de texte pour le mot de passe de l'utilisateur. */
     private JPasswordField mdpField;
-
     /** Champ de sélection pour le type de patient (visible uniquement si l'utilisateur est un patient). */
     private JComboBox<String> typePatientBox;
-
     /** Type d'utilisateur (ex: "patient", "specialiste"). */
     private String typeUtilisateur;
 
     /** Bouton permettant de revenir à l'écran précédent. */
     private JButton btnRetour;
-
     /** Bouton permettant de créer le compte. */
     private JButton creerBtn;
 
     /**
      * Constructeur permettant d'initialiser la fenêtre de création de compte en fonction du type d'utilisateur.
-     *
      * @param typeUtilisateur Le type d'utilisateur pour la création du compte (ex: "patient", "specialiste").
      */
     public CreationCompte(String typeUtilisateur) {
@@ -265,35 +256,30 @@ public class CreationCompte extends BaseFrame {
 
     /**
      * Récupère le champ de texte pour le lieu (visible si l'utilisateur est un spécialiste).
-     *
      * @return Le champ de texte du lieu.
      */
     public JTextField getLieuField() { return lieuField; }
 
     /**
      * Récupère le champ de sélection pour le type de patient (visible uniquement si l'utilisateur est un patient).
-     *
      * @return Le champ de sélection du type de patient.
      */
     public JComboBox<String> getTypePatientBox() { return typePatientBox; }
 
     /**
      * Récupère le type d'utilisateur (ex: "patient", "specialiste").
-     *
      * @return Le type d'utilisateur.
      */
     public String getTypeUtilisateur() { return typeUtilisateur; }
 
     /**
      * Récupère le bouton de retour.
-     *
      * @return Le bouton de retour.
      */
     public JButton getBtnRetour() { return btnRetour; }
 
     /**
      * Récupère le bouton pour créer le compte.
-     *
      * @return Le bouton pour créer le compte.
      */
     public JButton getCreerBtn() { return creerBtn; }
