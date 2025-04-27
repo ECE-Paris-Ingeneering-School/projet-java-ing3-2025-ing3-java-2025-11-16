@@ -5,6 +5,7 @@ import org.chem.Modele.RendezVous;
 import org.chem.Modele.Utilisateur;
 import org.chem.Dao.RendezVousDAO;
 import org.chem.Dao.DatabaseConnection;
+import org.chem.Modele.Horaire;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -21,7 +22,7 @@ public class RendezVousVue extends BaseFrame {
         if (utilisateurConnecte instanceof Patient patient) {
             afficherRendezVous(patient.getId());
         } else {
-            JOptionPane.showMessageDialog(this, "Seuls les patients peuvent consulter leurs rendez-vous.");
+            JOptionPane.showMessageDialog(this, "Patients peuvent consulter les rdv.");
         }
     }
 
@@ -35,11 +36,36 @@ public class RendezVousVue extends BaseFrame {
         DefaultTableModel model = new DefaultTableModel(colonnes, 0);
 
         for (RendezVous rdv : rdvs) {
+            Utilisateur specialiste = db.getUtilisateurDAO().getById(rdv.getIdSpecialiste());
+
+
+            String heure = "";
+            if (specialiste != null && specialiste instanceof org.chem.Modele.Specialiste specialisteCast) {
+                for (var h : specialisteCast.getEmploiDuTemps()) {
+                    if (h.getId() == rdv.getIdHoraire()) {
+                        String heureDebut;
+                        if (h.getHeureDebut() != null) {
+                            heureDebut = h.getHeureDebut().toString();
+                        } else {
+                            heureDebut = "Inconnue";
+                        }
+                        String heureFin;
+                        if (h.getHeureFin() != null) {
+                            heureFin = h.getHeureFin().toString();
+                        } else {
+                            heureFin = "Inconnue";
+                        }
+                    heure = heureDebut + " - " + heureFin;
+                    break;
+                    }
+                }
+            }
+
             Object[] ligne = {
                     rdv.getId(),
                     rdv.getDate().toString(),
-                    "IDHoraire #" + rdv.getIdHoraire(),
-                    "IDSpécialiste #" + rdv.getIdSpecialiste(),
+                    heure,
+                    (specialiste != null) ? specialiste.getNom() + " " + specialiste.getPrenom() : "Inconnu",
                     rdv.getLieu(),
                     rdv.getNotes()
             };
@@ -55,6 +81,7 @@ public class RendezVousVue extends BaseFrame {
         getCenterPanel().revalidate();
         getCenterPanel().repaint();
     }
+
 
 }
 
