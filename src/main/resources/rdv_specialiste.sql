@@ -1,9 +1,8 @@
--- 🌐 Suppression et création de la base
 DROP DATABASE IF EXISTS `rdv_specialiste`;
 CREATE DATABASE `rdv_specialiste` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `rdv_specialiste`;
 
--- 👤 Table des utilisateurs
+--  Table des utilisateurs
 CREATE TABLE `utilisateur` (
        `ID` INT(11) NOT NULL AUTO_INCREMENT,
        `nom` VARCHAR(255) NOT NULL,
@@ -20,7 +19,7 @@ CREATE TABLE `admin` (
          CONSTRAINT `fk_admin_utilisateur` FOREIGN KEY (`ID`) REFERENCES `utilisateur`(`ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 👶 Table des patients
+--  Table des patients
 CREATE TABLE `patient` (
            `ID` INT(11) NOT NULL,
            `type` INT(11) NOT NULL,
@@ -28,7 +27,7 @@ CREATE TABLE `patient` (
            CONSTRAINT `fk_patient_utilisateur` FOREIGN KEY (`ID`) REFERENCES `utilisateur`(`ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 🩺 Table des spécialistes
+--  Table des spécialistes
 CREATE TABLE `specialiste` (
            `ID` INT(11) NOT NULL,
            `Specialisation` VARCHAR(255) NOT NULL,
@@ -38,7 +37,7 @@ CREATE TABLE `specialiste` (
            CONSTRAINT `fk_specialiste_utilisateur` FOREIGN KEY (`ID`) REFERENCES `utilisateur`(`ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 🕒 Table des horaires
+--  Table des horaires
 CREATE TABLE `horaire` (
                `ID` INT(11) NOT NULL AUTO_INCREMENT,
                `jourSemaine` TINYINT NOT NULL CHECK (jourSemaine BETWEEN 1 AND 7),
@@ -47,7 +46,7 @@ CREATE TABLE `horaire` (
                PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 📅 Table des rendez-vous
+--  Table des rendez-vous
 CREATE TABLE `rdv` (
                `ID` INT(11) NOT NULL AUTO_INCREMENT,
                `IDSpecialiste` INT(11) NOT NULL,
@@ -63,7 +62,7 @@ CREATE TABLE `rdv` (
                UNIQUE (`IDSpecialiste`, `Date`, `IDHoraire`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 📆 Table des disponibilités
+--  Table des disponibilités
 CREATE TABLE `edt` (
                `ID` INT(11) NOT NULL AUTO_INCREMENT,
                `IDSpecialiste` INT(11) NOT NULL,
@@ -73,7 +72,7 @@ CREATE TABLE `edt` (
                CONSTRAINT `fk_edt_horaire` FOREIGN KEY (`IDHoraire`) REFERENCES `horaire`(`ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 👨‍⚕️ Insertion des spécialistes
+-- ️ Insertion des spécialistes
 INSERT INTO utilisateur (nom, prenom, email, mdp) VALUES
               ('Dupont', 'Jean', 'jean.dupont@medilink.fr', '$2a$12$WXhZ2SgV4qAKrq1om6BLVOiAt1hbYBev8CpPq90e3iU3j.BcOl0OC'),
               ('Martin', 'Claire', 'claire.martin@medilink.fr', '$2a$12$WXhZ2SgV4qAKrq1om6BLVOiAt1hbYBev8CpPq90e3iU3j.BcOl0OC'),
@@ -84,7 +83,7 @@ INSERT INTO specialiste (ID, Specialisation, Lieu) VALUES
                (2, 'Dermatologue', 'Lyon'),
                (3, 'Psychologue', 'Marseille');
 
--- 👨‍👩‍👧 Insertion des patients
+--  Insertion des patients
 INSERT INTO utilisateur (nom, prenom, email, mdp) VALUES
               ('Bernard', 'Lucie', 'lucie.bernard@gmail.com', '$2a$12$WXhZ2SgV4qAKrq1om6BLVOiAt1hbYBev8CpPq90e3iU3j.BcOl0OC'),
               ('Petit', 'Marc', 'marc.petit@gmail.com', '$2a$12$WXhZ2SgV4qAKrq1om6BLVOiAt1hbYBev8CpPq90e3iU3j.BcOl0OC'),
@@ -95,7 +94,7 @@ INSERT INTO patient (ID, type) VALUES
                (5, 1),
                (6, 1);
 
--- 👮 Insertion des admins
+--  Insertion des admins
 INSERT INTO utilisateur (nom, prenom, email, mdp) VALUES
               ('Bernard', 'Thomas', 'thomas.bernard@medilink.fr', '$2a$12$WXhZ2SgV4qAKrq1om6BLVOiAt1hbYBev8CpPq90e3iU3j.BcOl0OC'),
               ('Fabre', 'Emma', 'emma.fabre@medilink.fr', '$2a$12$WXhZ2SgV4qAKrq1om6BLVOiAt1hbYBev8CpPq90e3iU3j.BcOl0OC'),
@@ -106,7 +105,7 @@ INSERT INTO admin (ID) VALUES
                    (8),
                    (9);
 
--- 👨‍⚕️ Nouveaux spécialistes
+--  Nouveaux spécialistes
 INSERT INTO utilisateur (nom, prenom, email, mdp) VALUES
                   ('Moreau', 'Julie', 'julie.moreau@medilink.fr', '$2a$12$WXhZ2SgV4qAKrq1om6BLVOiAt1hbYBev8CpPq90e3iU3j.BcOl0OC'),
                   ('Garcia', 'Paul', 'paul.garcia@medilink.fr', '$2a$12$WXhZ2SgV4qAKrq1om6BLVOiAt1hbYBev8CpPq90e3iU3j.BcOl0OC'),
@@ -185,7 +184,7 @@ INSERT INTO horaire(ID, jourSemaine, HeureDebut, HeureFin) VALUES
         (48, 6, '16:00:00', '17:00:00');
 
 
--- 🗓️ Disponibilités réduites pour tous les spécialistes (4 créneaux chacun)
+--  Disponibilités réduites pour tous les spécialistes (4 créneaux chacun)
 
 -- Jean Dupont (Cardiologue, Paris)
 INSERT INTO edt (IDSpecialiste, IDHoraire) VALUES
@@ -223,22 +222,22 @@ INSERT INTO edt (IDSpecialiste, IDHoraire) VALUES
 INSERT INTO edt (IDSpecialiste, IDHoraire) VALUES
        (15, 19), (15, 20), (15, 41), (15, 42);
 
--- ✅ RDV pour Jean Dupont (ID=1, Cardiologue à Paris), dispo horaire 1, lundi 22 avril
+--  RDV pour Jean Dupont (ID=1, Cardiologue à Paris), dispo horaire 1, lundi 22 avril
 INSERT INTO rdv (IDSpecialiste, IDPatient, IDHoraire, Date, Notes, Lieu) VALUES
     (1, 4, 1, '2025-04-28', 'Suivi tension artérielle', 'Paris');
 
--- ✅ RDV pour Claire Martin (ID=2, Dermatologue à Lyon), dispo horaire 13, mardi 23 avril
+--  RDV pour Claire Martin (ID=2, Dermatologue à Lyon), dispo horaire 13, mardi 23 avril
 INSERT INTO rdv (IDSpecialiste, IDPatient, IDHoraire, Date, Notes, Lieu) VALUES
     (2, 5, 13, '2025-04-29', 'Examen de grain de beauté', 'Lyon');
 
--- ✅ RDV pour Linh Nguyen (ID=3, Psychologue à Marseille), dispo horaire 27, jeudi 24 avril
+--  RDV pour Linh Nguyen (ID=3, Psychologue à Marseille), dispo horaire 27, jeudi 24 avril
 INSERT INTO rdv (IDSpecialiste, IDPatient, IDHoraire, Date, Notes, Lieu) VALUES
     (3, 6, 27, '2025-04-24', 'Séance d’accompagnement', 'Marseille');
 
--- ✅ RDV pour Julie Moreau (ID=10, Cardiologue à Paris), dispo horaire 4, lundi 22 avril
+--  RDV pour Julie Moreau (ID=10, Cardiologue à Paris), dispo horaire 4, lundi 22 avril
 INSERT INTO rdv (IDSpecialiste, IDPatient, IDHoraire, Date, Notes, Lieu) VALUES
     (10, 5, 4, '2025-04-28', 'Bilan cardiaque annuel', 'Paris');
 
--- ✅ RDV pour Lucia Fernandez (ID=12, Cardiologue à Bordeaux), dispo horaire 5, lundi 22 avril
+--  RDV pour Lucia Fernandez (ID=12, Cardiologue à Bordeaux), dispo horaire 5, lundi 22 avril
 INSERT INTO rdv (IDSpecialiste, IDPatient, IDHoraire, Date, Notes, Lieu) VALUES
     (12, 6, 5, '2025-04-28', 'Consultation fatigue', 'Bordeaux');

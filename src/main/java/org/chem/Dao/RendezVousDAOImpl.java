@@ -6,13 +6,29 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Implémentation de l'interface RendezVousDAO pour la gestion des rendez-vous dans la base de données.
+ * Cette classe permet de manipuler les données relatives aux rendez-vous des patients avec les spécialistes.
+ */
 public class RendezVousDAOImpl implements RendezVousDAO {
+
+    /** Instance de la connexion à la base de données */
     private final DatabaseConnection db;
 
+    /**
+     * Constructeur de la classe RendezVousDAOImpl.
+     *
+     * @param db Connexion à la base de données
+     */
     public RendezVousDAOImpl(DatabaseConnection db) {
         this.db = db;
     }
 
+    /**
+     * Récupère tous les rendez-vous présents dans la base de données.
+     *
+     * @return Une liste d'objets RendezVous correspondant à tous les rendez-vous
+     */
     @Override
     public ArrayList<RendezVous> getAllRendezVous() {
         ArrayList<RendezVous> rendezVousList = new ArrayList<>();
@@ -43,7 +59,12 @@ public class RendezVousDAOImpl implements RendezVousDAO {
         return rendezVousList;
     }
 
-
+    /**
+     * Récupère un rendez-vous à partir de son ID.
+     *
+     * @param id L'ID du rendez-vous
+     * @return L'objet RendezVous correspondant à l'ID ou null si l'ID n'existe pas
+     */
     @Override
     public RendezVous getRendezVousById(int id) {
         String query = "SELECT * FROM rdv WHERE ID = ?";
@@ -63,6 +84,12 @@ public class RendezVousDAOImpl implements RendezVousDAO {
         return null;
     }
 
+    /**
+     * Récupère tous les rendez-vous d'un spécialiste en particulier.
+     *
+     * @param idSpecialiste L'ID du spécialiste
+     * @return Une liste de RendezVous du spécialiste triés par date et horaire
+     */
     @Override
     public ArrayList<RendezVous> getRendezVousBySpecialiste(int idSpecialiste) {
         ArrayList<RendezVous> liste = new ArrayList<>();
@@ -83,6 +110,12 @@ public class RendezVousDAOImpl implements RendezVousDAO {
         return liste;
     }
 
+    /**
+     * Récupère tous les rendez-vous d'un patient en particulier.
+     *
+     * @param idPatient L'ID du patient
+     * @return Une liste de RendezVous du patient triés par date et horaire
+     */
     @Override
     public ArrayList<RendezVous> getRendezVousByPatient(int idPatient) {
         ArrayList<RendezVous> liste = new ArrayList<>();
@@ -103,6 +136,12 @@ public class RendezVousDAOImpl implements RendezVousDAO {
         return liste;
     }
 
+    /**
+     * Ajoute un rendez-vous dans la base de données.
+     *
+     * @param rendezVous L'objet RendezVous à ajouter
+     * @return true si l'ajout a réussi, sinon false
+     */
     @Override
     public boolean ajouterRendezVous(RendezVous rendezVous) {
         boolean result = false;
@@ -133,6 +172,13 @@ public class RendezVousDAOImpl implements RendezVousDAO {
         return result;
     }
 
+    /**
+     * Vérifie si un horaire est déjà réservé pour une date spécifique.
+     *
+     * @param idHoraire L'ID de l'horaire
+     * @param dateUtil La date du rendez-vous
+     * @return true si l'horaire est déjà réservé, sinon false
+     */
     @Override
     public boolean estDejaReserve(int idHoraire, java.util.Date dateUtil) {
         System.out.println(idHoraire);
@@ -157,8 +203,12 @@ public class RendezVousDAOImpl implements RendezVousDAO {
         return false;
     }
 
-
-
+    /**
+     * Supprime un rendez-vous à partir de son ID.
+     *
+     * @param id L'ID du rendez-vous à supprimer
+     * @return true si la suppression a réussi, sinon false
+     */
     @Override
     public boolean supprimerRendezVous(int id) {
         String query = "DELETE FROM rdv WHERE ID = ?";
@@ -174,6 +224,12 @@ public class RendezVousDAOImpl implements RendezVousDAO {
         return false;
     }
 
+    /**
+     * Modifie un rendez-vous existant dans la base de données.
+     *
+     * @param rendezVous L'objet RendezVous à modifier
+     * @return true si la modification a réussi, sinon false
+     */
     @Override
     public boolean modifierRendezVous(RendezVous rendezVous) {
         String query = "UPDATE rdv SET IDSpecialiste = ?, IDPatient = ?, IDHoraire = ?, Date = ?, Notes = ?, Lieu = ? WHERE ID = ?";
@@ -197,7 +253,11 @@ public class RendezVousDAOImpl implements RendezVousDAO {
     }
 
     /**
-     * Méthode utilitaire pour mapper un ResultSet vers un objet RendezVous
+     * Méthode utilitaire pour mapper un ResultSet vers un objet RendezVous.
+     *
+     * @param rs Le ResultSet à mapper
+     * @return L'objet RendezVous correspondant
+     * @throws SQLException Si une erreur SQL survient lors du mappage
      */
     private RendezVous mapResultSetToRendezVous(ResultSet rs) throws SQLException {
         RendezVous rv = new RendezVous();

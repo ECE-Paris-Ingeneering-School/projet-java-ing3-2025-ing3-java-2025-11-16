@@ -6,13 +6,29 @@ import org.mindrot.jbcrypt.BCrypt;
 import java.sql.*;
 import java.util.*;
 
+/**
+ * Classe qui implémente l'interface `UtilisateurDAO` pour interagir avec la base de données.
+ * Fournit des méthodes pour la gestion des utilisateurs (connexion, ajout, modification, suppression, recherche).
+ */
 public class UtilisateurDAOImpl implements UtilisateurDAO {
     private DatabaseConnection Data;
 
+    /**
+     * Constructeur de la classe `UtilisateurDAOImpl`.
+     * @param Data L'objet de connexion à la base de données.
+     */
     public UtilisateurDAOImpl(DatabaseConnection Data) {
         this.Data = Data;
     }
 
+    /**
+     * Recherche des spécialistes en fonction de critères tels que le mot-clé, le jour, l'heure et le lieu.
+     * @param motCle Le mot-clé à rechercher dans les noms, prénoms et spécialisation.
+     * @param jour Le jour de la semaine.
+     * @param heure L'heure du rendez-vous.
+     * @param lieu Le lieu du spécialiste.
+     * @return Une liste de spécialistes qui correspondent aux critères.
+     */
     @Override
     public ArrayList<Specialiste> rechercherSpecialistes(String motCle, String jour, Time heure, String lieu) {
         ArrayList<Specialiste> resultats = new ArrayList<>();
@@ -89,6 +105,11 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         return resultats;
     }
 
+    /**
+     * Charge les horaires d'un spécialiste spécifique.
+     * @param idSpecialiste L'ID du spécialiste.
+     * @return Une liste d'horaires associés au spécialiste.
+     */
     @Override
     public ArrayList<Horaire> chargerHorairesPourSpecialiste(int idSpecialiste) {
         ArrayList<Horaire> horaires = new ArrayList<>();
@@ -124,6 +145,13 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
     }
 
 
+    /**
+     * Permet à un utilisateur de se connecter en vérifiant l'email et le mot de passe.
+     * @param email L'email de l'utilisateur.
+     * @param mdp Le mot de passe de l'utilisateur.
+     * @param type Le type d'utilisateur (patient, spécialiste, admin).
+     * @return Un objet Utilisateur correspondant aux identifiants si la connexion est réussie, sinon null.
+     */
     @Override
     public Utilisateur seConnecter(String email, String mdp, String type) {
         Utilisateur utilisateur = null;
@@ -186,7 +214,10 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
     }
 
 
-
+    /**
+     * Ajoute un nouvel utilisateur à la base de données.
+     * @param utilisateur L'utilisateur à ajouter (Patient, Spécialiste ou Admin).
+     */
     @Override
     public void ajouter(Utilisateur utilisateur) {
         try {
@@ -240,6 +271,10 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         }
     }
 
+    /**
+     * Récupère la liste de tous les spécialistes enregistrés dans la base de données.
+     * @return Une liste de spécialistes.
+     */
     @Override
     public ArrayList<Specialiste> getAllSpecialistes() {
         ArrayList<Specialiste> specialistes = new ArrayList<>();
@@ -275,7 +310,10 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         return specialistes;
     }
 
-
+    /**
+     * Récupère la liste de tous les patients enregistrés dans la base de données.
+     * @return Une liste de patients.
+     */
     @Override
     public ArrayList<Patient> getAllPatients() {
         ArrayList<Patient> patients = new ArrayList<>();
@@ -309,7 +347,10 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         return patients;
     }
 
-
+    /**
+     * Supprime un utilisateur de la base de données.
+     * @param utilisateur L'utilisateur à supprimer.
+     */
     @Override
     public void supprimer(Utilisateur utilisateur) {
         try {
@@ -338,6 +379,10 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         }
     }
 
+    /**
+     * Modifie les informations d'un utilisateur existant dans la base de données.
+     * @param utilisateur L'utilisateur avec les informations modifiées.
+     */
     @Override
     public void modifier(Utilisateur utilisateur) {
         try {
@@ -372,6 +417,11 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         }
     }
 
+    /**
+     * Récupère un utilisateur en fonction de son ID.
+     * @param id L'ID de l'utilisateur à récupérer.
+     * @return L'utilisateur correspondant à l'ID, ou null si l'utilisateur n'existe pas.
+     */
     @Override
     public Utilisateur getById(int id) {
         Utilisateur utilisateur = null;

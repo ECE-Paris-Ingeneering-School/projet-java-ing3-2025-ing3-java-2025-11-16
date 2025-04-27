@@ -6,13 +6,30 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Implémentation de l'interface HoraireDAO pour la gestion des horaires dans la base de données.
+ * Cette classe permet de manipuler les données relatives aux horaires des spécialistes.
+ */
 public class HoraireDAOImpl implements HoraireDAO {
+
+    /** Instance de la connexion à la base de données */
     private DatabaseConnection db;
 
+    /**
+     * Constructeur de la classe HoraireDAOImpl.
+     *
+     * @param db Connexion à la base de données
+     */
     public HoraireDAOImpl(DatabaseConnection db) {
         this.db = db;
     }
 
+    /**
+     * Récupère un horaire à partir de son ID.
+     *
+     * @param id L'ID de l'horaire
+     * @return L'objet Horaire correspondant à l'ID ou null si l'ID n'existe pas
+     */
     @Override
     public Horaire getHoraireById(int id) {
         String sql = "SELECT * FROM horaire WHERE ID = ?";
@@ -35,6 +52,11 @@ public class HoraireDAOImpl implements HoraireDAO {
         return null;
     }
 
+    /**
+     * Récupère tous les horaires présents dans la base de données.
+     *
+     * @return Une liste d'objets Horaire correspondant à tous les horaires
+     */
     @Override
     public List<Horaire> getAllHoraires() {
         List<Horaire> list = new ArrayList<>();
@@ -56,6 +78,12 @@ public class HoraireDAOImpl implements HoraireDAO {
         return list;
     }
 
+    /**
+     * Ajoute un nouvel horaire dans la base de données.
+     *
+     * @param horaire L'objet Horaire à ajouter
+     * @return true si l'ajout a réussi, sinon false
+     */
     @Override
     public boolean ajouterHoraire(Horaire horaire) {
         String sql = "INSERT INTO horaire (jourSemaine, HeureDebut, HeureFin) VALUES (?, ?, ?)";
@@ -71,6 +99,12 @@ public class HoraireDAOImpl implements HoraireDAO {
         return false;
     }
 
+    /**
+     * Supprime un horaire à partir de son ID.
+     *
+     * @param id L'ID de l'horaire à supprimer
+     * @return true si la suppression a réussi, sinon false
+     */
     @Override
     public boolean supprimerHoraire(int id) {
         String sql = "DELETE FROM horaire WHERE ID = ?";
@@ -84,6 +118,12 @@ public class HoraireDAOImpl implements HoraireDAO {
         return false;
     }
 
+    /**
+     * Met à jour un horaire dans la base de données.
+     *
+     * @param horaire L'objet Horaire à mettre à jour
+     * @return true si la mise à jour a réussi, sinon false
+     */
     @Override
     public boolean mettreAJourHoraire(Horaire horaire) {
         String sql = "UPDATE horaire SET jourSemaine = ?, HeureDebut = ?, HeureFin = ? WHERE ID = ?";
@@ -100,6 +140,13 @@ public class HoraireDAOImpl implements HoraireDAO {
         return false;
     }
 
+    /**
+     * Récupère l'ID d'un horaire existant à partir du jour et de l'heure de début.
+     *
+     * @param jour Le jour de la semaine
+     * @param heureDebut L'heure de début de l'horaire
+     * @return L'ID de l'horaire si trouvé, sinon -1
+     */
     @Override
     public int getIdHoraireExistant(int jour, Time heureDebut) {
         try (Connection conn =db.getConnection()) {

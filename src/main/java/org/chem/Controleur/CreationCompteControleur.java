@@ -7,15 +7,28 @@ import org.chem.Vue.*;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
-
+/**
+ * Contrôleur pour la création d'un nouveau compte utilisateur.
+ * Gère les actions de création et de retour à la page de connexion.
+ */
 public class CreationCompteControleur {
+
+    /** La vue associée à ce contrôleur. */
     private CreationCompte vue;
 
+    /**
+     * Constructeur du contrôleur de création de compte.
+     *
+     * @param vue La vue de création de compte à contrôler.
+     */
     public CreationCompteControleur(CreationCompte vue) {
         this.vue = vue;
         ajouterListeners();
     }
 
+    /**
+     * Ajoute les écouteurs d'événements (listeners) aux boutons de la vue.
+     */
     private void ajouterListeners() {
         vue.getCreerBtn().addActionListener(this::creerCompte);
         vue.getBtnRetour().addActionListener(e -> {
@@ -24,6 +37,13 @@ public class CreationCompteControleur {
         });
     }
 
+    /**
+     * Crée un compte utilisateur selon les informations saisies dans la vue.
+     * Valide les champs, instancie le bon type d'utilisateur (Patient, Spécialiste ou Admin),
+     * enregistre l'utilisateur en base de données via le DAO, puis redirige vers la connexion.
+     *
+     * @param e L'événement déclenché par l'appui sur le bouton "Créer".
+     */
     private void creerCompte(ActionEvent e) {
         String nom = vue.getNomField().getText().trim();
         String prenom = vue.getPrenomField().getText().trim();
@@ -43,7 +63,7 @@ public class CreationCompteControleur {
 
         switch (vue.getTypeUtilisateur().toLowerCase()) {
             case "patient":
-                //int type = vue.getTypePatientBox().getSelectedIndex() + 1;
+                // Par défaut, type de patient mis à 1 (modifiable si besoin)
                 utilisateur = new Patient(nom, prenom, email, mdp, 1);
                 break;
             case "specialiste":
@@ -53,10 +73,8 @@ public class CreationCompteControleur {
                 break;
             case "admin":
                 utilisateur = new Admin(nom, prenom, email, mdp);
-
                 break;
         }
-
 
         if (utilisateur != null) {
             try {
