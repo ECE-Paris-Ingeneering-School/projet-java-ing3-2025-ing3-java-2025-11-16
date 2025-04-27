@@ -133,7 +133,7 @@ public class CreationCompte extends BaseFrame {
         mdpPanel.add(mdpField, BorderLayout.CENTER);
 
         formPanel.add(mdpPanel);
-        formPanel.add(Box.createVerticalStrut(15));
+        formPanel.add(Box.createVerticalStrut(25));
 
         // Champs spécifiques pour spécialiste
         if (typeUtilisateur.equalsIgnoreCase("specialiste")) {
