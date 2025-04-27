@@ -28,7 +28,7 @@ public class BaseFrame extends JFrame {
     public void initUI() {
         setTitle("Application Rendez-vous");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1240, 600);
+        setSize(1280, 720);
         setLocationRelativeTo(null);
 
         JPanel mainPanel = new JPanel(new BorderLayout());
