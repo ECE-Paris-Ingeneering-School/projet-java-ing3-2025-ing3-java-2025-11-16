@@ -20,10 +20,10 @@ public class CreationCompte extends BaseFrame {
     private JTextField emailField;
 
     /** Champ de texte pour la spécialité (visible uniquement si l'utilisateur est un spécialiste). */
-    private JTextField SpecialiteField;
+    private JTextField specialiteField;
 
     /** Champ de texte pour le lieu (visible uniquement si l'utilisateur est un spécialiste). */
-    private JTextField LieuField;
+    private JTextField lieuField;
 
     /** Champ de texte pour le mot de passe de l'utilisateur. */
     private JPasswordField mdpField;
@@ -48,67 +48,181 @@ public class CreationCompte extends BaseFrame {
     public CreationCompte(String typeUtilisateur) {
         super();
         this.typeUtilisateur = typeUtilisateur;
-        JPanel Contenu = getCenterPanel();
-        JPanel boutonsPanel = new JPanel(new BorderLayout());
+        initCreationCompte();
+    }
 
-        // Création du titre de la fenêtre
-        JLabel titreLabel = new JLabel("Création de Compte " + typeUtilisateur, SwingConstants.CENTER);
-        titreLabel.setFont(new Font("Arial", Font.BOLD, 30));
-        titreLabel.setBorder(BorderFactory.createEmptyBorder(30, 0, 0, 0));
-        Contenu.add(titreLabel, BorderLayout.NORTH);
+    private void initCreationCompte() {
+        JPanel contenu = getCenterPanel();
+        contenu.setLayout(new GridBagLayout());
 
-        // Panneau principal pour les champs de saisie
-        JPanel panel = new JPanel(new GridLayout(8, 1, 10, 10));
-        panel.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
-        boutonsPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        JPanel formPanel = new JPanel();
+        formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
+        formPanel.setBackground(Color.WHITE);
+        formPanel.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
+        formPanel.setMaximumSize(new Dimension(800, 700));
 
-        // Création des champs de saisie
-        nomField = new JTextField(10);
-        prenomField = new JTextField(10);
-        emailField = new JTextField(10);
-        mdpField = new JPasswordField(10);
-        SpecialiteField = new JTextField(10);
-        LieuField = new JTextField(10);
+        // Titre
+        JLabel titreLabel = new JLabel("Création de compte ", SwingConstants.CENTER);
+        titreLabel.setFont(new Font("Arial", Font.BOLD, 40));
+        titreLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        titreLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
+        formPanel.add(titreLabel);
 
-        // Ajout des éléments à la fenêtre
-        panel.add(new JLabel("Nom :"));
-        panel.add(nomField);
-        panel.add(new JLabel("Prénom :"));
-        panel.add(prenomField);
-        panel.add(new JLabel("Email :"));
-        panel.add(emailField);
-        panel.add(new JLabel("Mot de passe :"));
-        panel.add(mdpField);
+        // Nom
+        JPanel nomPanel = new JPanel(new BorderLayout());
+        nomPanel.setBackground(Color.WHITE);
+        nomPanel.setMaximumSize(new Dimension(500, 50));
+        nomPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Si l'utilisateur est un spécialiste, on ajoute les champs spécialité et lieu
+        JLabel nomLabel = new JLabel("Nom :");
+        nomLabel.setFont(new Font("Arial", Font.BOLD, 15));
+        nomLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        nomPanel.add(nomLabel, BorderLayout.NORTH);
+
+        nomField = new JTextField(40);
+        nomField.setMaximumSize(new Dimension(500, 50));
+        nomField.setFont(new Font("Arial", Font.PLAIN, 16));
+        nomPanel.add(nomField, BorderLayout.CENTER);
+
+        formPanel.add(nomPanel);
+        formPanel.add(Box.createVerticalStrut(15));
+
+        // Prénom
+        JPanel prenomPanel = new JPanel(new BorderLayout());
+        prenomPanel.setBackground(Color.WHITE);
+        prenomPanel.setMaximumSize(new Dimension(500, 50));
+        prenomPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel prenomLabel = new JLabel("Prénom :");
+        prenomLabel.setFont(new Font("Arial", Font.BOLD, 15));
+        prenomLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        prenomPanel.add(prenomLabel, BorderLayout.NORTH);
+
+        prenomField = new JTextField(40);
+        prenomField.setMaximumSize(new Dimension(500, 50));
+        prenomField.setFont(new Font("Arial", Font.PLAIN, 16));
+        prenomPanel.add(prenomField, BorderLayout.CENTER);
+
+        formPanel.add(prenomPanel);
+        formPanel.add(Box.createVerticalStrut(15));
+
+        // Email
+        JPanel emailPanel = new JPanel(new BorderLayout());
+        emailPanel.setBackground(Color.WHITE);
+        emailPanel.setMaximumSize(new Dimension(500, 50));
+        emailPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel emailLabel = new JLabel("Email :");
+        emailLabel.setFont(new Font("Arial", Font.BOLD, 15));
+        emailLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        emailPanel.add(emailLabel, BorderLayout.NORTH);
+
+        emailField = new JTextField(40);
+        emailField.setMaximumSize(new Dimension(500, 50));
+        emailField.setFont(new Font("Arial", Font.PLAIN, 16));
+        emailPanel.add(emailField, BorderLayout.CENTER);
+
+        formPanel.add(emailPanel);
+        formPanel.add(Box.createVerticalStrut(15));
+
+        // Mot de passe
+        JPanel mdpPanel = new JPanel(new BorderLayout());
+        mdpPanel.setBackground(Color.WHITE);
+        mdpPanel.setMaximumSize(new Dimension(500, 50));
+        mdpPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel mdpLabel = new JLabel("Mot de passe :");
+        mdpLabel.setFont(new Font("Arial", Font.BOLD, 15));
+        mdpLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        mdpPanel.add(mdpLabel, BorderLayout.NORTH);
+
+        mdpField = new JPasswordField(40);
+        mdpField.setMaximumSize(new Dimension(500, 50));
+        mdpField.setFont(new Font("Arial", Font.PLAIN, 16));
+        mdpPanel.add(mdpField, BorderLayout.CENTER);
+
+        formPanel.add(mdpPanel);
+        formPanel.add(Box.createVerticalStrut(15));
+
+        // Champs spécifiques pour spécialiste
         if (typeUtilisateur.equalsIgnoreCase("specialiste")) {
-            panel.add(new JLabel("Spécialité :"));
-            panel.add(SpecialiteField);
-            panel.add(new JLabel("Lieu :"));
-            panel.add(LieuField);
+            // Spécialité
+            JPanel specialitePanel = new JPanel(new BorderLayout());
+            specialitePanel.setBackground(Color.WHITE);
+            specialitePanel.setMaximumSize(new Dimension(500, 50));
+            specialitePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+            JLabel specialiteLabel = new JLabel("Spécialité :");
+            specialiteLabel.setFont(new Font("Arial", Font.BOLD, 15));
+            specialiteLabel.setHorizontalAlignment(SwingConstants.LEFT);
+            specialitePanel.add(specialiteLabel, BorderLayout.NORTH);
+
+            specialiteField = new JTextField(40);
+            specialiteField.setMaximumSize(new Dimension(500, 50));
+            specialiteField.setFont(new Font("Arial", Font.PLAIN, 16));
+            specialitePanel.add(specialiteField, BorderLayout.CENTER);
+
+            formPanel.add(specialitePanel);
+            formPanel.add(Box.createVerticalStrut(15));
+
+            // Lieu
+            JPanel lieuPanel = new JPanel(new BorderLayout());
+            lieuPanel.setBackground(Color.WHITE);
+            lieuPanel.setMaximumSize(new Dimension(500, 50));
+            lieuPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+            JLabel lieuLabel = new JLabel("Lieu :");
+            lieuLabel.setFont(new Font("Arial", Font.BOLD, 15));
+            lieuLabel.setHorizontalAlignment(SwingConstants.LEFT);
+            lieuPanel.add(lieuLabel, BorderLayout.NORTH);
+
+            lieuField = new JTextField(40);
+            lieuField.setMaximumSize(new Dimension(500, 50));
+            lieuField.setFont(new Font("Arial", Font.PLAIN, 16));
+            lieuPanel.add(lieuField, BorderLayout.CENTER);
+
+            formPanel.add(lieuPanel);
+            formPanel.add(Box.createVerticalStrut(15));
         }
 
-        // Création des boutons
-        creerBtn = new JButton("Créer le compte");
-        Font bigFont = new Font("Arial", Font.BOLD, 20);
-        Dimension bigSize = new Dimension(250, 60);
+        // Boutons
+        JPanel buttonsPanel = new JPanel();
+        buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.X_AXIS));
+        buttonsPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        buttonsPanel.setBackground(Color.WHITE);
 
-        creerBtn.setFont(bigFont);
         btnRetour = new JButton("Retour");
-        btnRetour.setFont(bigFont);
+        btnRetour.setFont(new Font("Arial", Font.BOLD, 16));
+        btnRetour.setPreferredSize(new Dimension(160, 45));
+        btnRetour.setMaximumSize(new Dimension(200, 45));
+        btnRetour.setBackground(Color.LIGHT_GRAY);
+        btnRetour.setForeground(Color.WHITE);
+        btnRetour.setFocusPainted(false);
+        btnRetour.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+        btnRetour.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        buttonsPanel.add(btnRetour);
 
-        creerBtn.setPreferredSize(bigSize);
-        btnRetour.setPreferredSize(bigSize);
+        buttonsPanel.add(Box.createHorizontalStrut(20));
 
-        // Ajout des boutons au panneau
-        boutonsPanel.add(btnRetour, BorderLayout.WEST);
-        boutonsPanel.add(creerBtn, BorderLayout.EAST);
+        creerBtn = new JButton("Créer le compte");
+        creerBtn.setFont(new Font("Arial", Font.BOLD, 16));
+        creerBtn.setPreferredSize(new Dimension(160, 45));
+        creerBtn.setMaximumSize(new Dimension(200, 45));
+        creerBtn.setBackground(Color.decode("#649FCB"));
+        creerBtn.setForeground(Color.WHITE);
+        creerBtn.setFocusPainted(false);
+        creerBtn.setBorder(BorderFactory.createLineBorder(Color.decode("#649FCB")));
+        creerBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        buttonsPanel.add(creerBtn);
 
-        // Ajout du panneau principal et du panneau des boutons à la fenêtre
-        Contenu.add(panel, BorderLayout.CENTER);
-        Contenu.add(boutonsPanel, BorderLayout.SOUTH);
+        formPanel.add(buttonsPanel);
 
-        // Affichage de la fenêtre
+        // Centrage dans la page
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        contenu.add(formPanel, gbc);
+
         setVisible(true);
     }
 
@@ -147,14 +261,14 @@ public class CreationCompte extends BaseFrame {
      *
      * @return Le champ de texte de la spécialité.
      */
-    public JTextField getSpecialiteField() { return SpecialiteField; }
+    public JTextField getSpecialiteField() { return specialiteField; }
 
     /**
      * Récupère le champ de texte pour le lieu (visible si l'utilisateur est un spécialiste).
      *
      * @return Le champ de texte du lieu.
      */
-    public JTextField getLieuField() { return LieuField; }
+    public JTextField getLieuField() { return lieuField; }
 
     /**
      * Récupère le champ de sélection pour le type de patient (visible uniquement si l'utilisateur est un patient).
