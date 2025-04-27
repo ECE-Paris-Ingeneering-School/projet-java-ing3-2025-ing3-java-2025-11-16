@@ -5,6 +5,7 @@ import org.chem.Modele.RendezVous;
 import org.chem.Modele.Utilisateur;
 import org.chem.Dao.RendezVousDAO;
 import org.chem.Dao.DatabaseConnection;
+import org.chem.Modele.Horaire;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -35,11 +36,26 @@ public class RendezVousVue extends BaseFrame {
         DefaultTableModel model = new DefaultTableModel(colonnes, 0);
 
         for (RendezVous rdv : rdvs) {
+            Utilisateur specialiste = db.getUtilisateurDAO().getById(rdv.getIdSpecialiste());
+
+
+            String heure = "";
+            if (specialiste != null && specialiste instanceof org.chem.Modele.Specialiste specialisteCast) {
+                for (var h : specialisteCast.getEmploiDuTemps()) {
+                    if (h.getId() == rdv.getIdHoraire()) {
+                    String heureDebut = (h.getHeureDebut() != null) ? h.getHeureDebut().toString() : "Inconnue";
+                    String heureFin = (h.getHeureFin() != null) ? h.getHeureFin().toString() : "Inconnue";
+                    heure = heureDebut + " - " + heureFin;
+                    break;
+                    }
+                }
+            }
+
             Object[] ligne = {
                     rdv.getId(),
                     rdv.getDate().toString(),
-                    "IDHoraire #" + rdv.getIdHoraire(),
-                    "IDSpécialiste #" + rdv.getIdSpecialiste(),
+                    heure,
+                    (specialiste != null) ? specialiste.getNom() + " " + specialiste.getPrenom() : "Inconnu",
                     rdv.getLieu(),
                     rdv.getNotes()
             };
@@ -55,6 +71,7 @@ public class RendezVousVue extends BaseFrame {
         getCenterPanel().revalidate();
         getCenterPanel().repaint();
     }
+
 
 }
 
