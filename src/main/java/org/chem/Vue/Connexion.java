@@ -37,50 +37,87 @@ public class Connexion extends BaseFrame {
         emailField.setText(login);
     }
 
-
     private void initConnection() {
         JPanel contenu = getCenterPanel();
-        JPanel boutonPanel = new JPanel(new BorderLayout());
+        contenu.setLayout(new GridBagLayout());
 
-        JLabel titreLabel = new JLabel("Connexion "+typeUtilisateur, SwingConstants.CENTER);
-        titreLabel.setFont(new Font("Arial", Font.BOLD, 30));
-        titreLabel.setBorder(BorderFactory.createEmptyBorder(30, 0, 0, 0));
-        contenu.add(titreLabel, BorderLayout.NORTH);
+        JPanel formPanel = new JPanel();
+        formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
+        formPanel.setBackground(Color.WHITE);
+        formPanel.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
+        formPanel.setMaximumSize(new Dimension(800, 500));
 
-        JPanel panel = new JPanel(new GridLayout(8, 1, 10, 10));
-        panel.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
-        boutonPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        JLabel titreLabel = new JLabel("Connexion", SwingConstants.CENTER);
+        titreLabel.setFont(new Font("Arial", Font.BOLD, 40));
+        titreLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        titreLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
+        formPanel.add(titreLabel);
 
-        emailField = new JTextField(10);
-        passwordField = new JPasswordField(10);
+        JPanel emailPanel = new JPanel(new BorderLayout());
+        emailPanel.setBackground(Color.WHITE);
+        emailPanel.setMaximumSize(new Dimension(500, 50));
+        emailPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        panel.add(new JLabel("Email :"));
-        panel.add(emailField);
-        panel.add(new JLabel("Mot de passe :"));
-        panel.add(passwordField);
+        JLabel emailLabel = new JLabel("Email :");
+        emailLabel.setFont(new Font("Arial", Font.BOLD, 15));
+        emailLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        emailPanel.add(emailLabel, BorderLayout.NORTH);
+
+        emailField = new JTextField(40);
+        emailField.setMaximumSize(new Dimension(500, 50));
+        emailField.setFont(new Font("Arial", Font.PLAIN, 16));
+        emailPanel.add(emailField, BorderLayout.CENTER);
+
+        formPanel.add(emailPanel);
+        formPanel.add(Box.createVerticalStrut(15));
+
+        JPanel passwordPanel = new JPanel(new BorderLayout());
+        passwordPanel.setBackground(Color.WHITE);
+        passwordPanel.setMaximumSize(new Dimension(500, 50));
+        passwordPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel passwordLabel = new JLabel("Mot de passe :");
+        passwordLabel.setFont(new Font("Arial", Font.BOLD, 15));
+        passwordLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        passwordPanel.add(passwordLabel, BorderLayout.NORTH);
+
+        passwordField = new JPasswordField(40);
+        passwordField.setMaximumSize(new Dimension(500, 50));
+        passwordField.setFont(new Font("Arial", Font.PLAIN, 16));
+        passwordPanel.add(passwordField, BorderLayout.CENTER);
+
+        formPanel.add(passwordPanel);
+        formPanel.add(Box.createVerticalStrut(25));
 
         loginBtn = new JButton("Se connecter");
-        signupBtn = new JButton("Pas de compte?");
-        btnRetour = new JButton("Retour");
+        loginBtn.setFont(new Font("Arial", Font.BOLD, 16));
+        loginBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+        loginBtn.setPreferredSize(new Dimension(160, 45));
+        loginBtn.setMaximumSize(new Dimension(200, 45));
+        loginBtn.setBackground(Color.decode("#649FCB"));
+        loginBtn.setForeground(Color.WHITE);
+        loginBtn.setFocusPainted(false);
+        loginBtn.setBorder(BorderFactory.createLineBorder(Color.decode("#649FCB")));
+        loginBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        formPanel.add(loginBtn);
 
-        Font bigFont = new Font("Arial", Font.BOLD, 18);
-        Dimension bigSize = new Dimension(200, 30);
-        Dimension size2 = new Dimension(150, 20);
+        formPanel.add(Box.createVerticalStrut(20));
 
-        loginBtn.setFont(bigFont);
-        signupBtn.setFont(bigFont);
-        btnRetour.setFont(bigFont);
+        signupBtn = new JButton("Pas de compte ?");
+        signupBtn.setFont(new Font("Arial", Font.PLAIN, 15));
+        signupBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+        signupBtn.setContentAreaFilled(false);
+        signupBtn.setBorderPainted(false);
+        signupBtn.setFocusPainted(false);
+        signupBtn.setForeground(Color.BLACK);
+        signupBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        formPanel.add(signupBtn);
 
-        loginBtn.setPreferredSize(bigSize);
-        signupBtn.setPreferredSize(size2);
-        btnRetour.setPreferredSize(bigSize);
-
-        boutonPanel.add(loginBtn, BorderLayout.EAST);
-        boutonPanel.add(signupBtn, BorderLayout.CENTER);
-        boutonPanel.add(btnRetour, BorderLayout.WEST);
-
-        contenu.add(boutonPanel, BorderLayout.SOUTH);
-        contenu.add(panel, BorderLayout.CENTER);
+        // Centrage dans la page
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        contenu.add(formPanel, gbc);
 
         setVisible(true);
     }
@@ -88,9 +125,9 @@ public class Connexion extends BaseFrame {
     // GETTERS pour le contrôleur
     public JButton getLoginBtn() { return loginBtn; }
     public JButton getSignupBtn() { return signupBtn; }
-    public JButton getBtnRetour() { return btnRetour; }
 
     public String getEmail() { return emailField.getText().trim(); }
     public String getMotDePasse() { return new String(passwordField.getPassword()).trim(); }
     public String getTypeUtilisateur() { return typeUtilisateur; }
+
 }
